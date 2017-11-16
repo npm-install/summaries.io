@@ -99,7 +99,7 @@ export default class App extends Component {
       <BrowserRouter>
         <div>
           <AppBar
-            title="Fideliza Card"
+            title="summaries.io"
             iconElementRight={topbarButtons}
             iconStyleRight={{
               display: 'flex',
