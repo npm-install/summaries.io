@@ -1,6 +1,6 @@
-import firebase from 'firebase';
+import firebase from 'firebase'
 // Required for side-effects
-require('firebase/firestore');
+require('firebase/firestore')
 
 const config = {
   apiKey: process.env.REACT_APP_apiKey,
@@ -9,8 +9,8 @@ const config = {
   projectId: process.env.REACT_APP_projectId,
   storageBucket: process.env.REACT_APP_storageBucket,
   messagingSenderId: process.env.REACT_APP_messagingSenderId
-};
+}
 
-firebase.initializeApp(config);
-export const db = firebase.firestore();
-export const firebaseAuth = firebase.auth;
+firebase.initializeApp(config)
+export const db = firebase.firestore()
+export const firebaseAuth = firebase.auth
