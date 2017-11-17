@@ -1,0 +1,12 @@
+dist: precise
+language: node_js
+node_js:
+  - 6
+  - 8
+cache:
+  directories:
+  - node_modules
+install: true
+env:
+  global:
+    - USE_YARN=no
