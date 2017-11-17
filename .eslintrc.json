@@ -1,3 +1,8 @@
 {
-    "extends": "standard"
+  "extends": "fullstack",
+  "rules": {
+    "class-methods-use-this": "off",
+    "react/prefer-stateless-function": "off",
+    "react/self-closing-comp": "off"
+  }
 }
