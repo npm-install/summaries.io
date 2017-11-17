@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { login, resetPassword } from '../helpers/auth'
-
+import { login, resetPassword, loginWithGoogle } from '../helpers/auth'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
@@ -74,6 +73,13 @@ export default class Login extends Component {
           primary={true}
           style={style.raisedBtn}
           type="submit"
+        />
+        <RaisedButton
+          label="Login with Google"
+          primary={false}
+          style={style.raisedBtn}
+          // type="submit"
+          onClick={loginWithGoogle}
         />
       </form>
     )
