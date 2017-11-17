@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "eslint-config-fullstack": "^3.0.0",
     "eslint-plugin-react": "^7.4.0",
     "firebase": "4.6.0",
     "material-ui": "^0.19.4",
