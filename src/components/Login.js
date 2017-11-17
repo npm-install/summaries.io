@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { login, resetPassword, loginWithGoogle } from '../helpers/auth'
-
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
@@ -35,6 +34,7 @@ export default class Login extends Component {
       )
       .catch(error => this.setState(setErrorMsg(`Email address not found.`)))
   }
+
   render() {
     return (
       <form
@@ -63,7 +63,7 @@ export default class Login extends Component {
             />
             <span className="sr-only">Error:</span>
             &nbsp;{this.state.loginMessage}{' '}
-            <a href="#" onClick={this.resetPassword} className="alert-link">
+            <a onClick={this.resetPassword} className="alert-link">
               Forgot Password?
             </a>
           </div>
