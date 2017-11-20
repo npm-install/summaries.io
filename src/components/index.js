@@ -8,6 +8,7 @@ import { logout } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
+import User from './User'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -113,6 +114,7 @@ export default class App extends Component {
             <div className="row">
               <Switch>
                 <Route path="/" exact component={Home} />
+                <Route path="/user" component={User} />
                 <PublicRoute
                   authed={this.state.authed}
                   path="/login"
