@@ -2,7 +2,6 @@ import React from 'react'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 import Divider from 'material-ui/Divider'
-import Avatar from 'material-ui/Avatar'
 
 const style = {
   height: 100,
