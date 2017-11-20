@@ -15,18 +15,13 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    db
-      .collection('user_input')
-      .get()
-      .then(snapshot => {
-        snapshot.forEach(doc => {
-          const data = doc.data()
-          this.setState({ message: data.value, timestamp: data.timestamp })
-        })
+    db.doc('user_input/test_inputs').onSnapshot(doc => {
+      const data = doc.data()
+      this.setState({
+        message: data.value || '',
+        timestamp: data.timestamp || ''
       })
-      .catch(err => {
-        console.log('Error getting documents', err)
-      })
+    })
   }
 
   handleChange(event) {
