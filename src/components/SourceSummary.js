@@ -81,7 +81,7 @@ export default class SourceSummary extends Component {
         </div>
         {this.state.articles.length &&
           this.state.articles.map(article => (
-            <Paper zDepth={2} key={article.title}>
+            <Paper zDepth={2} key={article.title} className="article-card">
               <div className="each-article">
                 <Article article={article} />
               </div>
