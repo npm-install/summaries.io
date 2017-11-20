@@ -1,5 +1,55 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.welcome {
+  margin-top: 2em;
+  line-height: 2em;
+}
+
+.welcome-title {
+  margin-bottom: 2em;
+}
+
+.source-header {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1.5em;
+}
+
+.source-title {
+  margin-left: .5em;
+  vertical-align: middle;
+}
+
+.sourcelogo {
+  width: 2em;
+  height: 2em;
+}
+
+.source-summary {
+  padding: 2em;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.each-article {
+  font-family: 'Noto Sans', sans-serif;
+  padding: 2em;
+  margin: 1em 0;
+}
+
+/* Mobile */
+@media only screen and (max-width: 667px) {
+  .welcome {
+    margin-top: 2em;
+    margin-left: .5em;
+    line-height: 2em;
+  }
+  
+  .welcome-title {
+    margin-bottom: 2em;
+    margin-left: .7em;
+  }
 }
