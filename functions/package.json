@@ -10,9 +10,13 @@
   },
   "dependencies": {
     "firebase-admin": "~5.4.2",
+<<<<<<< HEAD
     "firebase-functions": "^0.7.1",
     "nodemailer": "^4.4.0",
     "sendgrid": "^5.2.3"
+=======
+    "firebase-functions": "^0.7.1"
+>>>>>>> master
   },
   "private": true
 }
