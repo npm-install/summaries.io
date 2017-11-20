@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import Home from './Home';
-import Dashboard from './protected/Dashboard';
-import { logout } from '../helpers/auth';
-import { firebaseAuth } from '../config/constants';
-import AppBar from 'material-ui/AppBar';
-import FlatButton from 'material-ui/FlatButton';
+import React, { Component } from 'react'
+import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
+import Login from './Login'
+import Register from './Register'
+import Home from './Home'
+import Dashboard from './protected/Dashboard'
+import { logout } from '../helpers/auth'
+import { firebaseAuth } from '../config/constants'
+import AppBar from 'material-ui/AppBar'
+import FlatButton from 'material-ui/FlatButton'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -22,7 +22,7 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
           />
         )}
     />
-  );
+  )
 }
 
 function PublicRoute({ component: Component, authed, ...rest }) {
@@ -36,40 +36,40 @@ function PublicRoute({ component: Component, authed, ...rest }) {
           <Redirect to="/dashboard" />
         )}
     />
-  );
+  )
 }
 
 export default class App extends Component {
   state = {
     authed: false,
     loading: true
-  };
+  }
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (user) {
         this.setState({
           authed: true,
           loading: false
-        });
+        })
       } else {
         this.setState({
           authed: false,
           loading: false
-        });
+        })
       }
-    });
+    })
   }
   componentWillUnmount() {
-    this.removeListener();
+    this.removeListener()
   }
   render() {
-    console.log(this.state);
+    console.log(this.state)
 
     const authButtons = this.state.authed ? (
       <FlatButton
         label="Logout"
         onClick={() => {
-          logout();
+          logout()
         }}
         style={{ color: '#fff' }}
       />
@@ -82,7 +82,7 @@ export default class App extends Component {
           <FlatButton label="Register" style={{ color: '#fff' }} />
         </Link>
       </span>
-    );
+    )
 
     const topbarButtons = (
       <div>
@@ -94,7 +94,7 @@ export default class App extends Component {
         </Link>
         {authButtons}
       </div>
-    );
+    )
     return this.state.loading === true ? (
       <h1>Loading</h1>
     ) : (
@@ -134,6 +134,6 @@ export default class App extends Component {
           </div>
         </div>
       </BrowserRouter>
-    );
+    )
   }
 }
