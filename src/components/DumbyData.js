@@ -179,5 +179,9 @@ export const gadgets = [
   {
     name: 'Reddit',
     image: 'https://icons.better-idea.org/icon?url=https://www.reddit.com/r/all&size=70..120..200'
+  },
+  {
+    name: 'Bloomberg',
+    image: 'https://icons.better-idea.org/icon?url=http://www.bloomberg.com&size=70..120..200'
   }
 ]
