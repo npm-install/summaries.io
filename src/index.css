@@ -16,7 +16,8 @@ body {
 }
 
 .source-title {
-  margin-left: .5em;
+  margin-top: .1em;
+  margin-left: .4em;
 }
 
 .sourcelogo {
@@ -67,11 +68,6 @@ body {
   margin-top: 3em;
 }
 
-.fa-spinner {
-  margin-left: 1em;
-  margin-top: 1em;
-}
-
 .fa-home {
   color: snow;
   margin-right: 1em;
@@ -100,6 +96,10 @@ body {
   height: 5em;
 }
 
+.news-card {
+  width: 25em;
+}
+
 .news-name {
   margin-top: .8em;
   margin-left: 1em;
@@ -120,6 +120,28 @@ body {
   
   .welcome-title {
     margin-bottom: 2em;
-    margin-left: .7em;
+    margin-left: .6em;
   }
+
+  .source-header {
+    margin-left: 1em;
+  }
+
+  .article-card {
+    margin: 1em;
+  }
+
+  .news-card {
+    width: 21em;
+    margin-left: 1em;
+  }
+
+  .news-name {
+    font-size: 1.2em;
+  }
+
+  .new-content {
+    flex-direction: column;
+  }
+
 }

@@ -113,7 +113,7 @@ export default class App extends Component {
       </div>
     );
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} className="fa-spinner" />
+      <CircularProgress size={80} thickness={5} />
     ) : (
       <BrowserRouter>
         <div>
