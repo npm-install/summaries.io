@@ -9,8 +9,10 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+    "aws-sdk": "^2.154.0",
     "firebase-admin": "~5.4.2",
     "firebase-functions": "^0.7.1",
+    "fs": "^0.0.1-security",
     "nodemailer": "^4.4.0",
     "sendgrid": "^5.2.3"
   },

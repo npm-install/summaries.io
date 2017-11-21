@@ -46,3 +46,31 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   )
 })
 
+const AWS = require('aws-sdk')
+const fs = require('fs')
+
+const Polly = new AWS.Polly({
+  signatureVersion: 'v4',
+  region: 'us-east-1'
+})
+
+let params = {
+  Text: `Testing this text, and that was a comma
+    Mr. Adrien so we can hear how the pauses work`,
+  OutputFormat: 'mp3',
+  VoiceId: 'Joanna'
+}
+
+exports.polly = functions.https.onRequest((req, res) => {
+  Polly.synthesizeSpeech(params, (err, data) => {
+    if (err) console.err(err.stack)
+    else if (data) {
+      if (data.AudioStream instanceof Buffer) {
+        fs.writeFile('./speech.mp3', data.AudioStream, err => {
+          if (err) return console.err(err)
+          console.log('The file was saved!')
+        })
+      }
+    }
+  })
+})
