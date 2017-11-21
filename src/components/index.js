@@ -9,6 +9,7 @@ import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
 import User from './User'
+import { db } from '../config/constants'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -16,7 +17,7 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
       {...rest}
       render={props =>
         authed === true ? (
-          <Component {...props} />
+          <Component {...rest} /> // was {...props}
         ) : (
           <Redirect
             to={{ pathname: '/login', state: { from: props.location } }}
@@ -47,11 +48,25 @@ export default class App extends Component {
   }
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
+      // Now let's modify the state with user information and auth
       if (user) {
-        this.setState({
-          authed: true,
-          loading: false
-        })
+        // Let's retrieve the user's information
+        var userRef = db.collection('users')
+        var query = userRef
+          .where('uid', '==', user.uid)
+          .get()
+          .then(snapshot => {
+            snapshot.forEach(doc => {
+              this.setState({
+                authed: true,
+                loading: false,
+                user: doc.data() // make sure this is synchronous
+              })
+            })
+          })
+          .catch(err => {
+            console.log('Error getting documents', err)
+          })
       } else {
         this.setState({
           authed: false,
@@ -91,7 +106,10 @@ export default class App extends Component {
           <FlatButton label="Home" style={{ color: '#fff' }} />
         </Link>
         <Link to="/dashboard">
-          <FlatButton label="dashboard" style={{ color: '#fff' }} />
+          <FlatButton label="Dashboard" style={{ color: '#fff' }} />
+        </Link>
+        <Link to="/account">
+          <FlatButton label="Account" style={{ color: '#fff' }} />
         </Link>
         {authButtons}
       </div>
@@ -131,7 +149,8 @@ export default class App extends Component {
                 />
                 <PrivateRoute
                   authed={this.state.authed}
-                  path="/user"
+                  path="/account"
+                  user={this.state.user}
                   component={User}
                 />
                 <Route render={() => <h3>No Match</h3>} />
