@@ -82,6 +82,29 @@ body {
   margin-right: .5em;
 }
 
+.news-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 1em;
+}
+
+.news-grid{
+  display: inline-flex;
+  padding: 1em;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.news-logo {
+  width: 5em;
+  height: 5em;
+}
+
+.news-name {
+  margin-top: .8em;
+  margin-left: 1em;
+  font-size: 1.5em;
+}
 
 /* Mobile */
 @media only screen and (max-width: 667px) {

@@ -157,3 +157,27 @@ export const TechCrunch = [
     summaryText: `The new Oasis keeps all its battery in-house, meaning that you don't need a cover with it to get the full battery life out of the Kindle, as you did with the old one. In the end, when I asked Amazon for an updated Kindle this year, the new Oasis is basically exactly what I had in mind.`
   }
 ];
+
+
+export const gadgets = [
+  {
+    name: 'The New York Times',
+    image: 'https://icons.better-idea.org/icon?url=http://www.nytimes.com&size=70..120..200'
+  },
+  {
+    name: 'IGN',
+    image: 'https://icons.better-idea.org/icon?url=http://www.ign.com&size=70..120..200'
+  },
+  {
+    name: 'BBC News',
+    image: 'https://icons.better-idea.org/icon?url=http://www.bbc.co.uk/news&size=70..120..200'
+  },
+  {
+    name: 'Hacker News',
+    image: 'https://icons.better-idea.org/icon?url=https://news.ycombinator.com&size=70..120..200'
+  },
+  {
+    name: 'Reddit',
+    image: 'https://icons.better-idea.org/icon?url=https://www.reddit.com/r/all&size=70..120..200'
+  }
+]

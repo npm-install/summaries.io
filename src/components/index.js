@@ -11,6 +11,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import CircularProgress from 'material-ui/CircularProgress';
 import User from "./User";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
@@ -81,8 +82,8 @@ export default class App extends Component {
       iconStyle={{color:'#fff'}}
     >
       <MenuItem primaryText="View Past Summaries" />
-      <MenuItem primaryText="Settings" />
-      <MenuItem primaryText="Sign Out" onClick={() => {logout();}} />
+      <Link to="/user" style={{textDecoration: 'none'}}><MenuItem primaryText="My Profile" /></Link>
+      <MenuItem primaryText="Sign out" onClick={() => {logout();}} />
     </IconMenu>
     ) : (
       <IconMenu
@@ -108,14 +109,11 @@ export default class App extends Component {
         <Link to="/dashboard">
           <i className="fa fa-sliders fa-2x" aria-hidden="true" />
         </Link>
-        <Link to="/user">
-          <FlatButton label="Account" style={{ color: '#fff' }} />
-        </Link>
         {authButtons}
       </div>
     );
     return this.state.loading === true ? (
-      <i className="fa fa-spinner fa-4x" aria-hidden="true" />
+      <CircularProgress size={80} thickness={5} className="fa-spinner" />
     ) : (
       <BrowserRouter>
         <div>
