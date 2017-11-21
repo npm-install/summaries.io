@@ -12,8 +12,7 @@
     "firebase-admin": "~5.4.2",
     "firebase-functions": "^0.7.1",
     "nodemailer": "^4.4.0",
-    "sendgrid": "^5.2.3",
-    "firebase-functions": "^0.7.1"
+    "sendgrid": "^5.2.3"
   },
   "private": true
 }
