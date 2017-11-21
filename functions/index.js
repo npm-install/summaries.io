@@ -46,8 +46,12 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   )
 })
 
-const AWS = require('aws-sdk')
-const fs = require('fs')
+import AWS from 'aws-sdk'
+import fs from 'fs'
+const credentials = AWS.Credentials(
+  process.env.REACT_APP_awsKey,
+  process.env.REACT_APP_awsSecret
+)
 
 const Polly = new AWS.Polly({
   signatureVersion: 'v4',
