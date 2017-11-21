@@ -55,7 +55,7 @@ export default class Dashboard extends Component {
             ))}
         </div>
 
-        <div>
+        <div className="adrien-useless-stuff">
           Dashboard. This is a protected route. You can only see this if you're
           authed.
           <form onSubmit={this.handleSubmit}>
