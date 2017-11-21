@@ -93,6 +93,9 @@ export default class App extends Component {
         <Link to="/dashboard">
           <FlatButton label="dashboard" style={{ color: '#fff' }} />
         </Link>
+        <Link to="/user">
+          <FlatButton label="Account" style={{ color: '#fff' }} />
+        </Link>
         {authButtons}
       </div>
     )
