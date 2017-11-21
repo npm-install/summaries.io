@@ -45,7 +45,7 @@ export default class Dashboard extends Component {
           {gadgets &&
             gadgets.map(gad => (
               <div key={gad.name}>
-                <Paper zDepth={2} style={{marginRight: '1em', marginBottom: '1em', width: '25em'}}>
+                <Paper zDepth={2} style={{marginRight: '1em', marginBottom: '1em'}} className="news-card">
                   <div className="news-grid">
                     <img src={gad.image} alt={gad.name} className="news-logo" />
                     <p className="news-name">{gad.name}</p>
