@@ -48,7 +48,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 
 import AWS from 'aws-sdk'
 import fs from 'fs'
-const credentials = AWS.Credentials(
+const credentials = new AWS.Credentials(
   process.env.REACT_APP_awsKey,
   process.env.REACT_APP_awsSecret
 )
