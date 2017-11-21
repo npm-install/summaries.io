@@ -26,7 +26,9 @@ export default class Login extends Component {
     })
   }
   resetPassword = () => {
-    resetPassword(this.state.email)
+    resetPassword(this.state.email, {
+      url: `https://summary-73ccc.firebaseapp.com/login`
+    })
       .then(() =>
         this.setState(
           setErrorMsg(`Password reset email sent to ${this.state.email}.`)
@@ -64,9 +66,13 @@ export default class Login extends Component {
             />
             <span className="sr-only">Error:</span>
             &nbsp;{this.state.loginMessage}{' '}
-            <a onClick={this.resetPassword} className="alert-link">
-              Forgot Password?
-            </a>
+            <div className="alert-link">
+              <RaisedButton
+                label="Forgot Password?"
+                style={style.raisedBtn}
+                onClick={this.resetPassword}
+              />
+            </div>
           </div>
         )}
         <RaisedButton

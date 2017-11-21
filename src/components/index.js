@@ -108,6 +108,9 @@ export default class App extends Component {
         <Link to="/dashboard">
           <i className="fa fa-sliders fa-2x" aria-hidden="true" />
         </Link>
+        <Link to="/user">
+          <FlatButton label="Account" style={{ color: '#fff' }} />
+        </Link>
         {authButtons}
       </div>
     );

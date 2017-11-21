@@ -27,8 +27,8 @@ export function loginWithGoogle() {
     })
 }
 
-export function resetPassword(email) {
-  return firebaseAuth().sendPasswordResetEmail(email)
+export function resetPassword(email, actionCodeSettings) {
+  return firebaseAuth().sendPasswordResetEmail(email, actionCodeSettings)
 }
 
 export function saveUser(user) {
