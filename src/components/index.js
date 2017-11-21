@@ -114,7 +114,6 @@ export default class App extends Component {
             <div className="row">
               <Switch>
                 <Route path="/" exact component={Home} />
-                <Route path="/user" component={User} />
                 <PublicRoute
                   authed={this.state.authed}
                   path="/login"
@@ -129,6 +128,11 @@ export default class App extends Component {
                   authed={this.state.authed}
                   path="/dashboard"
                   component={Dashboard}
+                />
+                <PrivateRoute
+                  authed={this.state.authed}
+                  path="/user"
+                  component={User}
                 />
                 <Route render={() => <h3>No Match</h3>} />
               </Switch>
