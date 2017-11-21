@@ -2,8 +2,8 @@ import React from 'react';
 
 const Article = ({ article }) => (
   <div>
-    <h4>{article.title}</h4>
-    <li>{article.summaryText}</li>
+    <a href={article.url} className="article-link">{article.title}</a>
+    <li className="summary-text">{article.summaryText}</li>
   </div>
 );
 
