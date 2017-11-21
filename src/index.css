@@ -17,12 +17,11 @@ body {
 
 .source-title {
   margin-left: .5em;
-  vertical-align: middle;
 }
 
 .sourcelogo {
-  width: 2em;
-  height: 2em;
+  width: 2.5em;
+  height: 2.5em;
 }
 
 .source-summary {
@@ -60,8 +59,27 @@ body {
   color: #333;
 }
 
+.article-link:hover {
+  text-decoration: none;
+}
+
 .login-form{
   margin-top: 3em;
+}
+
+.fa-spinner {
+  margin-left: 1em;
+  margin-top: 1em;
+}
+
+.fa-home {
+  color: snow;
+  margin-right: 1em;
+}
+
+.fa-sliders {
+  color: snow;
+  margin-right: .5em;
 }
 
 /* Mobile */
