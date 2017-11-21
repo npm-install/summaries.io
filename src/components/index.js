@@ -1,14 +1,17 @@
-import React, { Component } from 'react'
-import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
-import Login from './Login'
-import Register from './Register'
-import Home from './Home'
-import Dashboard from './protected/Dashboard'
-import { logout } from '../helpers/auth'
-import { firebaseAuth } from '../config/constants'
-import AppBar from 'material-ui/AppBar'
-import FlatButton from 'material-ui/FlatButton'
-import User from './User'
+import React, { Component } from "react";
+import { Route, BrowserRouter, Link, Redirect, Switch } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
+import Home from "./Home";
+import Dashboard from "./protected/Dashboard";
+import { logout } from "../helpers/auth";
+import { firebaseAuth } from "../config/constants";
+import AppBar from "material-ui/AppBar";
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import User from "./User";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -19,11 +22,11 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
+            to={{ pathname: "/login", state: { from: props.location } }}
           />
         )}
     />
-  )
+  );
 }
 
 function PublicRoute({ component: Component, authed, ...rest }) {
@@ -37,70 +40,82 @@ function PublicRoute({ component: Component, authed, ...rest }) {
           <Redirect to="/dashboard" />
         )}
     />
-  )
+  );
 }
 
 export default class App extends Component {
   state = {
     authed: false,
     loading: true
-  }
+  };
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       if (user) {
         this.setState({
           authed: true,
           loading: false
-        })
+        });
       } else {
         this.setState({
           authed: false,
           loading: false
-        })
+        });
       }
-    })
+    });
   }
   componentWillUnmount() {
-    this.removeListener()
+    this.removeListener();
   }
   render() {
-    console.log(this.state)
+    console.log(this.state);
 
     const authButtons = this.state.authed ? (
-      <FlatButton
-        label="Logout"
-        onClick={() => {
-          logout()
-        }}
-        style={{ color: '#fff' }}
-      />
+      <IconMenu
+      iconButtonElement={
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
+      }
+      anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      targetOrigin={{ horizontal: "right", vertical: "top" }}
+      iconStyle={{color:'#fff'}}
+    >
+      <MenuItem primaryText="View Past Summaries" />
+      <MenuItem primaryText="Settings" />
+      <MenuItem primaryText="Sign Out" onClick={() => {logout();}} />
+    </IconMenu>
     ) : (
-      <span>
-        <Link to="/login">
-          <FlatButton label="Login" style={{ color: '#fff' }} />
-        </Link>
-        <Link to="/register">
-          <FlatButton label="Register" style={{ color: '#fff' }} />
-        </Link>
-      </span>
-    )
+      <IconMenu
+      iconButtonElement={
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
+      }
+      anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      targetOrigin={{ horizontal: "right", vertical: "top" }}
+      iconStyle={{color:'#fff'}}
+    >
+      <Link to="/login" style={{textDecoration: 'none'}}><MenuItem primaryText="Sign In" /></Link>
+      <Link to="/register" style={{textDecoration: 'none'}}><MenuItem primaryText="Sign Up" /></Link>
+    </IconMenu>
+    );
 
     const topbarButtons = (
       <div>
         <Link to="/">
-          <FlatButton label="Home" style={{ color: '#fff' }} />
+          <i className="fa fa-home fa-2x" aria-hidden="true" />
         </Link>
         <Link to="/dashboard">
-          <FlatButton label="dashboard" style={{ color: '#fff' }} />
+          <i className="fa fa-sliders fa-2x" aria-hidden="true" />
         </Link>
         <Link to="/user">
           <FlatButton label="Account" style={{ color: '#fff' }} />
         </Link>
         {authButtons}
       </div>
-    )
+    );
     return this.state.loading === true ? (
-      <h1>Loading</h1>
+      <i className="fa fa-spinner fa-4x" aria-hidden="true" />
     ) : (
       <BrowserRouter>
         <div>
@@ -108,10 +123,12 @@ export default class App extends Component {
             title="summaries.io"
             iconElementRight={topbarButtons}
             iconStyleRight={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '0'
+              display: "flex",
+              alignItems: "center",
+              marginTop: ".5em"
             }}
+            style={{fontFamily: 'Noto Sans, sans-serif'}}
+            showMenuIconButton={false}
           />
           <div className="container d-flex justify-content-center">
             <div className="row">
@@ -139,6 +156,6 @@ export default class App extends Component {
           </div>
         </div>
       </BrowserRouter>
-    )
+    );
   }
 }

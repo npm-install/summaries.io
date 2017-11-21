@@ -42,6 +42,7 @@ export default class Login extends Component {
       <form
         style={style.container}
         onSubmit={event => this.handleSubmit(event)}
+        className="login-form"
       >
         <h3>Login</h3>
         <TextField
