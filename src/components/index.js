@@ -7,7 +7,6 @@ import Dashboard from './protected/Dashboard'
 import { logout } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
-import FlatButton from 'material-ui/FlatButton'
 import User from './User'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
@@ -57,7 +56,7 @@ export default class App extends Component {
       if (user) {
         // Let's retrieve the user's information
         var userRef = db.collection('users')
-        var query = userRef
+        userRef
           .where('uid', '==', user.uid)
           .get()
           .then(snapshot => {
@@ -98,7 +97,7 @@ export default class App extends Component {
         iconStyle={{ color: '#fff' }}
       >
         <MenuItem primaryText="View Past Summaries" />
-        <Link to="/user" style={{ textDecoration: 'none' }}>
+        <Link to="/account" style={{ textDecoration: 'none' }}>
           <MenuItem primaryText="My Profile" />
         </Link>
         <MenuItem

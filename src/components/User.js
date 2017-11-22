@@ -1,6 +1,7 @@
 import React from 'react'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
+import { RaisedButton } from 'material-ui'
 
 const style = {
   height: 100,
@@ -27,6 +28,12 @@ export default function User(props) {
         <div>
           <TextField hintText={`Email Address`} defaultValue={email} />
         </div>
+        <RaisedButton
+          label="Save"
+          primary={true}
+          style={style.raisedBtn}
+          type="submit"
+        />
         <div>{JSON.stringify(props.user)}</div>
       </span>
     </div>
