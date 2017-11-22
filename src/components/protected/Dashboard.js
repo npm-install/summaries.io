@@ -24,7 +24,7 @@ export default class Dashboard extends Component {
   componentDidMount() {
     let arr = [];
     db
-      .collection("sources")
+      .collection('sources')
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(source) {
@@ -57,7 +57,7 @@ export default class Dashboard extends Component {
          <div className="column-left">
           {this.state.sources.map(source => (
             <div key={source.id}>
-              <Card className="news-card" style={{zDepth: 2}}>
+              <Card className="news-card" style={{borderRadius: '10px'}}>
                 <CardHeader
                   title={source.name}
                   avatar={source.logo}
@@ -74,7 +74,10 @@ export default class Dashboard extends Component {
           </div>
 
           <div className="column-right">
-
+            <Paper
+              style={{width: '800px', height: '3000px', borderRadius: '20px'}}
+              zDepth={3}
+            ></Paper>
           </div>
       </div>
 

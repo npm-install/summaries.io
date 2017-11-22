@@ -78,12 +78,21 @@ body {
   margin-right: .5em;
 }
 
+.news-content {
+  display: inline-flex;
+}
+
 .column-left {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin-top: 10em;
   width: 50%;
+}
+
+.column-right {
+  margin-top: 10em;
+  margin-left: 5em;
 }
 
 .news-grid{
