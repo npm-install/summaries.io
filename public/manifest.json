@@ -1,0 +1,21 @@
+{
+  "name": "summaries.io",
+  "short_name": "smmr.io",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#00BFD2",
+  "background_color": "#fff",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src":"favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -9,8 +9,13 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
+<<<<<<< HEAD
     "aws-sdk": "^2.154.0",
     "firebase-admin": "~5.4.2",
+=======
+    "axios": "^0.17.1",
+    "firebase-admin": "^5.5.0",
+>>>>>>> master
     "firebase-functions": "^0.7.1",
     "fs": "^0.0.1-security",
     "nodemailer": "^4.4.0",

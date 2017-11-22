@@ -28,7 +28,7 @@ export default class Register extends Component {
   };
   render() {
     return (
-      <form onSubmit={this.handleSubmit} style={style.container}>
+      <form onSubmit={this.handleSubmit} style={style.container} className="login-form">
         <h3>Register</h3>
         <TextField
           hintText="Enter your Email"
