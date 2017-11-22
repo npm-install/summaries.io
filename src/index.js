@@ -4,9 +4,16 @@ import App from './components'
 import registerServiceWorker from './registerServiceWorker'
 import './index.css'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: '#FF9800'
+  },
+});
 
 ReactDOM.render(
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={muiTheme}>
     <App />
   </MuiThemeProvider>,
   document.getElementById('root')

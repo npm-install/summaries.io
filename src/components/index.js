@@ -125,7 +125,7 @@ export default class App extends Component {
               alignItems: "center",
               marginTop: ".5em"
             }}
-            style={{fontFamily: 'Noto Sans, sans-serif'}}
+            style={{fontFamily: 'Noto Sans, sans-serif', position: 'fixed'}}
             showMenuIconButton={false}
           />
           <div className="container d-flex justify-content-center">
