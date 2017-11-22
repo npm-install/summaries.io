@@ -46,8 +46,8 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   )
 })
 
-import AWS from 'aws-sdk'
-import fs from 'fs'
+const AWS = require('aws-sdk')
+const fs = require('fs')
 const credentials = new AWS.Credentials(
   process.env.REACT_APP_awsKey,
   process.env.REACT_APP_awsSecret
@@ -60,7 +60,8 @@ const Polly = new AWS.Polly({
 
 let params = {
   Text: `Testing this text, and that was a comma
-    Mr. Adrien so we can hear how the pauses work`,
+    Mr. Adrien so we can hear how the pauses work. Now this
+    is the final sentence of our test.`,
   OutputFormat: 'mp3',
   VoiceId: 'Joanna'
 }
