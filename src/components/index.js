@@ -9,6 +9,11 @@ import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
 import FlatButton from 'material-ui/FlatButton'
 import User from './User'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import CircularProgress from 'material-ui/CircularProgress'
 import { db } from '../config/constants'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
@@ -82,40 +87,60 @@ export default class App extends Component {
     console.log(this.state)
 
     const authButtons = this.state.authed ? (
-      <FlatButton
-        label="Logout"
-        onClick={() => {
-          logout()
-        }}
-        style={{ color: '#fff' }}
-      />
+      <IconMenu
+        iconButtonElement={
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        }
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        iconStyle={{ color: '#fff' }}
+      >
+        <MenuItem primaryText="View Past Summaries" />
+        <Link to="/user" style={{ textDecoration: 'none' }}>
+          <MenuItem primaryText="My Profile" />
+        </Link>
+        <MenuItem
+          primaryText="Sign out"
+          onClick={() => {
+            logout()
+          }}
+        />
+      </IconMenu>
     ) : (
-      <span>
-        <Link to="/login">
-          <FlatButton label="Login" style={{ color: '#fff' }} />
+      <IconMenu
+        iconButtonElement={
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        }
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        iconStyle={{ color: '#fff' }}
+      >
+        <Link to="/login" style={{ textDecoration: 'none' }}>
+          <MenuItem primaryText="Sign In" />
         </Link>
-        <Link to="/register">
-          <FlatButton label="Register" style={{ color: '#fff' }} />
+        <Link to="/register" style={{ textDecoration: 'none' }}>
+          <MenuItem primaryText="Sign Up" />
         </Link>
-      </span>
+      </IconMenu>
     )
 
     const topbarButtons = (
       <div>
         <Link to="/">
-          <FlatButton label="Home" style={{ color: '#fff' }} />
+          <i className="fa fa-home fa-2x" aria-hidden="true" />
         </Link>
         <Link to="/dashboard">
-          <FlatButton label="Dashboard" style={{ color: '#fff' }} />
-        </Link>
-        <Link to="/account">
-          <FlatButton label="Account" style={{ color: '#fff' }} />
+          <i className="fa fa-sliders fa-2x" aria-hidden="true" />
         </Link>
         {authButtons}
       </div>
     )
     return this.state.loading === true ? (
-      <h1>Loading</h1>
+      <CircularProgress size={80} thickness={5} />
     ) : (
       <BrowserRouter>
         <div>
@@ -125,8 +150,10 @@ export default class App extends Component {
             iconStyleRight={{
               display: 'flex',
               alignItems: 'center',
-              marginTop: '0'
+              marginTop: '.5em'
             }}
+            style={{ fontFamily: 'Noto Sans, sans-serif' }}
+            showMenuIconButton={false}
           />
           <div className="container d-flex justify-content-center">
             <div className="row">
