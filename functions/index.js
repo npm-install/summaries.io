@@ -10,15 +10,6 @@ const axios = require('axios')
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
 
-const config = {
-  apiKey: 'AIzaSyAkc2x4ZAXRgOQHGkf6KGYyLTHz47PBqxs',
-  authDomain: 'summary-73ccc.firebaseapp.com',
-  databaseURL: 'https://summary-73ccc.firebaseio.com',
-  projectId: 'summary-73ccc',
-  storageBucket: 'summary-73ccc.appspot.com',
-  messagingSenderId: '494672399890'
-}
-
 function dateMaker() {
   let date2 = Date().split(' ')
   const monthToNum = {
@@ -85,31 +76,37 @@ const credentials = new AWS.Credentials(
   process.env.REACT_APP_awsSecret
 )
 
-const Polly = new AWS.Polly({
-  signatureVersion: 'v4',
-  region: 'us-east-1'
-})
-
-let params = {
-  Text: `Testing this text, and that was a comma
-    Mr. Adrien so we can hear how the pauses work. Now this
-    is the final sentence of our test.`,
-  OutputFormat: 'mp3',
-  VoiceId: 'Joanna'
-}
-
 exports.polly = functions.https.onRequest((req, res) => {
+  const Polly = new AWS.Polly({
+    signatureVersion: 'v4',
+    region: 'us-east-1'
+  })
+
+  const articles = admin
+    .firestore()
+    .collection('articles')
+    .where('summaries', '==', true)
+  console.log(articles)
+  articles.get().then(article => article.forEach(art => console.log(art)))
+
+  let params = {
+    Text: `get the summaries`,
+    OutputFormat: 'mp3',
+    VoiceId: 'Joanna'
+  }
+
   Polly.synthesizeSpeech(params, (err, data) => {
-    if (err) console.err(err.stack)
+    if (err) console.error(err.stack)
     else if (data) {
       if (data.AudioStream instanceof Buffer) {
         fs.writeFile('./speech.mp3', data.AudioStream, err => {
-          if (err) return console.err(err)
+          if (err) return console.error(err)
           console.log('The file was saved!')
         })
       }
     }
   })
+})
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
