@@ -78,11 +78,12 @@ body {
   margin-right: .5em;
 }
 
-.news-content {
+.column-left {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin-top: 10em;
+  width: 50%;
 }
 
 .news-grid{
@@ -100,12 +101,9 @@ body {
 }
 
 .news-card {
-  width: 8em;
-}
-
-.news-name {
-  margin-top: .8em;
-  font-size: 1em;
+  width: 20em;
+  margin-bottom: 1em;
+  margin-right: 1em;
 }
 
 .adrien-useless-stuff {

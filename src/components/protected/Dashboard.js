@@ -1,5 +1,10 @@
-import React, { Component } from 'react'
-import { db } from '../../config/constants'
+import React, { Component } from 'react';
+import { db } from '../../config/constants';
+import {
+  Card,
+  CardHeader,
+  CardText
+} from 'material-ui/Card';
 import Paper from 'material-ui/Paper'
 
 export default class Dashboard extends Component {
@@ -9,26 +14,26 @@ export default class Dashboard extends Component {
       // value: '',
       // message: '',
       // timestamp: '',
-      sources: []
+      sources: [],
+      expanded: false
     };
     // this.handleChange = this.handleChange.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
-    let arr = []
+    let arr = [];
     db
-      .collection('sources')
+      .collection("sources")
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(source) {
-          arr.push(source.data())
-        })
+          arr.push(source.data());
+        });
       })
       .then(() => {
-        this.setState({sources: arr})
-      })
-
+        this.setState({ sources: arr });
+      });
   }
 
   // handleChange(event) {
@@ -48,22 +53,30 @@ export default class Dashboard extends Component {
     return (
       <div>
         <div className="news-content">
-          {this.state.sources.length &&
-            this.state.sources.map(source => (
-              <div key={source.id}>
-                <Paper
-                  zDepth={2}
-                  style={{ marginRight: '1em', marginBottom: '1em' }}
-                  className="news-card"
-                >
-                  <div className="news-grid">
-                    <img src={source.logo} alt={source.name} className="news-logo" />
-                    <p className="news-name">{source.name}</p>
-                  </div>
-                </Paper>
-              </div>
-            ))}
-        </div>
+
+         <div className="column-left">
+          {this.state.sources.map(source => (
+            <div key={source.id}>
+              <Card className="news-card" style={{zDepth: 2}}>
+                <CardHeader
+                  title={source.name}
+                  avatar={source.logo}
+                  actAsExpander={true}
+                  showExpandableButton={true}
+                  titleStyle={{fontSize: '1em', fontFamily: 'Noto Sans, sans-serif', marginTop: '.5em'}}
+                />
+                <CardText expandable={true} style={{width: '20em'}}>
+                  <p>{source.description}</p>
+                </CardText>
+              </Card>
+            </div>
+          ))}
+          </div>
+
+          <div className="column-right">
+
+          </div>
+      </div>
 
         {/* <div className="adrien-useless-stuff">
           Dashboard. This is a protected route. You can only see this if you're
