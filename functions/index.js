@@ -101,7 +101,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'nhl-news',
     'politico',
     'polygon',
-    'reddit-r-all',
+    // 'reddit-r-all',
     'reuters',
     'techcrunch',
     'the-hill',
@@ -128,9 +128,11 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .get(newsUrl)
       .then(response => {
         articles = response.data.articles.map(async article => {
-          const sumsObj = await axios.get(
-            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`
-          )
+          const sumsObj = await axios
+            .get(
+              `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`
+            )
+            .catch(console.error)
           const updatedArticle = Object.assign({}, article, {
             summary: sumsObj.data.sm_api_content || 'API MAXED OUT'
           })
@@ -154,11 +156,19 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 
         batch
           .commit()
-          .then(console.log)
+          .then(() => {
+            console.log(
+              'added ' +
+                articles.length +
+                ' from ' +
+                newsSource +
+                ' to Firestore'
+            )
+          })
           .catch(console.error)
       })
       .catch(console.error)
   })
 
-  response.json({ done: 'done' })
+  response.send('function is running, see console.log on the server')
 })
