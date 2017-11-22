@@ -113,7 +113,7 @@ export default class App extends Component {
       </div>
     );
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} />
+      <CircularProgress size={80} thickness={5} style={{marginLeft:'50em', marginTop:'50em'}}/>
     ) : (
       <BrowserRouter>
         <div>
