@@ -8,7 +8,8 @@
       "url": "http://abcnews.go.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://abcnews.go.com&size=70..120..200"
     },
     {
       "id": "al-jazeera-english",
@@ -18,7 +19,8 @@
       "url": "http://www.aljazeera.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.aljazeera.com&size=70..120..200"
     },
     {
       "id": "ars-technica",
@@ -28,7 +30,8 @@
       "url": "http://arstechnica.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://arstechnica.com&size=70..120..200"
     },
     {
       "id": "associated-press",
@@ -38,7 +41,8 @@
       "url": "https://apnews.com/",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://apnews.com/&size=70..120..200"
     },
     {
       "id": "axios",
@@ -48,7 +52,8 @@
       "url": "https://www.axios.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.axios.com&size=70..120..200"
     },
     {
       "id": "bleacher-report",
@@ -58,7 +63,8 @@
       "url": "http://www.bleacherreport.com",
       "category": "sport",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.bleacherreport.com&size=70..120..200"
     },
     {
       "id": "bloomberg",
@@ -68,17 +74,8 @@
       "url": "http://www.bloomberg.com",
       "category": "business",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "breitbart-news",
-      "name": "Breitbart News",
-      "description":
-        "Syndicated news and opinion website providing continuously updated headlines to top news and analysis sources.",
-      "url": "http://www.breitbart.com",
-      "category": "politics",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.bloomberg.com&size=70..120..200"
     },
     {
       "id": "business-insider",
@@ -88,7 +85,8 @@
       "url": "http://www.businessinsider.com",
       "category": "business",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.businessinsider.com&size=70..120..200"
     },
     {
       "id": "buzzfeed",
@@ -98,7 +96,8 @@
       "url": "https://www.buzzfeed.com",
       "category": "entertainment",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.buzzfeed.com&size=70..120..200"
     },
     {
       "id": "cbs-news",
@@ -108,7 +107,8 @@
       "url": "http://www.cbsnews.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.cbsnews.com&size=70..120..200"
     },
     {
       "id": "cnbc",
@@ -118,7 +118,8 @@
       "url": "http://www.cnbc.com",
       "category": "business",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.cnbc.com&size=70..120..200"
     },
     {
       "id": "cnn",
@@ -128,7 +129,8 @@
       "url": "http://us.cnn.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://us.cnn.com&size=70..120..200"
     },
     {
       "id": "crypto-coins-news",
@@ -138,7 +140,8 @@
       "url": "https://www.cryptocoinsnews.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.cryptocoinsnews.com&size=70..120..200"
     },
     {
       "id": "engadget",
@@ -148,7 +151,8 @@
       "url": "https://www.engadget.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.engadget.com&size=70..120..200"
     },
     {
       "id": "entertainment-weekly",
@@ -158,7 +162,8 @@
       "url": "http://www.ew.com",
       "category": "entertainment",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.ew.com&size=70..120..200"
     },
     {
       "id": "espn",
@@ -168,17 +173,8 @@
       "url": "http://espn.go.com",
       "category": "sport",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "espn-cric-info",
-      "name": "ESPN Cric Info",
-      "description":
-        "ESPN Cricinfo provides the most comprehensive cricket coverage available including live ball-by-ball commentary, news, unparalleled statistics, quality editorial comment and analysis.",
-      "url": "http://www.espncricinfo.com/",
-      "category": "sport",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://espn.go.com&size=70..120..200"
     },
     {
       "id": "fortune",
@@ -187,37 +183,8 @@
       "url": "http://fortune.com",
       "category": "business",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "fox-news",
-      "name": "Fox News",
-      "description":
-        "Breaking News, Latest News and Current News from FOXNews.com. Breaking news and video. Latest Current News: U.S., World, Entertainment, Health, Business, Technology, Politics, Sports.",
-      "url": "http://www.foxnews.com",
-      "category": "general",
-      "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "fox-sports",
-      "name": "Fox Sports",
-      "description":
-        "Find live scores, player and team news, videos, rumors, stats, standings, schedules and fantasy games on FOX Sports.",
-      "url": "http://www.foxsports.com",
-      "category": "sport",
-      "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "google-news",
-      "name": "Google News",
-      "description":
-        "Comprehensive, up-to-date news coverage, aggregated from sources all over the world by Google News.",
-      "url": "https://news.google.com",
-      "category": "general",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://fortune.com&size=70..120..200"
     },
     {
       "id": "hacker-news",
@@ -227,7 +194,8 @@
       "url": "https://news.ycombinator.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://news.ycombinator.com&size=70..120..200"
     },
     {
       "id": "ign",
@@ -237,7 +205,8 @@
       "url": "http://www.ign.com",
       "category": "gaming",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.ign.com&size=70..120..200"
     },
     {
       "id": "mashable",
@@ -247,17 +216,8 @@
       "url": "http://mashable.com",
       "category": "entertainment",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "medical-news-today",
-      "name": "Medical News Today",
-      "description":
-        "Medical news and health news headlines posted throughout the day, every day.",
-      "url": "http://www.medicalnewstoday.com",
-      "category": "health-and-medical",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://mashable.com&size=70..120..200"
     },
     {
       "id": "msnbc",
@@ -267,17 +227,8 @@
       "url": "http://www.msnbc.com",
       "category": "general",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "mtv-news",
-      "name": "MTV News",
-      "description":
-        "The ultimate news source for music, celebrity, entertainment, movies, and current events on the web. It's pop culture on steroids.",
-      "url": "http://www.mtv.com/news",
-      "category": "music",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.msnbc.com&size=70..120..200"
     },
     {
       "id": "national-geographic",
@@ -287,7 +238,8 @@
       "url": "http://news.nationalgeographic.com",
       "category": "science-and-nature",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://news.nationalgeographic.com&size=70..120..200"
     },
     {
       "id": "nbc-news",
@@ -297,47 +249,8 @@
       "url": "http://www.nbcnews.com",
       "category": "general",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "new-scientist",
-      "name": "New Scientist",
-      "description":
-        "Breaking science and technology news from around the world. Exclusive stories and expert analysis on space, technology, health, physics, life and Earth.",
-      "url": "https://www.newscientist.com/section/news",
-      "category": "science-and-nature",
-      "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "newsweek",
-      "name": "Newsweek",
-      "description":
-        "Newsweek provides in-depth analysis, news and opinion about international issues, technology, business, culture and politics.",
-      "url": "http://www.newsweek.com",
-      "category": "general",
-      "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "new-york-magazine",
-      "name": "New York Magazine",
-      "description":
-        "NYMAG and New York magazine cover the new, the undiscovered, the next in politics, culture, food, fashion, and behavior nationally, through a New York lens.",
-      "url": "http://nymag.com",
-      "category": "general",
-      "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "next-big-future",
-      "name": "Next Big Future",
-      "description":
-        "Coverage of science and technology that have the potential for disruption, and analysis of plans, policies, and technology that enable radical improvement.",
-      "url": "https://www.nextbigfuture.com",
-      "category": "science-and-nature",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nbcnews.com&size=70..120..200"
     },
     {
       "id": "nfl-news",
@@ -347,7 +260,8 @@
       "url": "http://www.nfl.com/news",
       "category": "sport",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nfl.com/news&size=70..120..200"
     },
     {
       "id": "nhl-news",
@@ -357,7 +271,8 @@
       "url": "https://www.nhl.com/news",
       "category": "sport",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.nhl.com/news&size=70..120..200"
     },
     {
       "id": "politico",
@@ -367,7 +282,8 @@
       "url": "https://www.politico.com",
       "category": "politics",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.politico.com&size=70..120..200"
     },
     {
       "id": "polygon",
@@ -377,17 +293,8 @@
       "url": "http://www.polygon.com",
       "category": "gaming",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "recode",
-      "name": "Recode",
-      "description":
-        "Get the latest independent tech news, reviews and analysis from Recode with the most informed and respected journalists in technology and media.",
-      "url": "http://www.recode.net",
-      "category": "technology",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.polygon.com&size=70..120..200"
     },
     {
       "id": "reddit-r-all",
@@ -397,7 +304,8 @@
       "url": "https://www.reddit.com/r/all",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.reddit.com/r/all&size=70..120..200"
     },
     {
       "id": "reuters",
@@ -407,7 +315,8 @@
       "url": "http://www.reuters.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.reuters.com&size=70..120..200"
     },
     {
       "id": "techcrunch",
@@ -417,17 +326,8 @@
       "url": "https://techcrunch.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "techradar",
-      "name": "TechRadar",
-      "description":
-        "The latest technology news and reviews, covering computing, home entertainment systems, gadgets and more.",
-      "url": "http://www.techradar.com",
-      "category": "technology",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://techcrunch.com&size=70..120..200"
     },
     {
       "id": "the-hill",
@@ -437,7 +337,8 @@
       "url": "http://thehill.com",
       "category": "politics",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://thehill.com&size=70..120..200"
     },
     {
       "id": "the-huffington-post",
@@ -447,7 +348,8 @@
       "url": "http://www.huffingtonpost.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.huffingtonpost.com&size=70..120..200"
     },
     {
       "id": "the-new-york-times",
@@ -457,17 +359,8 @@
       "url": "http://www.nytimes.com",
       "category": "general",
       "language": "en",
-      "country": "us"
-    },
-    {
-      "id": "the-next-web",
-      "name": "The Next Web",
-      "description":
-        "The Next Web is one of the world’s largest online publications that delivers an international perspective on the latest news about Internet technology, business and culture.",
-      "url": "http://thenextweb.com",
-      "category": "technology",
-      "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nytimes.com&size=70..120..200"
     },
     {
       "id": "the-verge",
@@ -477,7 +370,8 @@
       "url": "http://www.theverge.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.theverge.com&size=70..120..200"
     },
     {
       "id": "the-wall-street-journal",
@@ -487,7 +381,8 @@
       "url": "http://www.wsj.com",
       "category": "business",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.wsj.com&size=70..120..200"
     },
     {
       "id": "the-washington-post",
@@ -497,7 +392,8 @@
       "url": "https://www.washingtonpost.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.washingtonpost.com&size=70..120..200"
     },
     {
       "id": "time",
@@ -507,7 +403,8 @@
       "url": "http://time.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://time.com&size=70..120..200"
     },
     {
       "id": "usa-today",
@@ -517,7 +414,8 @@
       "url": "http://www.usatoday.com/news",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.usatoday.com/news&size=70..120..200"
     },
     {
       "id": "vice-news",
@@ -527,7 +425,8 @@
       "url": "https://news.vice.com",
       "category": "general",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://news.vice.com&size=70..120..200"
     },
     {
       "id": "wired",
@@ -537,7 +436,8 @@
       "url": "https://www.wired.com",
       "category": "technology",
       "language": "en",
-      "country": "us"
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.wired.com&size=70..120..200"
     }
   ]
 }
