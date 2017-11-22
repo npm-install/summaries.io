@@ -1,5 +1,5 @@
 const functions = require('firebase-functions')
-
+const Storage = require('@google-cloud/storage')
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -8,6 +8,7 @@ const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 
 const admin = require('firebase-admin')
+
 admin.initializeApp(functions.config().firebase)
 
 function dateMaker() {
@@ -82,30 +83,41 @@ exports.polly = functions.https.onRequest((req, res) => {
     region: 'us-east-1'
   })
 
-  const articles = admin
+  // const storageRef = firebase.storage().ref()
+  // const summaries = storageRef.child('summaries')
+  const date = dateMaker()
+
+  const articleRef = admin
     .firestore()
-    .collection('articles')
-    .where('summaries', '==', true)
-  console.log(articles)
-  articles.get().then(article => article.forEach(art => console.log(art)))
-
-  let params = {
-    Text: `get the summaries`,
-    OutputFormat: 'mp3',
-    VoiceId: 'Joanna'
-  }
-
-  Polly.synthesizeSpeech(params, (err, data) => {
-    if (err) console.error(err.stack)
-    else if (data) {
-      if (data.AudioStream instanceof Buffer) {
-        fs.writeFile('./speech.mp3', data.AudioStream, err => {
-          if (err) return console.error(err)
-          console.log('The file was saved!')
+    .collection(`sources/bloomberg/days/${date}/articles`)
+    .get()
+    .then(querySnapshot =>
+      querySnapshot.forEach(async doc => {
+        let params = {
+          Text: doc.data().summary,
+          OutputFormat: 'mp3',
+          VoiceId: 'Joanna'
+        }
+        console.log(doc.data().title)
+        return Polly.synthesizeSpeech(params, (err, data) => {
+          if (err) console.error(err.stack)
+          else if (data) {
+            if (data.AudioStream instanceof Buffer) {
+              fs.writeFile('./speech.mp3', data.AudioStream, err => {
+                if (err) return console.error(err)
+                console.log('The file was saved!')
+              })
+            }
+          }
         })
-      }
-    }
-  })
+      })
+    )
+  // console.log('articleRef', articleRef)
+  // let params = {
+  //   Text: `get the summaries`,
+  //   OutputFormat: 'mp3',
+  //   VoiceId: 'Joanna'
+  // }
 })
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {

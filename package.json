@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@google-cloud/storage": "^1.4.0",
     "axios": "^0.17.1",
     "eslint-config-fullstack": "^3.0.0",
     "eslint-plugin-react": "^7.4.0",
