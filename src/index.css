@@ -82,28 +82,30 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 5em;
+  margin-top: 10em;
 }
 
 .news-grid{
-  display: inline-flex;
-  padding: 1em;
+  padding-top: 2em;
+  padding-bottom: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
   font-family: 'Noto Sans', sans-serif;
+  text-align: center;
 }
 
 .news-logo {
-  width: 5em;
-  height: 5em;
+  width: 4em;
+  height: 4em;
 }
 
 .news-card {
-  width: 25em;
+  width: 8em;
 }
 
 .news-name {
   margin-top: .8em;
-  margin-left: 1em;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 .adrien-useless-stuff {
