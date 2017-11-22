@@ -16,13 +16,21 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    db.doc("user_input/test_inputs").onSnapshot(doc => {
-      const data = doc.data();
-      this.setState({
-        message: data.value || "",
-        timestamp: data.timestamp || ""
+    // db.doc("user_input/test_inputs").onSnapshot(doc => {
+    //   const data = doc.data();
+    //   this.setState({
+    //     message: data.value || "",
+    //     timestamp: data.timestamp || ""
+    //   });
+    // });
+    db
+      .collection('users/MSP2LuactJebx5sO4KXE/emails/2017-11-22/articles')
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          console.log(doc.id, ' => ', doc.data());
+        });
       });
-    });
   }
 
   handleChange(event) {
@@ -45,7 +53,11 @@ export default class Dashboard extends Component {
           {gadgets &&
             gadgets.map(gad => (
               <div key={gad.name}>
-                <Paper zDepth={2} style={{marginRight: '1em', marginBottom: '1em'}} className="news-card">
+                <Paper
+                  zDepth={2}
+                  style={{ marginRight: "1em", marginBottom: "1em" }}
+                  className="news-card"
+                >
                   <div className="news-grid">
                     <img src={gad.image} alt={gad.name} className="news-logo" />
                     <p className="news-name">{gad.name}</p>
