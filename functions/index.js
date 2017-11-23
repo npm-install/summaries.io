@@ -155,22 +155,40 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
         batch.set(dayRef.doc(article.title), { ...article })
       })
 
-      // console.log(batch)
-
       batch
         .commit()
         .then(console.log)
         .catch(console.error)
-
-      // admin
-      //   .firestore()
-      //   .collection('sources')
-      //   .doc(newsSource)
-      //   .collection('days')
-      //   .doc(date)
-      //   .set({ ...data[0] })
-      //   .then(console.log)
       response.json(data)
     })
     .catch(console.error)
+})
+
+exports.makeEmails = functions.https.onRequest((request, response) => {
+  const rec = admin
+    .firestore()
+    .collection('users')
+    // Here add a where query to filter by requested time
+    // For now, let's generate Adrien's email
+    .where('email', '==', 'q@q.com')
+    .get()
+    .then(function(users) {
+      users.forEach(function(user) {
+        admin
+          .firestore()
+          .collection('users')
+          .doc(user.id)
+          .collection('subscriptions')
+          .get()
+          .then(subscriptions => {
+            subscriptions.forEach(subscription => {
+              console.log(subscription.id)
+            })
+          })
+          .catch(console.error)
+      })
+    })
+    .catch(console.error)
+
+  response.send('hello')
 })

@@ -1,0 +1,443 @@
+{
+  "sources": [
+    {
+      "id": "abc-news",
+      "name": "ABC News",
+      "description":
+        "Your trusted source for breaking news, analysis, exclusive interviews, headlines, and videos at ABCNews.com.",
+      "url": "http://abcnews.go.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://abcnews.go.com&size=70..120..200"
+    },
+    {
+      "id": "al-jazeera-english",
+      "name": "Al Jazeera English",
+      "description":
+        "News, analysis from the Middle East and worldwide, multimedia and interactives, opinions, documentaries, podcasts, long reads and broadcast schedule.",
+      "url": "http://www.aljazeera.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.aljazeera.com&size=70..120..200"
+    },
+    {
+      "id": "ars-technica",
+      "name": "Ars Technica",
+      "description":
+        "The PC enthusiast's resource. Power users and the tools they love, without computing religion.",
+      "url": "http://arstechnica.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://arstechnica.com&size=70..120..200"
+    },
+    {
+      "id": "associated-press",
+      "name": "Associated Press",
+      "description":
+        "The AP delivers in-depth coverage on the international, politics, lifestyle, business, and entertainment news.",
+      "url": "https://apnews.com/",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://apnews.com/&size=70..120..200"
+    },
+    {
+      "id": "axios",
+      "name": "Axios",
+      "description":
+        "Axios are a new media company delivering vital, trustworthy news and analysis in the most efficient, illuminating and shareable ways possible.",
+      "url": "https://www.axios.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.axios.com&size=70..120..200"
+    },
+    {
+      "id": "bleacher-report",
+      "name": "Bleacher Report",
+      "description":
+        "Sports journalists and bloggers covering NFL, MLB, NBA, NHL, MMA, college football and basketball, NASCAR, fantasy sports and more. News, photos, mock drafts, game scores, player profiles and more!",
+      "url": "http://www.bleacherreport.com",
+      "category": "sport",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.bleacherreport.com&size=70..120..200"
+    },
+    {
+      "id": "bloomberg",
+      "name": "Bloomberg",
+      "description":
+        "Bloomberg delivers business and markets news, data, analysis, and video to the world, featuring stories from Businessweek and Bloomberg News.",
+      "url": "http://www.bloomberg.com",
+      "category": "business",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.bloomberg.com&size=70..120..200"
+    },
+    {
+      "id": "business-insider",
+      "name": "Business Insider",
+      "description":
+        "Business Insider is a fast-growing business site with deep financial, media, tech, and other industry verticals. Launched in 2007, the site is now the largest business news site on the web.",
+      "url": "http://www.businessinsider.com",
+      "category": "business",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.businessinsider.com&size=70..120..200"
+    },
+    {
+      "id": "buzzfeed",
+      "name": "Buzzfeed",
+      "description":
+        "BuzzFeed is a cross-platform, global network for news and entertainment that generates seven billion views each month.",
+      "url": "https://www.buzzfeed.com",
+      "category": "entertainment",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.buzzfeed.com&size=70..120..200"
+    },
+    {
+      "id": "cbs-news",
+      "name": "CBS News",
+      "description":
+        "CBS News: dedicated to providing the best in journalism under standards it pioneered at the dawn of radio and television and continue in the digital age.",
+      "url": "http://www.cbsnews.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.cbsnews.com&size=70..120..200"
+    },
+    {
+      "id": "cnbc",
+      "name": "CNBC",
+      "description":
+        "Get latest business news on stock markets, financial & earnings on CNBC. View world markets streaming charts & video; check stock tickers and quotes.",
+      "url": "http://www.cnbc.com",
+      "category": "business",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.cnbc.com&size=70..120..200"
+    },
+    {
+      "id": "cnn",
+      "name": "CNN",
+      "description":
+        "View the latest news and breaking news today for U.S., world, weather, entertainment, politics and health at CNN",
+      "url": "http://us.cnn.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://us.cnn.com&size=70..120..200"
+    },
+    {
+      "id": "crypto-coins-news",
+      "name": "Crypto Coins News",
+      "description":
+        "Providing breaking cryptocurrency news - focusing on Bitcoin, Ethereum, ICOs, blockchain technology, and smart contracts.",
+      "url": "https://www.cryptocoinsnews.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.cryptocoinsnews.com&size=70..120..200"
+    },
+    {
+      "id": "engadget",
+      "name": "Engadget",
+      "description":
+        "Engadget is a web magazine with obsessive daily coverage of everything new in gadgets and consumer electronics.",
+      "url": "https://www.engadget.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.engadget.com&size=70..120..200"
+    },
+    {
+      "id": "entertainment-weekly",
+      "name": "Entertainment Weekly",
+      "description":
+        "Online version of the print magazine includes entertainment news, interviews, reviews of music, film, TV and books, and a special area for magazine subscribers.",
+      "url": "http://www.ew.com",
+      "category": "entertainment",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.ew.com&size=70..120..200"
+    },
+    {
+      "id": "espn",
+      "name": "ESPN",
+      "description":
+        "ESPN has up-to-the-minute sports news coverage, scores, highlights and commentary for NFL, MLB, NBA, College Football, NCAA Basketball and more.",
+      "url": "http://espn.go.com",
+      "category": "sport",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://espn.go.com&size=70..120..200"
+    },
+    {
+      "id": "fortune",
+      "name": "Fortune",
+      "description": "Fortune 500 Daily and Breaking Business News",
+      "url": "http://fortune.com",
+      "category": "business",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://fortune.com&size=70..120..200"
+    },
+    {
+      "id": "hacker-news",
+      "name": "Hacker News",
+      "description":
+        "Hacker News is a social news website focusing on computer science and entrepreneurship. It is run by Paul Graham's investment fund and startup incubator, Y Combinator. In general, content that can be submitted is defined as \"anything that gratifies one's intellectual curiosity\".",
+      "url": "https://news.ycombinator.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://news.ycombinator.com&size=70..120..200"
+    },
+    {
+      "id": "ign",
+      "name": "IGN",
+      "description":
+        "IGN is your site for Xbox One, PS4, PC, Wii-U, Xbox 360, PS3, Wii, 3DS, PS Vita and iPhone games with expert reviews, news, previews, trailers, cheat codes, wiki guides and walkthroughs.",
+      "url": "http://www.ign.com",
+      "category": "gaming",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.ign.com&size=70..120..200"
+    },
+    {
+      "id": "mashable",
+      "name": "Mashable",
+      "description":
+        "Mashable is a global, multi-platform media and entertainment company.",
+      "url": "http://mashable.com",
+      "category": "entertainment",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://mashable.com&size=70..120..200"
+    },
+    {
+      "id": "msnbc",
+      "name": "MSNBC",
+      "description":
+        "Breaking news and in-depth analysis of the headlines, as well as commentary and informed perspectives from The Rachel Maddow Show, Morning Joe & more.",
+      "url": "http://www.msnbc.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.msnbc.com&size=70..120..200"
+    },
+    {
+      "id": "national-geographic",
+      "name": "National Geographic",
+      "description":
+        "Reporting our world daily: original nature and science news from National Geographic.",
+      "url": "http://news.nationalgeographic.com",
+      "category": "science-and-nature",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://news.nationalgeographic.com&size=70..120..200"
+    },
+    {
+      "id": "nbc-news",
+      "name": "NBC News",
+      "description":
+        "Breaking news, videos, and the latest top stories in world news, business, politics, health and pop culture.",
+      "url": "http://www.nbcnews.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nbcnews.com&size=70..120..200"
+    },
+    {
+      "id": "nfl-news",
+      "name": "NFL News",
+      "description":
+        "The official source for NFL news, schedules, stats, scores and more.",
+      "url": "http://www.nfl.com/news",
+      "category": "sport",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nfl.com/news&size=70..120..200"
+    },
+    {
+      "id": "nhl-news",
+      "name": "NHL News",
+      "description":
+        "The most up-to-date breaking hockey news from the official source including interviews, rumors, statistics and schedules.",
+      "url": "https://www.nhl.com/news",
+      "category": "sport",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.nhl.com/news&size=70..120..200"
+    },
+    {
+      "id": "politico",
+      "name": "Politico",
+      "description":
+        "Political news about Congress, the White House, campaigns, lobbyists and issues.",
+      "url": "https://www.politico.com",
+      "category": "politics",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.politico.com&size=70..120..200"
+    },
+    {
+      "id": "polygon",
+      "name": "Polygon",
+      "description":
+        "Polygon is a gaming website in partnership with Vox Media. Our culture focused site covers games, their creators, the fans, trending stories and entertainment news.",
+      "url": "http://www.polygon.com",
+      "category": "gaming",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.polygon.com&size=70..120..200"
+    },
+    {
+      "id": "reddit-r-all",
+      "name": "Reddit /r/all",
+      "description":
+        "Reddit is an entertainment, social news networking service, and news website. Reddit's registered community members can submit content, such as text posts or direct links.",
+      "url": "https://www.reddit.com/r/all",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.reddit.com/r/all&size=70..120..200"
+    },
+    {
+      "id": "reuters",
+      "name": "Reuters",
+      "description":
+        "Reuters.com brings you the latest news from around the world, covering breaking news in business, politics, entertainment, technology, video and pictures.",
+      "url": "http://www.reuters.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.reuters.com&size=70..120..200"
+    },
+    {
+      "id": "techcrunch",
+      "name": "TechCrunch",
+      "description":
+        "TechCrunch is a leading technology media property, dedicated to obsessively profiling startups, reviewing new Internet products, and breaking tech news.",
+      "url": "https://techcrunch.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://techcrunch.com&size=70..120..200"
+    },
+    {
+      "id": "the-hill",
+      "name": "The Hill",
+      "description":
+        "The Hill is a top US political website, read by the White House and more lawmakers than any other site -- vital for policy, politics and election campaigns.",
+      "url": "http://thehill.com",
+      "category": "politics",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://thehill.com&size=70..120..200"
+    },
+    {
+      "id": "the-huffington-post",
+      "name": "The Huffington Post",
+      "description":
+        "The Huffington Post is a politically liberal American online news aggregator and blog that has both localized and international editions founded by Arianna Huffington, Kenneth Lerer, Andrew Breitbart, and Jonah Peretti, featuring columnists.",
+      "url": "http://www.huffingtonpost.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.huffingtonpost.com&size=70..120..200"
+    },
+    {
+      "id": "the-new-york-times",
+      "name": "The New York Times",
+      "description":
+        "The New York Times: Find breaking news, multimedia, reviews & opinion on Washington, business, sports, movies, travel, books, jobs, education, real estate, cars & more at nytimes.com.",
+      "url": "http://www.nytimes.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.nytimes.com&size=70..120..200"
+    },
+    {
+      "id": "the-verge",
+      "name": "The Verge",
+      "description":
+        "The Verge covers the intersection of technology, science, art, and culture.",
+      "url": "http://www.theverge.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.theverge.com&size=70..120..200"
+    },
+    {
+      "id": "the-wall-street-journal",
+      "name": "The Wall Street Journal",
+      "description":
+        "WSJ online coverage of breaking news and current headlines from the US and around the world. Top stories, photos, videos, detailed analysis and in-depth reporting.",
+      "url": "http://www.wsj.com",
+      "category": "business",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.wsj.com&size=70..120..200"
+    },
+    {
+      "id": "the-washington-post",
+      "name": "The Washington Post",
+      "description":
+        "Breaking news and analysis on politics, business, world national news, entertainment more. In-depth DC, Virginia, Maryland news coverage including traffic, weather, crime, education, restaurant reviews and more.",
+      "url": "https://www.washingtonpost.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.washingtonpost.com&size=70..120..200"
+    },
+    {
+      "id": "time",
+      "name": "Time",
+      "description":
+        "Breaking news and analysis from TIME.com. Politics, world news, photos, video, tech reviews, health, science and entertainment news.",
+      "url": "http://time.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://time.com&size=70..120..200"
+    },
+    {
+      "id": "usa-today",
+      "name": "USA Today",
+      "description":
+        "Get the latest national, international, and political news at USATODAY.com.",
+      "url": "http://www.usatoday.com/news",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=http://www.usatoday.com/news&size=70..120..200"
+    },
+    {
+      "id": "vice-news",
+      "name": "Vice News",
+      "description":
+        "Vice News is Vice Media, Inc.'s current affairs channel, producing daily documentary essays and video through its website and YouTube channel. It promotes itself on its coverage of \"under - reported stories\".",
+      "url": "https://news.vice.com",
+      "category": "general",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://news.vice.com&size=70..120..200"
+    },
+    {
+      "id": "wired",
+      "name": "Wired",
+      "description":
+        "Wired is a monthly American magazine, published in print and online editions, that focuses on how emerging technologies affect culture, the economy, and politics.",
+      "url": "https://www.wired.com",
+      "category": "technology",
+      "language": "en",
+      "country": "us",
+      "logo": "https://icons.better-idea.org/icon?url=https://www.wired.com&size=70..120..200"
+    }
+  ]
+}
