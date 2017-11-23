@@ -69,26 +69,45 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 
   // First we retrieve the list of sources
   const newsSources = [
-    // "abc-news",
-    // "al-jazeera-english",
-    // "ars-technica",
-    // "associated-press",
-    // "axios",
-    // "bleacher-report",
-    // "bloomberg",
-    // "business-insider",
-    // "buzzfeed",
-    // "cbs-news",
-    // "cnbc",
-    "cnn"
-    // "crypto-coins-news",
-    // "engadget",
-    // // "entertainment-weekly",
+    "abc-news",
+    "al-jazeera-english",
+    "ars-technica",
+    "associated-press",
+    "axios",
+    "bleacher-report",
+    "bloomberg",
+    "business-insider",
+    "buzzfeed",
+    "cbs-news",
+    "cnbc",
+    "cnn",
+    "crypto-coins-news",
+    "engadget",
+    // "entertainment-weekly",
     // "espn"
-    // "fortune",
-    // "hacker-news"
-    // "ign",
-    // "mashable"
+    "fortune",
+    // "hacker-news",
+    "ign",
+    "mashable",
+    "msnbc",
+    "national-geographic",
+    "nbc-news",
+    "nfl-news",
+    "nhl-news",
+    "politico",
+    "polygon",
+    "reuters",
+    "techcrunch",
+    "the-hill",
+    "the-huffington-post",
+    "the-new-york-times",
+    "the-verge",
+    "the-wall-street-journal",
+    "the-washington-post",
+    "time",
+    "usa-today",
+    "vice-news",
+    "wired"
   ];
   let articles = [];
 
@@ -99,11 +118,11 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
   .then(result => {
     Promise.map(result, writeSource)
       .then(_ => {
-        response.json("Wrote to the database");
+        response.json("Successfully wrote all articles to the database, ayyy :)");
       })
       .catch((err) => {
-        console.log('Error writing to the database', err.message)
-        response.json('Error writing to the database')
+        console.error('Error writing to the database on a source,', err.message)
+        response.json('Error writing to the database on atleast one source, check logs')
       })
   })
   .catch((err) => {
@@ -163,7 +182,15 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           " to Firestore"
       );
     })
-    .catch(console.error);
+    .catch(() => {
+      console.log(
+        "ERROR: Failed to write" +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+      );
+    });
 
   }
 });
