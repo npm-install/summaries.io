@@ -6,6 +6,7 @@ const functions = require("firebase-functions");
 const sendgrid = require("sendgrid");
 const client = sendgrid("YOUR_SG_API_KEY");
 const axios = require("axios");
+const Promise = require("bluebird");
 
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
@@ -64,7 +65,7 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
 );
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require("./keys")
+  const { newsKey, sumKey } = require("./keys");
 
   // First we retrieve the list of sources
   const newsSources = [
@@ -82,108 +83,83 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     "cnn",
     "crypto-coins-news",
     "engadget",
-    "entertainment-weekly",
-    "espn",
+    // // "entertainment-weekly",
+    // "espn"
     "fortune",
-    "hacker-news",
+    // "hacker-news",
     "ign",
-    "mashable",
-    "msnbc",
-    "national-geographic",
-    "nbc-news",
-    "nfl-news",
-    "nhl-news",
-    "politico",
-    "polygon",
-    // 'reddit-r-all',
-    "reuters",
-    "techcrunch",
-    "the-hill",
-    "the-huffington-post",
-    "the-new-york-times",
-    "the-verge",
-    "the-wall-street-journal",
-    "the-washington-post",
-    "time",
-    "usa-today",
-    "vice-news",
-    "wired"
+    "mashable"
   ];
+  let articles = [];
 
   // What is today's date?
-  const date = dateMaker()
+  const date = dateMaker();
 
-  // newsSources.forEach(source => {
-  //   writeSource(source)
-  // })
+  Promise.map(newsSources, getSource)
+  .then(result => {
+    Promise.map(result, writeSource)
+      .then(_ => {
+        response.json("Wrote to the database");
+      })
+      .catch((err) => console.log('Error writing to the database', err.message))
+  })
+  .catch((err) => console.log('Error getting sources, ', err.message))
 
-  writeSource('the-washington-post')
 
-  // Function definition to write to database
-  function writeSource(newsSource) {
+  // Function definition to getSource
+  function getSource(newsSource) {
     const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
       newsSource
     }&apiKey=${newsKey}`;
 
-    let articles = [];
-
-    axios
-      .get(newsUrl)
-      .then(response => {
-        articles = response.data.articles.map(async article => {
-          const sumsObj = await axios
-            .get(
-              `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
-                article.url
-              }`
-            )
-            .catch(console.error);
-          const updatedArticle = Object.assign({}, article, {
-            summary: sumsObj.data.sm_api_content || "API MAXED OUT"
-          });
-          return updatedArticle;
-        });
-        return Promise.all(articles);
-      })
-      .then(data => {
-        const batch = admin.firestore().batch();
-        const dayRef = admin
-          .firestore()
-          .collection("sources")
-          .doc(newsSource)
-          .collection("days")
-          .doc(date)
-          .collection("articles");
-
-        data.forEach(article => {
-          batch.set(dayRef.doc(article.title), { ...article });
-        });
-
-        batch
-          .commit()
-          .then(() => {
-            console.log(
-              "added " +
-                articles.length +
-                " from " +
-                newsSource +
-                " to Firestore"
-            );
-          })
+    return axios.get(newsUrl).then(response => {
+      articles = response.data.articles.map(async article => {
+        const sumsObj = await axios
+          .get(
+            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
+              article.url
+            }`
+          )
           .catch(console.error);
-      })
-      .catch(console.error);
+        const updatedArticle = Object.assign({}, article, {
+          summary: sumsObj.data.sm_api_content || "API MAXED OUT"
+        });
+        return updatedArticle;
+      });
+      return Promise.all(articles);
+    });
   }
 
-  //   batch
-  //     .commit()
-  //     // .then(console.log)
-  //     .then(() => {
-  //       response.json(data)
-  //     })
-  //     .catch(console.error)
-  // .catch(console.error)
-  response.json("Check console.logs, function running");
+  // Write source to the database
+  function writeSource (data) {
+    const newsSource = data[0].source.id
+    const batch = admin.firestore().batch();
+    const dayRef = admin
+    .firestore()
+    .collection("sources")
+    .doc(newsSource)
+    .collection("days")
+    .doc(date)
+    .collection("articles");
+
+  data.forEach(article => {
+    batch.set(dayRef.doc(article.title), { ...article });
+  });
+
+  batch
+    .commit()
+    .then(() => {
+      console.log(
+        "added " +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+      );
+    })
+    .catch(console.error);
+
+  }
 });
 
 exports.makeEmails = functions.https.onRequest((request, response) => {
@@ -214,3 +190,46 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
 
   response.send("hello");
 });
+
+// Source List Reference
+//
+// "abc-news",
+// "al-jazeera-english",
+// "ars-technica",
+// "associated-press",
+// "axios",
+// "bleacher-report",
+// "bloomberg",
+// "business-insider",
+// "buzzfeed",
+// "cbs-news",
+// "cnbc",
+// "cnn",
+// "crypto-coins-news",
+// "engadget",
+// // "entertainment-weekly",
+// // "espn",
+// "fortune",
+// "hacker-news",
+// "ign",
+// "mashable"
+// "msnbc",
+// "national-geographic",
+// "nbc-news",
+// "nfl-news",
+// "nhl-news",
+// "politico",
+// "polygon",
+// 'reddit-r-all',
+// "reuters",
+// "techcrunch",
+// "the-hill",
+// "the-huffington-post",
+// "the-new-york-times",
+// "the-verge",
+// "the-wall-street-journal",
+// "the-washington-post",
+// "time",
+// "usa-today",
+// "vice-news",
+// "wired"
