@@ -63,12 +63,6 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
     })
 )
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send(
-    'Hello from summaries.io, where your we summarize your news while you sleep!'
-  )
-})
-
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
 
@@ -170,5 +164,42 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .catch(console.error)
   })
 
-  response.send('function is running, see console.log on the server')
+    //   batch
+    //     .commit()
+    //     // .then(console.log)
+    //     .then(() => {
+    //       response.json(data)
+    //     })
+    //     .catch(console.error)
+    // .catch(console.error)
+    response.json("Check console.logs, function running")
+})
+
+exports.makeEmails = functions.https.onRequest((request, response) => {
+  const rec = admin
+    .firestore()
+    .collection('users')
+    // Here add a where query to filter by requested time
+    // For now, let's generate Adrien's email
+    .where('email', '==', 'q@q.com')
+    .get()
+    .then(function(users) {
+      users.forEach(function(user) {
+        admin
+          .firestore()
+          .collection('users')
+          .doc(user.id)
+          .collection('subscriptions')
+          .get()
+          .then(subscriptions => {
+            subscriptions.forEach(subscription => {
+              console.log(subscription.id)
+            })
+          })
+          .catch(console.error)
+      })
+    })
+    .catch(console.error)
+
+  response.send('hello')
 })

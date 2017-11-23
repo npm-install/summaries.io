@@ -139,7 +139,7 @@ export default class App extends Component {
       </div>
     )
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} />
+      <CircularProgress size={80} thickness={5} style={{marginLeft:'50em', marginTop:'50em'}}/>
     ) : (
       <BrowserRouter>
         <div>
@@ -151,7 +151,8 @@ export default class App extends Component {
               alignItems: 'center',
               marginTop: '.5em'
             }}
-            style={{ fontFamily: 'Noto Sans, sans-serif' }}
+            style={{fontFamily: 'Noto Sans, sans-serif', position: 'fixed'}}
+
             showMenuIconButton={false}
           />
           <div className="container d-flex justify-content-center">
