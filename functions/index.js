@@ -69,26 +69,26 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 
   // First we retrieve the list of sources
   const newsSources = [
-    "abc-news",
-    "al-jazeera-english",
-    "ars-technica",
-    "associated-press",
-    "axios",
-    "bleacher-report",
-    "bloomberg",
-    "business-insider",
-    "buzzfeed",
-    "cbs-news",
-    "cnbc",
-    "cnn",
-    "crypto-coins-news",
-    "engadget",
+    // "abc-news",
+    // "al-jazeera-english",
+    // "ars-technica",
+    // "associated-press",
+    // "axios",
+    // "bleacher-report",
+    // "bloomberg",
+    // "business-insider",
+    // "buzzfeed",
+    // "cbs-news",
+    // "cnbc",
+    "cnn"
+    // "crypto-coins-news",
+    // "engadget",
     // // "entertainment-weekly",
     // "espn"
-    "fortune",
-    // "hacker-news",
-    "ign",
-    "mashable"
+    // "fortune",
+    // "hacker-news"
+    // "ign",
+    // "mashable"
   ];
   let articles = [];
 
@@ -101,9 +101,15 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .then(_ => {
         response.json("Wrote to the database");
       })
-      .catch((err) => console.log('Error writing to the database', err.message))
+      .catch((err) => {
+        console.log('Error writing to the database', err.message)
+        response.json('Error writing to the database')
+      })
   })
-  .catch((err) => console.log('Error getting sources, ', err.message))
+  .catch((err) => {
+    console.log('Error getting sources, ', err.message)
+    response.json('Error getting sources')
+  })
 
 
   // Function definition to getSource
