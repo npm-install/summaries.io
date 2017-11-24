@@ -27,7 +27,7 @@ function dateMaker() {
     Nov: 11,
     Dec: 12
   };
-  return `${date2[3]}-${monthToNum[date2[1]]}-${date2[2]} `;
+  return `${date2[3]}-${monthToNum[date2[1]]}-${date2[2]}`;
 }
 
 function parseBody(body) {
@@ -126,8 +126,8 @@ exports.makeSummaries1 = functions.https.onRequest((request, response) => {
       })
   })
   .catch((err) => {
-    console.log('Error getting sources, ', err.message)
-    response.json('Error getting sources')
+    console.log('Error getting sources or summarizing, ', err.message)
+    response.json('Error getting sources or summarizing')
   })
 
 
