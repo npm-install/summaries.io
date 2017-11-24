@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 // const { weatherKey } = require('../functions/keys.js');
 
 export default class WeatherWidget extends Component {
@@ -16,9 +17,10 @@ export default class WeatherWidget extends Component {
 
   componentDidMount() {
     const weatherKey = '56f2b6fcede722ad8a463396763c6270'
-    // console.log(weatherKey)
+    console.log(weatherKey)
 
-    if (this.state.zipCode) {
+    if (this.state.zipCode.length === 5) {
+      console.log(weatherKey)
       axios
         .get(
         `http://api.openweathermap.org/data/2.5/weather?zip=${
@@ -40,10 +42,11 @@ export default class WeatherWidget extends Component {
     while (zip.length < 5) zip = '0' + zip;
 
     this.setState({ zipCode: zip })
+    this.componentDidMount()
   }
 
   render() {
-    console.log(this.state.zipCode)
+    console.log(this.state)
 
     if (!this.state.zipCode) {
       return (
@@ -66,11 +69,13 @@ export default class WeatherWidget extends Component {
     else if (Object.keys(this.state.weatherJSON).length === 0) {
       return (
         <Paper zDepth={2} className="article-card">
-          <div className="zipcode-input">
-            <div>Loading your weather</div>
+          <div className="loading-weather">
+            <ReactLoading type="spinningBubbles" color="#444" />
           </div>
         </Paper>)
     }
+    const weather = this.state.weatherJSON;
+    console.log(weather)
     return (
       <div>
         <h1>Weather for {this.state.zipCode}</h1>
