@@ -83,41 +83,41 @@ exports.polly = functions.https.onRequest((req, res) => {
     region: 'us-east-1'
   })
 
-  // const storageRef = firebase.storage().ref()
-  // const summaries = storageRef.child('summaries')
   const date = dateMaker()
-  const storage = new Storage()
-  storage
-    .bucket(`summary-73ccc.appspot.com`)
-    .upload(`/Users/Mueed-1/Pictures/test.jpeg`)
-    .then(_ => console.log('uploaded file'))
-    .catch(err => console.error(err))
+  // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
 
-  // const articleRef = admin
-  //   .firestore()
-  //   .collection(`sources/bloomberg/days/${date}/articles`)
-  //   .get()
-  //   .then(querySnapshot =>
-  //     querySnapshot.forEach(async doc => {
-  //       let params = {
-  //         Text: doc.data().title,
-  //         OutputFormat: 'mp3',
-  //         VoiceId: 'Joanna'
-  //       }
-  //       console.log(doc.data().title)
-  //       await Polly.synthesizeSpeech(params, (err, data) => {
-  //         if (err) console.error(err.stack)
-  //         else if (data) {
-  //           if (data.AudioStream instanceof Buffer) {
-  //             fs.writeFile(`./${Math.random()}.mp3`, data.AudioStream, err => {
-  //               if (err) return console.error(err)
-  //               console.log('The file was saved!')
-  //             })
-  //           }
-  //         }
-  //       })
-  //     })
-  //   )
+  const storage = new Storage()
+  const articleRef = admin
+    .firestore()
+    .collection(`sources/bloomberg/days/${date}/articles`)
+    .get()
+    .then(querySnapshot =>
+      querySnapshot.forEach(doc => {
+        const params = {
+          Text: doc.data().title,
+          OutputFormat: 'mp3',
+          VoiceId: 'Joanna'
+        }
+        console.log(doc.data().title)
+        //   Polly.synthesizeSpeech(params, (err, data) => {
+        //     if (err) console.error(err.stack)
+        //     else if (data) {
+        //       const title = params.Text
+        //       if (data.AudioStream instanceof Buffer) {
+        //         fs.writeFile(`./${title}.mp3`, data.AudioStream, err => {
+        //           if (err) return console.error(err)
+        //           console.log('The file was saved!')
+        //         })
+        //         storage
+        //           .bucket(`summary-73ccc.appspot.com`)
+        //           .upload(`${title}.mp3`)
+        //           .then(_ => console.log('uploaded file'))
+        //           .catch(err => console.error(err))
+        //       }
+        //     }
+        //   })
+      })
+    )
 })
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
