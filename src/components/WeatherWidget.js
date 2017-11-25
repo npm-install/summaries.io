@@ -4,9 +4,9 @@ import ReactLoading from 'react-loading';
 import { setTimeout } from 'core-js/library/web/timers';
 import zipcodes from 'zipcodes'
 import DarkSkyApi from 'dark-sky-api';
-import Skycons from 'react-skycons'
+// import Skycons from 'react-skycons'
 // const { weatherKey } = require('../functions/keys.js');
-let count = 1;
+import ReactAnimatedWeather from 'react-animated-weather';
 
 export default class WeatherWidget extends Component {
   constructor(props) {
@@ -62,9 +62,7 @@ export default class WeatherWidget extends Component {
 
   render() {
 
-    console.log('Component rendered', count++, 'time(s)')
     console.log(this.state)
-    // if (count === 2) this.getData()
 
     if (!this.state.zipCode) {
       return (
@@ -94,14 +92,23 @@ export default class WeatherWidget extends Component {
       )
     }
     const weather = this.state.weatherJSON;
+
     console.log(weather)
     return (
       <div>
         <Paper zDepth={2} className="article-card">
-          <h1>Weather for {this.state.city}</h1>
+          <div className="weather-widget">
+          <h3>Weather for {this.state.city}</h3>
           <div>
             <p>Temperature: {Math.floor(weather.temperature)} Degrees</p>
-
+            <p>{weather.summary}</p>
+            <ReactAnimatedWeather
+              icon={weather.icon.toUpperCase().split('-').join('_')}
+              color={'#FFA14A'}
+              size={128}
+              animate={true}
+            />
+          </div>
           </div>
         </Paper>
       </div>

@@ -130,6 +130,10 @@ body {
   margin: 5em;
 }
 
+.weather-widget {
+  padding: 2em
+}
+
 /* Mobile */
 @media only screen and (max-width: 667px) {
   .welcome {
