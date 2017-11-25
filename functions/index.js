@@ -70,6 +70,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   )
 })
 
+//Polly requirements
 const AWS = require('aws-sdk')
 const fs = require('fs')
 const credentials = new AWS.Credentials(
@@ -83,10 +84,13 @@ exports.polly = functions.https.onRequest((req, res) => {
     region: 'us-east-1'
   })
 
+  //set current date
   const date = dateMaker()
   // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
 
+  //initialize google cloud storage instance
   const storage = new Storage()
+
   return admin
     .firestore()
     .collection(`sources/bloomberg/days/${date}/articles`)
@@ -103,6 +107,12 @@ exports.polly = functions.https.onRequest((req, res) => {
           .title.replace(/\'+/, '')
           .replace(/\s+/, '-')
         console.log(title)
+
+        /*Regex to rewrite file with title of article without apostraphes and spaces
+          audio file will be in form of buffer from AWS Polly
+          file will have individual name of article title
+        */
+
         await Polly.synthesizeSpeech(params, async (err, data) => {
           const title = params.Text.replace(/\'+/, '').replace(/\s+/, '-')
           if (err) console.error(err.stack)
@@ -119,6 +129,12 @@ exports.polly = functions.https.onRequest((req, res) => {
             }
           }
         })
+
+        /*Adding to google cloud storage.
+          bucket requires the bucket name
+          upload requires local file path
+        */
+
         await storage
           .bucket(`summary-73ccc.appspot.com`)
           .upload(
