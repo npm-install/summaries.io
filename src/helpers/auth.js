@@ -17,7 +17,7 @@ export function login(email, pw) {
 export function loginWithGoogle() {
   const provider = new firebaseAuth.GoogleAuthProvider()
   firebaseAuth().signInWithRedirect(provider)
-  firebaseAuth
+  firebaseAuth()
     .getRedirectResult()
     .then(function(authData) {
       console.log(authData)
