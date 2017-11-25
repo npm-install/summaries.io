@@ -120,8 +120,6 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     .firestore()
     .collection('users')
     // Here add a where query to filter by requested time
-    // For now, let's generate Adrien's email
-    .where('email', '==', 'q@q.com')
     .get()
     .then(function(users) {
       const batch = admin.firestore().batch()
@@ -156,13 +154,11 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      // { ...articleContent }
-                      { name: 'test' }
+                      { ...articleContent }
                     )
                   })
                 })
                 .then(res => {
-                  console.log('batch commit')
                   batch
                     .commit()
                     .then(console.log)
@@ -176,5 +172,5 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     })
     .catch(console.error)
 
-  response.send('hello')
+  response.send('emails are being created')
 })
