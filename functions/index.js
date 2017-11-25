@@ -26,7 +26,7 @@ function dateMaker() {
     Nov: 11,
     Dec: 12
   }
-  return `${date2[3]}-${monthToNum[date2[1]]}-${date2[2]} `
+  return `${date2[3]}-${monthToNum[date2[1]]}-${date2[2]}`
 }
 
 function parseBody(body) {
@@ -114,6 +114,8 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 })
 
 exports.makeEmails = functions.https.onRequest((request, response) => {
+  const today = dateMaker()
+
   const rec = admin
     .firestore()
     .collection('users')
@@ -122,6 +124,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     .where('email', '==', 'q@q.com')
     .get()
     .then(function(users) {
+      const batch = admin.firestore().batch()
       users.forEach(function(user) {
         admin
           .firestore()
@@ -130,8 +133,42 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .collection('subscriptions')
           .get()
           .then(subscriptions => {
-            subscriptions.forEach(subscription => {
-              console.log(subscription.id)
+            return subscriptions.forEach(subscription => {
+              console.log(subscription.id, today)
+              admin
+                .firestore()
+                .collection('sources')
+                .doc(subscription.id)
+                .collection('days')
+                .doc(today)
+                .collection('articles')
+                .get()
+                .then(articles => {
+                  articles.forEach(article => {
+                    const articleContent = article.data()
+                    console.log('batch add')
+                    batch.set(
+                      admin
+                        .firestore()
+                        .collection('users')
+                        .doc(user.id)
+                        .collection('emails')
+                        .doc(today)
+                        .collection(subscription.id)
+                        .doc(article.id),
+                      // { ...articleContent }
+                      { name: 'test' }
+                    )
+                  })
+                })
+                .then(res => {
+                  console.log('batch commit')
+                  batch
+                    .commit()
+                    .then(console.log)
+                    .catch(console.error)
+                })
+                .catch(console.error)
             })
           })
           .catch(console.error)
