@@ -69,7 +69,6 @@ export default class WeatherWidget extends Component {
     if (!this.state.zipCode) {
       return (
         <div>
-        <Skycons color='white' icon='CLEAR_NIGHT' />
           <Paper zDepth={2} className="article-card">
             <div className="zipcode-input">
               <h3>Enter your zip code to get weather!</h3>
