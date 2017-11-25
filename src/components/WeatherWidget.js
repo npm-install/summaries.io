@@ -21,24 +21,18 @@ export default class WeatherWidget extends Component {
   }
 
 
-  getData(zip) {
+  getData(position, location) {
     const weatherKey = '3802941ad5b8c716614249ea1cf918b8'
 
     DarkSkyApi.apiKey = weatherKey;
 
-    const location = zipcodes.lookup(zip)
-
-    const position = {
-      latitude: location.latitude,
-      longitude: location.longitude
-    };
 
     DarkSkyApi.loadCurrent(position)
       .then(result => {
         this.setState(
           {
             weatherJSON: result,
-            city: location.city
+            city: `${location.city}, ${location.state}`
           }
         )
       })
@@ -52,17 +46,26 @@ export default class WeatherWidget extends Component {
 
     while (zip.length < 5) zip = '0' + zip;
 
+    const location = zipcodes.lookup(zip)
+    if (!location) {
+      alert('Invalid Zipcode, try again')
+      return false
+    }
+
+    const position = {
+      latitude: location.latitude,
+      longitude: location.longitude
+    };
+
     this.setState({ zipCode: zip, weatherJSON: {} })
+    this.getData(position, location)
 
-    setTimeout(() => {
-      this.getData(zip)
 
-    }, 2000)
   }
 
   render() {
 
-    console.log(this.state)
+    // console.log(this.state)
 
     if (!this.state.zipCode) {
       return (
@@ -98,17 +101,17 @@ export default class WeatherWidget extends Component {
       <div>
         <Paper zDepth={2} className="article-card">
           <div className="weather-widget">
-          <h3>Weather for {this.state.city}</h3>
-          <div>
-            <p>Temperature: {Math.floor(weather.temperature)} Degrees</p>
-            <p>{weather.summary}</p>
-            <ReactAnimatedWeather
-              icon={weather.icon.toUpperCase().split('-').join('_')}
-              color={'#FFA14A'}
-              size={128}
-              animate={true}
-            />
-          </div>
+            <h3>Weather for {this.state.city}</h3>
+            <div>
+              <h4>{weather.summary}</h4>
+              <h5>{Math.round(weather.temperature)}° F</h5>
+              <ReactAnimatedWeather
+                icon={weather.icon.toUpperCase().split('-').join('_')}
+                color={'#FFA14A'}
+                size={128}
+                animate={true}
+              />
+            </div>
           </div>
         </Paper>
       </div>
