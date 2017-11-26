@@ -237,6 +237,17 @@ body {
   margin-top: 30em;
 }
 
+.zipcode-input {
+  margin: 5em;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.loading-weather {
+  padding: 2em 40%;
+  margin: 5em;
+}
+
 /* Mobile */
 @media only screen and (max-width: 667px) {
   .welcome {
@@ -244,7 +255,7 @@ body {
     margin-left: .5em;
     line-height: 2em;
   }
-  
+
   .welcome-title {
     margin-bottom: 2em;
     margin-left: .6em;
@@ -272,3 +283,4 @@ body {
   }
 
 }
+
