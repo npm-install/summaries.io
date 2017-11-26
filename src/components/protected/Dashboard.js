@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { db } from "../../config/constants";
 import { Card, CardHeader, CardText } from "material-ui/Card";
 import Paper from "material-ui/Paper";
-import TextField from "material-ui/TextField";
 import Toggle from "material-ui/Toggle";
+import Autosuggest from "react-autosuggest";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -11,9 +11,14 @@ export default class Dashboard extends Component {
     this.state = {
       sources: [],
       preview: [],
-      expanded: false
+      expanded: false,
+      value: "",
+      suggestions: []
     };
     this.handleToggle = this.handleToggle.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
   }
 
   componentDidMount() {
@@ -44,19 +49,63 @@ export default class Dashboard extends Component {
     });
   }
 
+  onChange = (event, { newValue }) => {
+    this.setState({
+      value: newValue
+    });
+  };
+
+  onSuggestionsFetchRequested = ({ value }) => {
+    const getSuggestions = value => {
+      const inputValue = value.trim().toLowerCase();
+      const inputLength = inputValue.length;
+    
+      return inputLength === 0 ? [] : this.state.sources.filter(source =>
+        source.name.toLowerCase().slice(0, inputLength) === inputValue
+      );
+    };
+
+    this.setState({
+      suggestions: getSuggestions(value)
+    });
+  };
+
+  // Autosuggest will call this function every time you need to clear suggestions.
+  onSuggestionsClearRequested = () => {
+    this.setState({
+      suggestions: []
+    });
+  };
+
   render() {
     // const { classes } = this.props;
+    const { value, suggestions } = this.state;
+    const inputProps = {
+      placeholder: "Type a source you want to subscribe",
+      value,
+      onChange: this.onChange
+    };
+
+    const getSuggestionValue = suggestion => suggestion.name;
+    
+    const renderSuggestion = suggestion => (
+      <div>
+        {suggestion.name}
+      </div>
+    );
 
     return (
       <div>
         <div className="search-bar">
           <i className="fa fa-search" aria-hidden="true" />
-          <TextField
-            id="search"
-            label="Search field"
-            type="search"
-            // className={classes.textField}
-          />
+            <Autosuggest
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              inputProps={inputProps}
+            />
         </div>
 
         <div className="news-content">
@@ -94,7 +143,10 @@ export default class Dashboard extends Component {
             >
               {this.state.preview.map(preview => (
                 <div key={preview.id} className="preview-grid">
-                  <Card className="preview-card" style={{ borderRadius: "10px" }}>
+                  <Card
+                    className="preview-card"
+                    style={{ borderRadius: "10px" }}
+                  >
                     <CardHeader
                       title={preview.name}
                       avatar={preview.logo}

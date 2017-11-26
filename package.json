@@ -11,6 +11,7 @@
     "firebase-functions": "^0.7.3",
     "material-ui": "^0.19.4",
     "react": "^16.1.1",
+    "react-autosuggest": "^9.3.2",
     "react-beautiful-dnd": "^2.6.4",
     "react-dom": "^16.1.1",
     "react-router-dom": "^4.2.2",
