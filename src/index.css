@@ -86,12 +86,13 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 10em;
   width: 50%;
+  margin-top: 2em;
+  overflow-y: scroll;
+  height: 100vh;
 }
 
 .column-right {
-  margin-top: 10em;
   margin-left: 5em;
 }
 
@@ -113,6 +114,32 @@ body {
   width: 20em;
   margin-bottom: 1em;
   margin-right: 1em;
+}
+
+.fa-search {
+  margin-right: 1em;
+  color: #FFA14A;
+}
+
+.search-bar {
+  margin-top: 7em;
+  right: 2em;
+}
+
+.news-toggle {
+  padding-bottom: 1em;
+  margin-left: 16em;
+}
+
+.preview-grid {
+  font-family: 'Noto Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.preview-card {
+  margin-top: 1.5em;
+  width: 80%;
 }
 
 .adrien-useless-stuff {
