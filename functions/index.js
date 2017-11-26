@@ -115,35 +115,34 @@ exports.makeSummaries1 = functions.https.onRequest((request, response) => {
   const date = dateMaker();
 
   Promise.map(newsSources, getSource)
-  .then(result => {
-    Promise.map(result, writeSource)
-      .then(_ => {
-        response.json("Successfully wrote all articles to the database, ayyy :)");
-      })
-      .catch((err) => {
-        console.error('Error writing to the database on a source,', err.message)
-        response.json('Error writing to the database on atleast one source, check logs')
-      })
-  })
-  .catch((err) => {
-    console.log('Error getting sources or summarizing, ', err.message)
-    response.json('Error getting sources or summarizing')
-  })
+    .then(result => {
+      Promise.map(result, writeSource)
+        .then(_ => {
+          response.json("Successfully wrote all articles to the database, ayyy :)");
+        })
+        .catch((err) => {
+          console.error('Error writing to the database on a source,', err.message)
+        })
+    })
+    .catch((err) => {
+      console.log('Error getting sources or summarizing, ', err.message)
+      response.json('Atleast one error, check logs for more info')
+    })
 
 
   // Function definition to getSource
   function getSource(newsSource) {
     const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
       newsSource
-    }&apiKey=${newsKey}`;
+      }&apiKey=${newsKey}`;
 
     return axios.get(newsUrl).then(response => {
       articles = response.data.articles.map(async article => {
         const sumsObj = await axios
           .get(
-            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
-              article.url
-            }`
+          `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
+          article.url
+          }`
           )
           .catch(console.error);
         const updatedArticle = Object.assign({}, article, {
@@ -156,41 +155,41 @@ exports.makeSummaries1 = functions.https.onRequest((request, response) => {
   }
 
   // Write source to the database
-  function writeSource (data) {
+  function writeSource(data) {
     const newsSource = data[0].source.id
     const batch = admin.firestore().batch();
     const dayRef = admin
-    .firestore()
-    .collection("sources")
-    .doc(newsSource)
-    .collection("days")
-    .doc(date)
-    .collection("articles");
+      .firestore()
+      .collection("sources")
+      .doc(newsSource)
+      .collection("days")
+      .doc(date)
+      .collection("articles");
 
-  data.forEach(article => {
-    batch.set(dayRef.doc(article.title), { ...article });
-  });
-
-  batch
-    .commit()
-    .then(() => {
-      console.log(
-        "added " +
-          articles.length +
-          " from " +
-          newsSource +
-          " to Firestore"
-      );
-    })
-    .catch(() => {
-      console.log(
-        "ERROR: Failed to write" +
-          articles.length +
-          " from " +
-          newsSource +
-          " to Firestore"
-      );
+    data.forEach(article => {
+      batch.set(dayRef.doc(article.title), { ...article });
     });
+
+    batch
+      .commit()
+      .then(() => {
+        console.log(
+          "added " +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+        );
+      })
+      .catch(() => {
+        console.log(
+          "ERROR: Failed to write" +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+        );
+      });
 
   }
 });
@@ -246,35 +245,34 @@ exports.makeSummaries2 = functions.https.onRequest((request, response) => {
   const date = dateMaker();
 
   Promise.map(newsSources, getSource)
-  .then(result => {
-    Promise.map(result, writeSource)
-      .then(_ => {
-        response.json("Successfully wrote all articles to the database, ayyy :)");
-      })
-      .catch((err) => {
-        console.error('Error writing to the database on a source,', err.message)
-        response.json('Error writing to the database on atleast one source, check logs')
-      })
-  })
-  .catch((err) => {
-    console.log('Error getting sources, ', err.message)
-    response.json('Error getting sources')
-  })
+    .then(result => {
+      Promise.map(result, writeSource)
+        .then(_ => {
+          response.json("Successfully wrote all articles to the database, ayyy :)");
+        })
+        .catch((err) => {
+          console.error('Error writing to the database on a source,', err.message)
+        })
+    })
+    .catch((err) => {
+      console.log('Error getting sources, ', err.message)
+      response.json('Atleast one error, check logs for more info')
+    })
 
 
   // Function definition to getSource
   function getSource(newsSource) {
     const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
       newsSource
-    }&apiKey=${newsKey}`;
+      }&apiKey=${newsKey}`;
 
     return axios.get(newsUrl).then(response => {
       articles = response.data.articles.map(async article => {
         const sumsObj = await axios
           .get(
-            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
-              article.url
-            }`
+          `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
+          article.url
+          }`
           )
           .catch(console.error);
         const updatedArticle = Object.assign({}, article, {
@@ -287,41 +285,41 @@ exports.makeSummaries2 = functions.https.onRequest((request, response) => {
   }
 
   // Write source to the database
-  function writeSource (data) {
+  function writeSource(data) {
     const newsSource = data[0].source.id
     const batch = admin.firestore().batch();
     const dayRef = admin
-    .firestore()
-    .collection("sources")
-    .doc(newsSource)
-    .collection("days")
-    .doc(date)
-    .collection("articles");
+      .firestore()
+      .collection("sources")
+      .doc(newsSource)
+      .collection("days")
+      .doc(date)
+      .collection("articles");
 
-  data.forEach(article => {
-    batch.set(dayRef.doc(article.title), { ...article });
-  });
-
-  batch
-    .commit()
-    .then(() => {
-      console.log(
-        "added " +
-          articles.length +
-          " from " +
-          newsSource +
-          " to Firestore"
-      );
-    })
-    .catch(() => {
-      console.log(
-        "ERROR: Failed to write" +
-          articles.length +
-          " from " +
-          newsSource +
-          " to Firestore"
-      );
+    data.forEach(article => {
+      batch.set(dayRef.doc(article.title), { ...article });
     });
+
+    batch
+      .commit()
+      .then(() => {
+        console.log(
+          "added " +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+        );
+      })
+      .catch(() => {
+        console.log(
+          "ERROR: Failed to write" +
+          articles.length +
+          " from " +
+          newsSource +
+          " to Firestore"
+        );
+      });
 
   }
 });
@@ -334,9 +332,9 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     .collection("users")
     // Here add a where query to filter by requested time
     .get()
-    .then(function(users) {
+    .then(function (users) {
       const batch = admin.firestore().batch()
-      users.forEach(function(user) {
+      users.forEach(function (user) {
         admin
           .firestore()
           .collection("users")
