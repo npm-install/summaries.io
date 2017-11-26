@@ -25,6 +25,7 @@ export default class Login extends Component {
       this.setState(setErrorMsg('Invalid username/password.'))
     })
   }
+  
   resetPassword = () => {
     resetPassword(this.state.email, {
       url: `https://summary-73ccc.firebaseapp.com/login`
