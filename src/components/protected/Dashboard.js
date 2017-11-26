@@ -4,6 +4,7 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 import Paper from "material-ui/Paper";
 import Toggle from "material-ui/Toggle";
 import Autosuggest from "react-autosuggest";
+import TextField from 'material-ui/TextField';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -100,7 +101,7 @@ export default class Dashboard extends Component {
     return (
       <div>
         <div className="search-bar">
-          <i className="fa fa-search" aria-hidden="true" />
+          <i className="fa fa-search fa-2x" aria-hidden="true" />
           <Autosuggest
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -171,7 +172,7 @@ export default class Dashboard extends Component {
                       }}
                     />
                     <CardText expandable={true}>
-                      <p>{preview.description}</p>
+                      <TextField hintText="Keywords" />
                     </CardText>
                   </Card>
                 </div>
