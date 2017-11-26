@@ -233,6 +233,10 @@ body {
   margin-left: 2em;
 }
 
+.mobile-chips {
+  display: none;
+}
+
 .adrien-useless-stuff {
   margin-top: 30em;
 }
@@ -312,6 +316,14 @@ body {
 
   .keyword-input, .number-articles {
     margin-left: .5em;
+  }
+
+  .mobile-chips {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: 1em;
+    margin-top: 1em;
   }
 
 }

@@ -8,6 +8,8 @@ import TextField from "material-ui/TextField";
 // import Snackbar from "material-ui/Snackbar";
 import SelectField from "material-ui/SelectField";
 import MenuItem from "material-ui/MenuItem";
+import Chip from "material-ui/Chip";
+import Avatar from 'material-ui/Avatar';
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -63,7 +65,6 @@ export default class Dashboard extends Component {
   //Toggle helper functions
   handleToggle(el) {
     this.setState(state => {
-      state.open = true;
       const index = state.preview.indexOf(el);
       if (index > -1) {
         const preview = state.preview.slice(0);
@@ -74,6 +75,8 @@ export default class Dashboard extends Component {
       return { preview: [...state.preview, el] };
     });
   }
+
+
 
   //----------Search bar helper functions-------------
 
@@ -136,7 +139,17 @@ export default class Dashboard extends Component {
         </div>
 
         <div className="mobile-chips">
-          
+          {this.state.preview.map(preview => (
+              <Chip
+                key={preview.id}
+                className="news-chip"
+                onRequestDelete={() => this.handleToggle(preview)}
+                style={{marginRight: '.5em', marginTop: '.5em', fontFamily: "'Noto Sans', sans-serif"}}
+              >
+              <Avatar src={preview.logo} />
+                {preview.name}
+              </Chip>
+          ))}
         </div>
 
         <div className="news-content">
@@ -166,6 +179,7 @@ export default class Dashboard extends Component {
                     <Toggle
                       onToggle={() => this.handleToggle(source)}
                       className="news-toggle"
+                      toggled={this.state.preview.indexOf(source) > -1}
                     />
                     <CardText
                       expandable={true}
@@ -187,7 +201,7 @@ export default class Dashboard extends Component {
                           name="keywords"
                           className="keyword-input"
                         />
-                        <button style={{ border: "none", background: 'none' }}>
+                        <button style={{ border: "none", background: "none" }}>
                           <i className="fa fa-plus-circle" aria-hidden="true" />
                         </button>
                       </div>
