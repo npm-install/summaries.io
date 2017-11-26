@@ -252,6 +252,35 @@ body {
   margin: 5em;
 }
 
+.user-container {
+  margin-top: 10em;
+}
+
+.logo {
+  margin-top: 5em;
+}
+
+.landing-hero {
+  width: 100vw;
+  background-color: #FFA14A;
+  text-align: center;
+  color: snow;
+  padding-bottom: 15em;
+}
+
+.hero-description {
+  margin-top: 1em;
+}
+
+.stepper {
+  margin-top: 5em;
+  margin-left: 20vw;
+  width: 60%;
+  padding-bottom: 20em;
+  text-align: center;
+}
+
+
 /* Mobile */
 @media only screen and (max-width: 667px) {
   .welcome {

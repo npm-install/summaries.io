@@ -1,19 +1,20 @@
-import React, { Component } from 'react'
-import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
-import Login from './Login'
-import Register from './Register'
-import Home from './Home'
-import Dashboard from './protected/Dashboard'
-import { logout } from '../helpers/auth'
-import { firebaseAuth } from '../config/constants'
-import AppBar from 'material-ui/AppBar'
-import User from './User'
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-import CircularProgress from 'material-ui/CircularProgress'
-import { db } from '../config/constants'
+import React, { Component } from "react";
+import { Route, BrowserRouter, Link, Redirect, Switch } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
+import Home from "./Home";
+import Landing from './Landing';
+import Dashboard from "./protected/Dashboard";
+import { logout } from "../helpers/auth";
+import { firebaseAuth } from "../config/constants";
+import AppBar from "material-ui/AppBar";
+import User from "./User";
+import IconMenu from "material-ui/IconMenu";
+import MenuItem from "material-ui/MenuItem";
+import IconButton from "material-ui/IconButton";
+import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
+import CircularProgress from "material-ui/CircularProgress";
+import { db } from "../config/constants";
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -24,11 +25,12 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
           <Component {...rest} /> // was {...props}
         ) : (
           <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
+            to={{ pathname: "/login", state: { from: props.location } }}
           />
-        )}
+        )
+      }
     />
-  )
+  );
 }
 
 function PublicRoute({ component: Component, authed, ...rest }) {
@@ -40,24 +42,25 @@ function PublicRoute({ component: Component, authed, ...rest }) {
           <Component {...props} />
         ) : (
           <Redirect to="/dashboard" />
-        )}
+        )
+      }
     />
-  )
+  );
 }
 
 export default class App extends Component {
   state = {
     authed: false,
     loading: true
-  }
+  };
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       // Now let's modify the state with user information and auth
       if (user) {
         // Let's retrieve the user's information
-        var userRef = db.collection('users')
+        var userRef = db.collection("users");
         userRef
-          .where('uid', '==', user.uid)
+          .where("uid", "==", user.uid)
           .get()
           .then(snapshot => {
             snapshot.forEach(doc => {
@@ -65,25 +68,25 @@ export default class App extends Component {
                 authed: true,
                 loading: false,
                 user: doc.data() // make sure this is synchronous
-              })
-            })
+              });
+            });
           })
           .catch(err => {
-            console.log('Error getting documents', err)
-          })
+            console.log("Error getting documents", err);
+          });
       } else {
         this.setState({
           authed: false,
           loading: false
-        })
+        });
       }
-    })
+    });
   }
   componentWillUnmount() {
-    this.removeListener()
+    this.removeListener();
   }
   render() {
-    console.log(this.state)
+    console.log(this.state);
 
     const authButtons = this.state.authed ? (
       <IconMenu
@@ -92,18 +95,18 @@ export default class App extends Component {
             <MoreVertIcon />
           </IconButton>
         }
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-        iconStyle={{ color: '#fff' }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        targetOrigin={{ horizontal: "right", vertical: "top" }}
+        iconStyle={{ color: "#fff" }}
       >
         <MenuItem primaryText="View Past Summaries" />
-        <Link to="/account" style={{ textDecoration: 'none' }}>
+        <Link to="/account" style={{ textDecoration: "none" }}>
           <MenuItem primaryText="My Profile" />
         </Link>
         <MenuItem
           primaryText="Sign out"
           onClick={() => {
-            logout()
+            logout();
           }}
         />
       </IconMenu>
@@ -114,18 +117,18 @@ export default class App extends Component {
             <MoreVertIcon />
           </IconButton>
         }
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-        iconStyle={{ color: '#fff' }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        targetOrigin={{ horizontal: "right", vertical: "top" }}
+        iconStyle={{ color: "#fff" }}
       >
-        <Link to="/login" style={{ textDecoration: 'none' }}>
+        <Link to="/login" style={{ textDecoration: "none" }}>
           <MenuItem primaryText="Sign In" />
         </Link>
-        <Link to="/register" style={{ textDecoration: 'none' }}>
+        <Link to="/register" style={{ textDecoration: "none" }}>
           <MenuItem primaryText="Sign Up" />
         </Link>
       </IconMenu>
-    )
+    );
 
     const topbarButtons = (
       <div>
@@ -137,9 +140,13 @@ export default class App extends Component {
         </Link>
         {authButtons}
       </div>
-    )
+    );
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} style={{marginLeft:'20px', marginTop:'20px'}}/>
+      <CircularProgress
+        size={80}
+        thickness={5}
+        style={{ marginLeft: "20px", marginTop: "20px" }}
+      />
     ) : (
       <BrowserRouter>
         <div>
@@ -147,18 +154,17 @@ export default class App extends Component {
             title="summaries.io"
             iconElementRight={topbarButtons}
             iconStyleRight={{
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: '.5em'
+              display: "flex",
+              alignItems: "center",
+              marginTop: ".5em"
             }}
-            style={{fontFamily: 'Noto Sans, sans-serif', position: 'fixed'}}
-
+            style={{ fontFamily: "Noto Sans, sans-serif", position: "fixed" }}
             showMenuIconButton={false}
           />
           <div className="container d-flex justify-content-center">
             <div className="row">
               <Switch>
-                <Route path="/" exact component={Home} />
+                <Route path="/" exact component={this.state.authed ? Home : Landing} />
                 <PublicRoute
                   authed={this.state.authed}
                   path="/login"
@@ -186,6 +192,6 @@ export default class App extends Component {
           </div>
         </div>
       </BrowserRouter>
-    )
+    );
   }
 }
