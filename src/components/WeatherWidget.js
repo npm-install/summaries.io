@@ -4,7 +4,7 @@ import ReactLoading from 'react-loading';
 import { setTimeout } from 'core-js/library/web/timers';
 import zipcodes from 'zipcodes'
 import DarkSkyApi from 'dark-sky-api';
-import Skycons from 'react-skycons'
+// import Skycons from 'react-skycons'
 // const { weatherKey } = require('../functions/keys.js');
 let count = 1;
 
