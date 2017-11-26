@@ -13,7 +13,8 @@ export default class WeatherWidget extends Component {
     super(props);
     this.state = {
       zipCode: '',
-      weatherJSON: {},
+      currentWeather: {},
+      forecastWeather: {},
       city: ''
     };
 
@@ -21,7 +22,7 @@ export default class WeatherWidget extends Component {
   }
 
 
-  getData(position, location) {
+  getCurrentData(position, location) {
     const weatherKey = '3802941ad5b8c716614249ea1cf918b8'
 
     DarkSkyApi.apiKey = weatherKey;
@@ -31,7 +32,7 @@ export default class WeatherWidget extends Component {
       .then(result => {
         this.setState(
           {
-            weatherJSON: result,
+            currentWeather: result,
             city: `${location.city}, ${location.state}`
           }
         )
