@@ -4,7 +4,10 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 import Paper from "material-ui/Paper";
 import Toggle from "material-ui/Toggle";
 import Autosuggest from "react-autosuggest";
-import TextField from 'material-ui/TextField';
+import TextField from "material-ui/TextField";
+// import Snackbar from "material-ui/Snackbar";
+import SelectField from "material-ui/SelectField";
+import MenuItem from "material-ui/MenuItem";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -14,7 +17,8 @@ export default class Dashboard extends Component {
       preview: [],
       expanded: false,
       value: "",
-      suggestions: []
+      suggestions: [],
+      open: false,
     };
     this.handleToggle = this.handleToggle.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -24,6 +28,7 @@ export default class Dashboard extends Component {
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(
       this
     );
+    // this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   componentDidMount() {
@@ -41,8 +46,24 @@ export default class Dashboard extends Component {
       });
   }
 
+  //Snack bar helper functions
+
+  // handleTouchTap = () => {
+  //   this.setState({
+  //     open: true
+  //   });
+  // };
+
+  // handleRequestClose = () => {
+  //   this.setState({
+  //     open: false
+  //   });
+  // };
+
+  //Toggle helper functions
   handleToggle(el) {
     this.setState(state => {
+      state.open = true;
       const index = state.preview.indexOf(el);
       if (index > -1) {
         const preview = state.preview.slice(0);
@@ -53,6 +74,8 @@ export default class Dashboard extends Component {
       return { preview: [...state.preview, el] };
     });
   }
+
+  //----------Search bar helper functions-------------
 
   onChange = (event, { newValue }) => {
     this.setState({
@@ -171,8 +194,26 @@ export default class Dashboard extends Component {
                         marginTop: ".5em"
                       }}
                     />
-                    <CardText expandable={true}>
-                      <TextField hintText="Keywords" />
+                    <CardText expandable={true} className="expanded">
+                      <div className="add-keyword">
+                        <TextField
+                          hintText="Keywords"
+                          name="keywords"
+                          className="keyword-input"
+                        />
+                        <button style={{ border: "none" }}>
+                          <i className="fa fa-plus-circle" aria-hidden="true" />
+                        </button>
+                      </div>
+                      <SelectField
+                        floatingLabelText="Number of Articles"
+                        className="number-articles"
+                      >
+                        <MenuItem value={1} primaryText="1" />
+                        <MenuItem value={3} primaryText="3" />
+                        <MenuItem value={5} primaryText="5" />
+                        <MenuItem value={10} primaryText="10" />
+                      </SelectField>
                     </CardText>
                   </Card>
                 </div>

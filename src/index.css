@@ -193,6 +193,15 @@ body {
   background-color: #ddd;
 }
 
+.keyword-input {
+  margin-left: 2em;
+}
+
+.fa-plus-circle {
+  color: #FFA14A;
+  font-size: 1.5em;
+}
+
 /* --------END search bar styles------------ */
 
 .news-toggle {
@@ -211,20 +220,22 @@ body {
   width: 80%;
 }
 
+.add-keyword {
+  display: inline-flex;
+}
+
+.expanded {
+  display: flex;
+  flex-direction: column;
+}
+ 
+.number-articles {
+  margin-left: 2em;
+}
+
 .adrien-useless-stuff {
   margin-top: 30em;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /* Mobile */
 @media only screen and (max-width: 667px) {
