@@ -87,6 +87,7 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   width: 50%;
+  padding-left: 2em;
   margin-top: 2em;
   overflow-y: scroll;
   height: 100vh;
