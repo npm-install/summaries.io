@@ -17,8 +17,12 @@ export default class Dashboard extends Component {
     };
     this.handleToggle = this.handleToggle.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(
+      this
+    );
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -59,10 +63,13 @@ export default class Dashboard extends Component {
     const getSuggestions = value => {
       const inputValue = value.trim().toLowerCase();
       const inputLength = inputValue.length;
-    
-      return inputLength === 0 ? [] : this.state.sources.filter(source =>
-        source.name.toLowerCase().slice(0, inputLength) === inputValue
-      );
+
+      return inputLength === 0
+        ? []
+        : this.state.sources.filter(
+            source =>
+              source.name.toLowerCase().slice(0, inputLength) === inputValue
+          );
     };
 
     this.setState({
@@ -87,53 +94,57 @@ export default class Dashboard extends Component {
     };
 
     const getSuggestionValue = suggestion => suggestion.name;
-    
-    const renderSuggestion = suggestion => (
-      <div>
-        {suggestion.name}
-      </div>
-    );
+
+    const renderSuggestion = suggestion => <div>{suggestion.name}</div>;
 
     return (
       <div>
         <div className="search-bar">
           <i className="fa fa-search" aria-hidden="true" />
-            <Autosuggest
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              getSuggestionValue={getSuggestionValue}
-              renderSuggestion={renderSuggestion}
-              inputProps={inputProps}
-            />
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+          />
         </div>
 
         <div className="news-content">
           <div className="column-left">
-            {this.state.sources.map(source => (
-              <div key={source.id}>
-                <Card className="news-card" style={{ borderRadius: "10px" }}>
-                  <CardHeader
-                    title={source.name}
-                    avatar={source.logo}
-                    actAsExpander={true}
-                    showExpandableButton={true}
-                    titleStyle={{
-                      fontSize: "1em",
-                      fontFamily: "Noto Sans, sans-serif",
-                      marginTop: ".5em"
-                    }}
-                  />
-                  <Toggle
-                    onToggle={() => this.handleToggle(source)}
-                    className="news-toggle"
-                  />
-                  <CardText expandable={true} style={{ width: "20em" }}>
-                    <p>{source.description}</p>
-                  </CardText>
-                </Card>
-              </div>
-            ))}
+            {this.state.sources
+              .filter(
+                item =>
+                  !this.state.value ||
+                  item.name
+                    .toLowerCase()
+                    .indexOf(this.state.value.toLowerCase()) > -1
+              )
+              .map(source => (
+                <div key={source.id}>
+                  <Card className="news-card" style={{ borderRadius: "10px" }}>
+                    <CardHeader
+                      title={source.name}
+                      avatar={source.logo}
+                      actAsExpander={true}
+                      showExpandableButton={true}
+                      titleStyle={{
+                        fontSize: "1em",
+                        fontFamily: "Noto Sans, sans-serif",
+                        marginTop: ".5em"
+                      }}
+                    />
+                    <Toggle
+                      onToggle={() => this.handleToggle(source)}
+                      className="news-toggle"
+                    />
+                    <CardText expandable={true} style={{ width: "20em" }}>
+                      <p>{source.description}</p>
+                    </CardText>
+                  </Card>
+                </div>
+              ))}
           </div>
 
           <div className="column-right">
