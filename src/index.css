@@ -282,5 +282,37 @@ body {
     flex-direction: column;
   }
 
+  .column-right{
+    display: none;
+  }
+
+  .column-left {
+    width: 100%;
+    padding-left: 0;
+  }
+
+  .search-bar {
+    margin-left: 1.2em;
+  }
+
+  .fa-search {
+    margin-right: 1em;
+    font-size: 1.5em;
+  }
+
+  .react-autosuggest__input,  .react-autosuggest__suggestions-container--open{
+    width: 20em;
+    height: 3em;
+    font-size: 14px;
+  }
+
+  .news-card-description {
+    display: none;
+  }
+
+  .keyword-input, .number-articles {
+    margin-left: .5em;
+  }
+
 }
 

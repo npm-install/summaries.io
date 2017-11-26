@@ -18,7 +18,7 @@ export default class Dashboard extends Component {
       expanded: false,
       value: "",
       suggestions: [],
-      open: false,
+      open: false
     };
     this.handleToggle = this.handleToggle.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -135,6 +135,10 @@ export default class Dashboard extends Component {
           />
         </div>
 
+        <div className="mobile-chips">
+          
+        </div>
+
         <div className="news-content">
           <div className="column-left">
             {this.state.sources
@@ -163,8 +167,39 @@ export default class Dashboard extends Component {
                       onToggle={() => this.handleToggle(source)}
                       className="news-toggle"
                     />
-                    <CardText expandable={true} style={{ width: "20em" }}>
+                    <CardText
+                      expandable={true}
+                      style={{ width: "20em" }}
+                      className="news-card-description"
+                    >
                       <p>{source.description}</p>
+                    </CardText>
+
+                    {/* mobile settings */}
+                    <CardText
+                      expandable={true}
+                      style={{ width: "20em" }}
+                      className="news-card-mobile-settings"
+                    >
+                      <div className="add-keyword">
+                        <TextField
+                          hintText="Keywords"
+                          name="keywords"
+                          className="keyword-input"
+                        />
+                        <button style={{ border: "none", background: 'none' }}>
+                          <i className="fa fa-plus-circle" aria-hidden="true" />
+                        </button>
+                      </div>
+                      <SelectField
+                        floatingLabelText="Number of Articles"
+                        className="number-articles"
+                      >
+                        <MenuItem value={1} primaryText="1" />
+                        <MenuItem value={3} primaryText="3" />
+                        <MenuItem value={5} primaryText="5" />
+                        <MenuItem value={10} primaryText="10" />
+                      </SelectField>
                     </CardText>
                   </Card>
                 </div>
