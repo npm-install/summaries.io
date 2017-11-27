@@ -2,95 +2,52 @@ import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import ReactLoading from 'react-loading';
 import zipcodes from 'zipcodes'
-import DarkSkyApi from 'dark-sky-api';
-// import Skycons from 'react-skycons'
-// const { weatherKey } = require('../functions/keys.js');
-import ReactAnimatedWeather from 'react-animated-weather';
+import WeatherItem from './WeatherItem'
+import { db } from '../config/constants'
+
 
 export default class WeatherWidget extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      zipCode: '',
-      weatherJSON: {},
-      forecastWeather: {},
-      city: ''
+      zipCode: '08536',
+      weather: {},
+      location: {}
     };
-
-    this.submitHandler = this.submitHandler.bind(this)
   }
 
+  componentDidMount() {
+    const date = dateMaker()
+    const zipCode = this.state.zipCode;
 
-  getCurrentData(position, location) {
-    const weatherKey = '3802941ad5b8c716614249ea1cf918b8'
+    db
+      .collection('weather')
+      .doc('days')
+      .collection(date)
+      .doc('zip')
+      .collection(zipCode)
+      .get()
+      .then(snapshot => {
+        let weatherForecast = []
 
-    DarkSkyApi.apiKey = weatherKey
+        snapshot.forEach(doc => {
+          weatherForecast.push(doc.data())
+        })
+        weatherForecast = weatherForecast[0];
 
-
-    DarkSkyApi.loadCurrent(position)
-      .then(result => {
-        this.setState(
-          {
-            weatherJSON: result,
-            city: `${location.city}, ${location.state}`
-          }
-        )
+        this.setState({
+          weather: weatherForecast,
+          location: zipcodes.lookup(zipCode)
+        })
       })
-      .catch(console.error)
-  }
-
-  submitHandler(event) {
-    event.preventDefault()
-    let zip = event.target.zip.value
-
-    while (zip.length < 5) zip = '0' + zip
-
-    const location = zipcodes.lookup(zip)
-    if (!location) {
-      alert('Invalid Zipcode, try again')
-      return false
-    }
-
-    const position = {
-      latitude: location.latitude,
-      longitude: location.longitude
-    };
-
-    this.setState({ zipCode: zip, weatherJSON: {} })
-    this.getCurrentData(position, location)
-
-
+      .catch(err => {
+        console.log('Error getting documents', err)
+      })
   }
 
   render() {
 
-    // console.log(this.state)
-
-    if (!this.state.zipCode) {
-      return (
-        <div>
-          <Paper zDepth={2} className="article-card">
-            <div className="zipcode-input">
-              <h3>Enter your zip code to get weather!</h3>
-              <form onSubmit={this.submitHandler}>
-                <label htmlFor="zip" style={{marginRight: '1em'}}>Zip Code:</label>
-                <input
-                  name="zip"
-                  placeholder="10001"
-                  type="number"
-                  step="1"
-                  min="00000"
-                  max="99999"
-                />
-                <button type="submit" className="btn btn-primary" style={{marginLeft: '1em'}}>
-                  Submit
-                </button>
-              </form>
-            </div>
-          </Paper>
-        </div>
-      )
-    } else if (Object.keys(this.state.weatherJSON).length === 0) {
+    if (Object.keys(this.state.weather).length === 0) {
       return (
         <Paper zDepth={2} className="article-card">
           <div className="loading-weather">
@@ -99,27 +56,26 @@ export default class WeatherWidget extends Component {
         </Paper>
       )
     }
-    const weather = this.state.weatherJSON;
-
+    const weather = this.state.weather
+    const location = this.state.location
     console.log(weather)
     return (
       <div>
         <Paper zDepth={2} className="article-card">
           <div className="weather-widget">
-            <h3>Weather for {this.state.city}</h3>
+            <h3>Weather for {`${location.city}, ${location.state}`}</h3>
+            <h5>{weather.summary}</h5>
             <div>
-              <h4>{weather.summary}</h4>
-              <h5>{Math.round(weather.temperature)}° F</h5>
-              <ReactAnimatedWeather
-                icon={weather.icon.toUpperCase().split('-').join('_')}
-                color={'#FFA14A'}
-                size={128}
-                animate={true}
-              />
+              <WeatherItem forecast={weather.data[0]} />
             </div>
           </div>
         </Paper>
       </div>
     )
   }
+}
+
+function dateMaker() {
+  const date = new Date()
+  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }

@@ -275,12 +275,11 @@ exports.getWeather = functions.https.onRequest((request, response) => {
 
 
 function writeWeather(location) {
-    const fora = forecast.get([location.latitude, location.longitude], function (err, weather) {
+    forecast.get([location.latitude, location.longitude], function (err, weather) {
       if (err) return console.dir(err);
       // console.log(weather.daily.data[0]);
 
       const date = dateMaker();
-
       return admin
         .firestore()
         .collection('weather')
@@ -289,7 +288,7 @@ function writeWeather(location) {
         .doc('zip')
         .collection(location.zip)
         .doc('forecast')
-        .set(weather.daily)
+        .set(weather.hourly)
         .then((succ) => {
           console.log('wrote weather for', location.zip)
         })
