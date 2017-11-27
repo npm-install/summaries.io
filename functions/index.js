@@ -1,68 +1,54 @@
-const functions = require("firebase-functions");
+const functions = require('firebase-functions')
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-const sendgrid = require("sendgrid");
-const client = sendgrid("YOUR_SG_API_KEY");
-const axios = require("axios");
-const Promise = require("bluebird");
+const sendgrid = require('sendgrid')
+const client = sendgrid('YOUR_SG_API_KEY')
+const axios = require('axios')
+const Promise = require('bluebird')
 
-const admin = require("firebase-admin");
-admin.initializeApp(functions.config().firebase);
+const admin = require('firebase-admin')
+admin.initializeApp(functions.config().firebase)
 
 function dateMaker() {
-  let date2 = Date().split(" ");
-  const monthToNum = {
-    Jan: 1,
-    Feb: 2,
-    Mar: 3,
-    Apr: 4,
-    May: 5,
-    Jun: 6,
-    Jul: 7,
-    Aug: 8,
-    Sep: 9,
-    Oct: 10,
-    Nov: 11,
-    Dec: 12
-  }
-  return `${date2[3]}-${monthToNum[date2[1]]}-${date2[2]}`
+  const date = new Date()
+  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
 function parseBody(body) {
-  const helper = sendgrid.mail;
-  const fromEmail = new helper.Email(body.from);
-  const toEmail = new helper.Email(body.to);
-  const subject = body.subject;
-  const content = new helper.Content("text/html", body.content);
-  const mail = new helper.Mail(fromEmail, subject, toEmail, content);
-  return mail.toJSON();
+  const helper = sendgrid.mail
+  const fromEmail = new helper.Email(body.from)
+  const toEmail = new helper.Email(body.to)
+  const subject = body.subject
+  const content = new helper.Content('text/html', body.content)
+  const mail = new helper.Mail(fromEmail, subject, toEmail, content)
+  return mail.toJSON()
 }
 
 exports.httpEmail = functions.https.onRequest((req, res) =>
   Promise.resolve()
     .then(_ => {
-      if (req.method !== "POST") {
-        const error = new Error("Only POST requests are accepted");
-        error.code = 405;
-        throw error;
+      if (req.method !== 'POST') {
+        const error = new Error('Only POST requests are accepted')
+        error.code = 405
+        throw error
       }
 
       const request = client.emptyRequest({
-        method: "POST",
-        path: "/v3/mail/send",
+        method: 'POST',
+        path: '/v3/mail/send',
         body: parseBody(req.body)
-      });
+      })
 
-      return client.API(request);
+      return client.API(request)
     })
     .then(response => (response.body ? res.send(response.body) : res.end()))
     .catch(err => {
-      console.error(err);
-      return Promise.reject(err);
+      console.error(err)
+      return Promise.reject(err)
     })
-);
+)
 
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
@@ -178,7 +164,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
   // Write source to the database
   function writeSource(data) {
     const newsSource = data[0].source.id
-    const batch = admin.firestore().batch();
+    const batch = admin.firestore().batch()
     const dayRef = admin
       .firestore()
       .collection("sources")
@@ -209,14 +195,14 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       });
 
   }
-});
+})
 
 exports.makeEmails = functions.https.onRequest((request, response) => {
   const today = dateMaker()
 
   const rec = admin
     .firestore()
-    .collection("users")
+    .collection('users')
     // Here add a where query to filter by requested time
     .get()
     .then(function (users) {
@@ -224,9 +210,9 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
       users.forEach(function (user) {
         admin
           .firestore()
-          .collection("users")
+          .collection('users')
           .doc(user.id)
-          .collection("subscriptions")
+          .collection('subscriptions')
           .get()
           .then(subscriptions => {
             return subscriptions.forEach(subscription => {
@@ -265,9 +251,9 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                 .catch(console.error)
             })
           })
-          .catch(console.error);
-      });
+          .catch(console.error)
+      })
     })
-    .catch(console.error);
+    .catch(console.error)
   response.send('emails are being created')
 })
