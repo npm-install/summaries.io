@@ -151,33 +151,30 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       return axios.get(newsUrl)
         .then(response => {
           articles = response.data.articles.map(async article => {
+
+            // Defaults to description
+            article.summary = article.description;
+
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
-              .catch(() => {
+              .catch((err) => {
                 console.error('Error with smmry on', article.url)
               });
 
             let updatedArticle;
 
             // Check to see if article summarized successfully
-            if (!sumsObj || !sumsObj.data.sm_api_content) {
-              // Article summary failed, just use the description
-              updatedArticle = Object.assign({}, article, {
-                summary: article.description
-              });
-              return updatedArticle;
+            if (sumsObj && sumsObj.data.sm_api_content) {
+              console.log('Summary success')
+              // Article summary success, overwrite description
+              article.summary = sumsObj.data.sm_api_content
             }
 
-            // If article summarized successfully add the summary
-            updatedArticle = Object.assign({}, article, {
-              summary: sumsObj.data.sm_api_content
-            });
-
-            return updatedArticle;
+            return article;
           });
           return Promise.all(response.data.articles);
         })
-        .catch(() => {
+        .catch((err) => {
           console.error('error on', newsSource)
         });
     }
