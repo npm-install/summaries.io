@@ -6,7 +6,7 @@ import { db, firebaseAuth } from '../config/constants'
 
 function today() {
   const dt = new Date()
-  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + (dt.getDate() - 1)
+  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
 }
 
 
@@ -19,18 +19,9 @@ export default class SourceSummary extends Component {
   }
 
   componentDidMount() {
-    const articles = {
-      newyorktimes: NYT,
-      ignnews: IGN,
-      tc: TechCrunch
-    }
-
-    const currentUser = firebaseAuth().currentUser // will be used when we have emails as user ids
-
-    console.log(today())
     db
       .collection('users')
-      .doc('5CmbNogIFYyCBcWTVrrS')
+      .doc(firebaseAuth().currentUser)
       .collection('emails')
       .doc(today())
       .collection('bloomberg')

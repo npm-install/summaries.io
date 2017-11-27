@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { db } from '../../config/constants'
+import { db, firebaseAuth } from '../../config/constants'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 import Paper from 'material-ui/Paper'
 import Toggle from 'material-ui/Toggle'
@@ -46,7 +46,7 @@ export default class Dashboard extends Component {
       .then(() => {
         db
           .collection('users')
-          .doc('QgFF8KtweB8Ut9TL2jmO')
+          .doc(firebaseAuth().currentUser.email)
           .collection('subscriptions')
           .get()
           .then(querySnapshot => {
@@ -84,7 +84,7 @@ export default class Dashboard extends Component {
 
         db
         .collection('users')
-        .doc('QgFF8KtweB8Ut9TL2jmO')
+        .doc(firebaseAuth().currentUser.email)
         .collection('subscriptions')
         .doc(el.id)
         .delete()
@@ -94,7 +94,7 @@ export default class Dashboard extends Component {
 
         db
           .collection('users')
-          .doc('QgFF8KtweB8Ut9TL2jmO')
+          .doc(firebaseAuth().currentUser.email)
           .collection('subscriptions')
           .doc(el.id)
           .set(el)
