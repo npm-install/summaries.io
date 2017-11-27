@@ -9,7 +9,7 @@ import ReactAnimatedWeather from 'react-animated-weather';
 
 export default class WeatherWidget extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       zipCode: '',
       weatherJSON: {},
@@ -24,7 +24,7 @@ export default class WeatherWidget extends Component {
   getCurrentData(position, location) {
     const weatherKey = '3802941ad5b8c716614249ea1cf918b8'
 
-    DarkSkyApi.apiKey = weatherKey;
+    DarkSkyApi.apiKey = weatherKey
 
 
     DarkSkyApi.loadCurrent(position)
@@ -36,15 +36,14 @@ export default class WeatherWidget extends Component {
           }
         )
       })
-      .catch(console.error);
-
+      .catch(console.error)
   }
 
   submitHandler(event) {
     event.preventDefault()
-    let zip = event.target.zip.value;
+    let zip = event.target.zip.value
 
-    while (zip.length < 5) zip = '0' + zip;
+    while (zip.length < 5) zip = '0' + zip
 
     const location = zipcodes.lookup(zip)
     if (!location) {
@@ -75,17 +74,23 @@ export default class WeatherWidget extends Component {
               <h3>Enter your zip code to get weather!</h3>
               <form onSubmit={this.submitHandler}>
                 <label htmlFor="zip">Zip Code:</label>
-                <input name="zip" placeholder="10001" type="number" step="1" min="00000" max="99999" />
+                <input
+                  name="zip"
+                  placeholder="10001"
+                  type="number"
+                  step="1"
+                  min="00000"
+                  max="99999"
+                />
                 <button type="submit" className="btn btn-primary">
                   Submit
-              </button>
+                </button>
               </form>
             </div>
           </Paper>
         </div>
-      );
-    }
-    else if (Object.keys(this.state.weatherJSON).length === 0) {
+      )
+    } else if (Object.keys(this.state.weatherJSON).length === 0) {
       return (
         <Paper zDepth={2} className="article-card">
           <div className="loading-weather">
@@ -115,6 +120,6 @@ export default class WeatherWidget extends Component {
           </div>
         </Paper>
       </div>
-    );
+    )
   }
 }
