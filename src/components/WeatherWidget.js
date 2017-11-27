@@ -73,7 +73,7 @@ export default class WeatherWidget extends Component {
             <div className="zipcode-input">
               <h3>Enter your zip code to get weather!</h3>
               <form onSubmit={this.submitHandler}>
-                <label htmlFor="zip">Zip Code:</label>
+                <label htmlFor="zip" style={{marginRight: '1em'}}>Zip Code:</label>
                 <input
                   name="zip"
                   placeholder="10001"
@@ -82,7 +82,7 @@ export default class WeatherWidget extends Component {
                   min="00000"
                   max="99999"
                 />
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" style={{marginLeft: '1em'}}>
                   Submit
                 </button>
               </form>

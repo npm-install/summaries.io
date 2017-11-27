@@ -5,7 +5,7 @@ const Article = ({ article }) => (
     <a href={article.url} className="article-link">
       {article.title}
     </a>
-    <li className="summary-text">{article.summaryText}</li>
+    <li className="summary-text">{article.summary}</li>
   </div>
 )
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { db } from '../../config/constants'
+import { db, firebaseAuth } from '../../config/constants'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 import Paper from 'material-ui/Paper'
 import Toggle from 'material-ui/Toggle'
@@ -30,17 +30,33 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    let arr = []
+    let previewArr = []
     db
       .collection('sources')
       .get()
       .then(function(querySnapshot) {
-        querySnapshot.forEach(function(source) {
-          arr.push(source.data())
-        })
+        return querySnapshot.docs.map(source => source.data())
+        // querySnapshot.forEach(function(source) {
+        //   sourceArr.push(source.data())
+        // })
+      })
+      .then(arr => {
+        this.setState({ sources: arr })
       })
       .then(() => {
-        this.setState({ sources: arr })
+        db
+          .collection('users')
+          .doc(firebaseAuth().currentUser.email)
+          .collection('subscriptions')
+          .get()
+          .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+              previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
+            })
+          })
+          .then(() => {
+            this.setState({ preview: previewArr })
+          })
       })
   }
 
@@ -65,10 +81,26 @@ export default class Dashboard extends Component {
       if (index > -1) {
         const preview = state.preview.slice(0)
         preview.splice(index, 1)
-        return { preview }
-      }
 
-      return { preview: [...state.preview, el] }
+        db
+        .collection('users')
+        .doc(firebaseAuth().currentUser.email)
+        .collection('subscriptions')
+        .doc(el.id)
+        .delete()
+
+        return { preview }
+      } else {
+
+        db
+          .collection('users')
+          .doc(firebaseAuth().currentUser.email)
+          .collection('subscriptions')
+          .doc(el.id)
+          .set(el)
+
+        return { preview: [...state.preview, el] }
+      }
     })
   }
 
@@ -105,6 +137,7 @@ export default class Dashboard extends Component {
   }
 
   render() {
+    console.log('le state', this.state)
     // const { classes } = this.props;
     const { value, suggestions } = this.state
     const inputProps = {
@@ -132,7 +165,7 @@ export default class Dashboard extends Component {
         </div>
 
         <div className="mobile-chips">
-          {this.state.preview.map(preview => (
+          {this.state.preview.length && this.state.preview.map(preview => (
             <Chip
               key={preview.id}
               className="news-chip"
@@ -213,6 +246,11 @@ export default class Dashboard extends Component {
 
           <div className="column-right">
             <Paper style={{ width: '800px', height: '100vh', borderRadius: '20px' }} zDepth={3}>
+              <div className="email-header">
+                <p>From: email@summaries.io</p>
+                <p>To: {firebaseAuth().currentUser.email}</p>
+                <p>Subject: Your Daily Gist</p>
+              </div>
               {this.state.preview.map(preview => (
                 <div key={preview.id} className="preview-grid">
                   <Card className="preview-card" style={{ borderRadius: '10px' }}>
