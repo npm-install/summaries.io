@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import SourceSummary from './SourceSummary';
-import WeatherWidget from './WeatherWidget';
+import React, { Component } from 'react'
+import SourceSummary from './SourceSummary'
+import WeatherWidget from './WeatherWidget'
 
 export default class Home extends Component {
   render() {
@@ -12,6 +12,6 @@ export default class Home extends Component {
 
         <SourceSummary />
       </div>
-    );
+    )
   }
 }

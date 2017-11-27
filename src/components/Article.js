@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const Article = ({ article }) => (
   <div>
@@ -7,6 +7,6 @@ const Article = ({ article }) => (
     </a>
     <li className="summary-text">{article.summaryText}</li>
   </div>
-);
+)
 
-export default Article;
+export default Article

@@ -1,10 +1,10 @@
-import React from 'react';
-import { RaisedButton } from 'material-ui';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
+import React from 'react'
+import { RaisedButton } from 'material-ui'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 
 export default function User(props) {
-  const email = props.user.email;
+  const email = props.user.email
 
   return (
     <div>
@@ -48,5 +48,5 @@ export default function User(props) {
         </SelectField>
       </div>
     </div>
-  );
+  )
 }

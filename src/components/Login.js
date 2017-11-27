@@ -1,38 +1,38 @@
-import React, { Component } from 'react';
-import { login, resetPassword, loginWithGoogle } from '../helpers/auth';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import React, { Component } from 'react'
+import { login, resetPassword, loginWithGoogle } from '../helpers/auth'
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
 
 function setErrorMsg(error) {
   return {
     loginMessage: error,
-  };
+  }
 }
 
 export default class Login extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       email: '',
       password: '',
       loginMessage: null,
-    };
+    }
   }
 
   handleSubmit = e => {
-    e.preventDefault();
+    e.preventDefault()
     login(this.state.email, this.state.password).catch(error => {
-      this.setState(setErrorMsg('Invalid username/password.'));
-    });
-  };
+      this.setState(setErrorMsg('Invalid username/password.'))
+    })
+  }
 
   resetPassword = () => {
     resetPassword(this.state.email, {
       url: `https://summary-73ccc.firebaseapp.com/login`,
     })
       .then(() => this.setState(setErrorMsg(`Password reset email sent to ${this.state.email}.`)))
-      .catch(error => this.setState(setErrorMsg(`Email address not found.`)));
-  };
+      .catch(error => this.setState(setErrorMsg(`Email address not found.`)))
+  }
 
   render() {
     return (
@@ -78,19 +78,19 @@ export default class Login extends Component {
           onClick={loginWithGoogle}
         />
       </form>
-    );
+    )
   }
 }
 
 const raisedBtn = {
   margin: 15,
-};
+}
 
 const container = {
   textAlign: 'center',
-};
+}
 
 const style = {
   raisedBtn,
   container,
-};
+}

@@ -1,54 +1,54 @@
-import React, { Component } from 'react';
-import { Step, Stepper, StepLabel } from 'material-ui/Stepper';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
+import React, { Component } from 'react'
+import { Step, Stepper, StepLabel } from 'material-ui/Stepper'
+import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
 export default class Landing extends Component {
   constructor() {
-    super();
+    super()
     this.state = {
       finished: false,
       stepIndex: 0,
-    };
-    this.handleNext = this.handleNext.bind(this);
-    this.handlePrev = this.handlePrev.bind(this);
-    this.getStepContent = this.getStepContent.bind(this);
+    }
+    this.handleNext = this.handleNext.bind(this)
+    this.handlePrev = this.handlePrev.bind(this)
+    this.getStepContent = this.getStepContent.bind(this)
   }
 
   handleNext = () => {
-    const { stepIndex } = this.state;
+    const { stepIndex } = this.state
     this.setState({
       stepIndex: stepIndex + 1,
       finished: stepIndex >= 2,
-    });
-  };
+    })
+  }
 
   handlePrev = () => {
-    const { stepIndex } = this.state;
+    const { stepIndex } = this.state
     if (stepIndex > 0) {
-      this.setState({ stepIndex: stepIndex - 1 });
+      this.setState({ stepIndex: stepIndex - 1 })
     }
-  };
+  }
 
   getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return 'Sign up with us or connect your gmail account';
+        return 'Sign up with us or connect your gmail account'
       case 1:
-        return 'Pick from our diverse selection of news sources and set gist receiving time';
+        return 'Pick from our diverse selection of news sources and set gist receiving time'
       case 2:
-        return 'Voilà! Enjoy your customzied daily gist';
+        return 'Voilà! Enjoy your customzied daily gist'
       default:
-        return "You're a long way from home sonny jim!";
+        return "You're a long way from home sonny jim!"
     }
   }
 
   render() {
-    const { finished, stepIndex } = this.state;
+    const { finished, stepIndex } = this.state
     const contentStyle = {
       margin: '0 16px',
       fontFamily: 'Noto Sans, sans-serif',
-    };
+    }
 
     return (
       <div className="landing-page">
@@ -123,8 +123,8 @@ export default class Landing extends Component {
                 Voila!
                 <button
                   onClick={event => {
-                    event.preventDefault();
-                    this.setState({ stepIndex: 0, finished: false });
+                    event.preventDefault()
+                    this.setState({ stepIndex: 0, finished: false })
                   }}
                   style={{ background: 'none', border: 'none' }}
                 >
@@ -155,6 +155,6 @@ export default class Landing extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import Home from './Home';
-import Landing from './Landing';
-import Dashboard from './protected/Dashboard';
-import { logout } from '../helpers/auth';
-import { firebaseAuth } from '../config/constants';
-import AppBar from 'material-ui/AppBar';
-import User from './User';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import CircularProgress from 'material-ui/CircularProgress';
-import { db } from '../config/constants';
+import React, { Component } from 'react'
+import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
+import Login from './Login'
+import Register from './Register'
+import Home from './Home'
+import Landing from './Landing'
+import Dashboard from './protected/Dashboard'
+import { logout } from '../helpers/auth'
+import { firebaseAuth } from '../config/constants'
+import AppBar from 'material-ui/AppBar'
+import User from './User'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
+import IconButton from 'material-ui/IconButton'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import CircularProgress from 'material-ui/CircularProgress'
+import { db } from '../config/constants'
 
 function PrivateRoute({ component: Component, authed, ...rest }) {
   return (
@@ -28,7 +28,7 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
         )
       }
     />
-  );
+  )
 }
 
 function PublicRoute({ component: Component, authed, ...rest }) {
@@ -37,20 +37,20 @@ function PublicRoute({ component: Component, authed, ...rest }) {
       {...rest}
       render={props => (authed === false ? <Component {...props} /> : <Redirect to="/dashboard" />)}
     />
-  );
+  )
 }
 
 export default class App extends Component {
   state = {
     authed: false,
     loading: true,
-  };
+  }
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       // Now let's modify the state with user information and auth
       if (user) {
         // Let's retrieve the user's information
-        var userRef = db.collection('users');
+        var userRef = db.collection('users')
         userRef
           .where('uid', '==', user.uid)
           .get()
@@ -60,25 +60,25 @@ export default class App extends Component {
                 authed: true,
                 loading: false,
                 user: doc.data(), // make sure this is synchronous
-              });
-            });
+              })
+            })
           })
           .catch(err => {
-            console.log('Error getting documents', err);
-          });
+            console.log('Error getting documents', err)
+          })
       } else {
         this.setState({
           authed: false,
           loading: false,
-        });
+        })
       }
-    });
+    })
   }
   componentWillUnmount() {
-    this.removeListener();
+    this.removeListener()
   }
   render() {
-    console.log(this.state);
+    console.log(this.state)
 
     const authButtons = this.state.authed ? (
       <IconMenu
@@ -98,7 +98,7 @@ export default class App extends Component {
         <MenuItem
           primaryText="Sign out"
           onClick={() => {
-            logout();
+            logout()
           }}
         />
       </IconMenu>
@@ -120,7 +120,7 @@ export default class App extends Component {
           <MenuItem primaryText="Sign Up" />
         </Link>
       </IconMenu>
-    );
+    )
 
     const topbarButtons = (
       <div>
@@ -132,7 +132,7 @@ export default class App extends Component {
         </Link>
         {authButtons}
       </div>
-    );
+    )
     return this.state.loading === true ? (
       <CircularProgress size={80} thickness={5} style={{ marginLeft: '50px', marginTop: '50px' }} />
     ) : (
@@ -169,6 +169,6 @@ export default class App extends Component {
           </div>
         </div>
       </BrowserRouter>
-    );
+    )
   }
 }

@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import Article from './Article';
-import Paper from 'material-ui/Paper';
-import { NYT, IGN, TechCrunch } from './DumbyData';
+import React, { Component } from 'react'
+import Article from './Article'
+import Paper from 'material-ui/Paper'
+import { NYT, IGN, TechCrunch } from './DumbyData'
 
 export default class SourceSummary extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       articles: {
         newyorktimes: NYT,
         ignnews: IGN,
         tc: TechCrunch,
       },
-    };
+    }
   }
 
   render() {
@@ -42,6 +42,6 @@ export default class SourceSummary extends Component {
             </div>
           ))}
       </div>
-    );
+    )
   }
 }

@@ -45,7 +45,7 @@ export const NYT = [
     publishedAt: '2017-11-20T19:41:01Z',
     summaryText: `Nebraska emerged more than seven years ago as an unlikely center of opposition to Keystone XL, which would run more than 1,100 miles from Alberta, Canada, to southern Nebraska and connect there with existing pipelines.`,
   },
-];
+]
 
 export const IGN = [
   {
@@ -93,7 +93,7 @@ export const IGN = [
     publishedAt: '2017-11-21T17:11:53Z',
     summaryText: `Welcome to IGN's Daily Deals, your source for the best deals on the stuff you actually want to buy. The following links go to Amazon but other stores may also have the same Black Friday pricing.`,
   },
-];
+]
 
 export const TechCrunch = [
   {
@@ -140,7 +140,7 @@ export const TechCrunch = [
     publishedAt: '2017-11-20T16:49:22Z',
     summaryText: `The new Oasis keeps all its battery in-house, meaning that you don't need a cover with it to get the full battery life out of the Kindle, as you did with the old one. In the end, when I asked Amazon for an updated Kindle this year, the new Oasis is basically exactly what I had in mind.`,
   },
-];
+]
 
 export const gadgets = [
   {
@@ -167,4 +167,4 @@ export const gadgets = [
     name: 'Bloomberg',
     image: 'https://icons.better-idea.org/icon?url=http://www.bloomberg.com&size=70..120..200',
   },
-];
+]

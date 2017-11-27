@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { auth } from '../helpers/auth';
+import React, { Component } from 'react'
+import { auth } from '../helpers/auth'
 
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton'
+import TextField from 'material-ui/TextField'
 
 function setErrorMsg(error) {
   return {
     registerError: error.message,
-  };
+  }
 }
 
 export default class Register extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       registerError: null,
       email: '',
       password: '',
-    };
+    }
   }
 
   handleSubmit = e => {
-    e.preventDefault();
-    auth(this.state.email, this.state.password).catch(e => this.setState(setErrorMsg(e)));
-  };
+    e.preventDefault()
+    auth(this.state.email, this.state.password).catch(e => this.setState(setErrorMsg(e)))
+  }
   render() {
     return (
       <form onSubmit={this.handleSubmit} style={style.container} className="login-form">
@@ -50,19 +50,19 @@ export default class Register extends Component {
         )}
         <RaisedButton label="Register" primary={true} style={style.raisedBtn} type="submit" />
       </form>
-    );
+    )
   }
 }
 
 const raisedBtn = {
   margin: 15,
-};
+}
 
 const container = {
   textAlign: 'center',
-};
+}
 
 const style = {
   raisedBtn,
   container,
-};
+}
