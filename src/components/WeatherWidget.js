@@ -59,7 +59,7 @@ export default class WeatherWidget extends Component {
     const weather = this.state.weather
     const location = this.state.location
     return (
-      <div>
+      <div id="wea_widget">
         <Paper zDepth={2} className="article-card">
           <div className="weather-widget">
             <h3>Weather for today in {`${location.city}, ${location.state}`}</h3>
