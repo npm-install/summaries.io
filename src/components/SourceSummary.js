@@ -9,6 +9,7 @@ function today() {
   return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + (dt.getDate() - 1)
 }
 
+
 export default class SourceSummary extends Component {
   constructor(props) {
     super(props)
@@ -57,6 +58,7 @@ export default class SourceSummary extends Component {
     console.log(Object.keys(this.state.articles))
     return (
       <div className="source-summary">
+
         {this.state.articles.bloomberg &&
           Object.keys(this.state.articles).map(key => (
             <div key={key} className="each-source">
@@ -66,9 +68,7 @@ export default class SourceSummary extends Component {
                   className="sourcelogo"
                   alt="logo"
                 />
-                <h3 className="source-title">
-                  {this.state.articles[key][0].source.name}
-                </h3>
+                <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
               </div>
 
               <div className="source-content">
