@@ -7,6 +7,8 @@ const sendgrid = require('sendgrid')
 const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
+const zipcodes = require('zipcodes')
+const DarkSkyApi = require('dark-sky-api')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -246,4 +248,55 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     })
     .catch(console.error)
   response.send('emails are being created')
+})
+
+exports.getWeather = functions.https.onRequest((request, response) => {
+  const { weatherKey } = require('./keys')
+
+  var Forecast = require('forecast');
+
+  // Initialize
+  var forecast = new Forecast({
+    service: 'darksky',
+    key: weatherKey,
+    units: 'fahrenheit'
+  });
+
+
+  // Gett all zipcodes from database
+  const zipsArray = ['08536', '10001', '08648', '08807']
+
+  const locations = zipsArray.map(zip => zipcodes.lookup(zip))
+
+  // Write each location to db
+  Promise.each(locations, writeWeather)
+    .then(() => {
+      response.json('Writing to DB, check logs')
+    })
+
+
+function writeWeather(location) {
+    const fora = forecast.get([location.latitude, location.longitude], function (err, weather) {
+      if (err) return console.dir(err);
+      // console.log(weather.daily.data[0]);
+
+      const date = dateMaker();
+
+      return admin
+        .firestore()
+        .collection('weather')
+        .doc('days')
+        .collection(date)
+        .doc('zip')
+        .collection(location.zip)
+        .doc('forecast')
+        .set(weather.daily)
+        .then((succ) => {
+          console.log('wrote weather for', location.zip)
+        })
+        .catch(console.error.bind(console))
+    })
+  }
+
+
 })
