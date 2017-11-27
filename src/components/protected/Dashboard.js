@@ -30,17 +30,18 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    let sourceArr = [], previewArr = []
+    let previewArr = []
     db
       .collection('sources')
       .get()
       .then(function(querySnapshot) {
-        querySnapshot.forEach(function(source) {
-          sourceArr.push(source.data())
-        })
+        return querySnapshot.docs.map(source => source.data())
+        // querySnapshot.forEach(function(source) {
+        //   sourceArr.push(source.data())
+        // })
       })
-      .then(() => {
-        this.setState({ sources: sourceArr })
+      .then((arr) => {
+        this.setState({ sources: arr })
       })
       .then(() => {
         db
@@ -80,11 +81,29 @@ export default class Dashboard extends Component {
       if (index > -1) {
         const preview = state.preview.slice(0)
         preview.splice(index, 1)
+
         return { preview }
       }
-
-      return { preview: [...state.preview, el] }
+      else {
+        db.collection('users').doc('QgFF8KtweB8Ut9TL2jmO').collection('subscriptions').add(el)
+        return { preview: [...state.preview, el] }
+      }
     })
+
+    // //meep meep
+    // db
+    // .collection('users')
+    // .doc('QgFF8KtweB8Ut9TL2jmO')
+    // .collection('subscriptions')
+    // .get()
+    // .then(querySnapshot => {
+    //   querySnapshot.forEach(doc => {
+    //     previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
+    //   })
+    // })
+    // .then(() => {
+    //   this.setState({ preview: previewArr })
+    // })
   }
 
   //----------Search bar helper functions-------------
