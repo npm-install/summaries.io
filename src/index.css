@@ -291,6 +291,17 @@ body {
   text-align: center;
 }
 
+.email-header {
+  padding-left: 2em;
+  padding-top: 2em;
+  line-height: 1.5em;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.news-card-mobile-settings {
+  display: none;
+}
+
 /* Mobile */
 /* @media only screen and (max-width: 667px) { */
   @media all and (max-width: 839px){

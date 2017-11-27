@@ -246,6 +246,11 @@ export default class Dashboard extends Component {
 
           <div className="column-right">
             <Paper style={{ width: '800px', height: '100vh', borderRadius: '20px' }} zDepth={3}>
+              <div className="email-header">
+                <p>From: email@summaries.io</p>
+                <p>To: {firebaseAuth().currentUser.email}</p>
+                <p>Subject: Your Daily Gist</p>
+              </div>
               {this.state.preview.map(preview => (
                 <div key={preview.id} className="preview-grid">
                   <Card className="preview-card" style={{ borderRadius: '10px' }}>

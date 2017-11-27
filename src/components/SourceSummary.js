@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Article from './Article'
 import Paper from 'material-ui/Paper'
-import { NYT, IGN, TechCrunch } from './DumbyData'
 import { db, firebaseAuth } from '../config/constants'
 
 function today() {
@@ -9,22 +8,21 @@ function today() {
   return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
 }
 
-
 export default class SourceSummary extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      articles: {}
+      articles: {},
     }
   }
 
   componentDidMount() {
     db
       .collection('users')
-      .doc(firebaseAuth().currentUser)
+      .doc(firebaseAuth().currentUser.email)
       .collection('emails')
       .doc(today())
-      .collection('bloomberg')
+      .collection('reuters')
       .get()
       .then(snapshot => {
         const artFromSource = []
@@ -33,42 +31,30 @@ export default class SourceSummary extends Component {
         })
         this.setState({
           articles: {
-            bloomberg: artFromSource
-          }
+            reuters: artFromSource,
+          },
         })
       })
       .catch(err => {
         console.log('Error getting documents', err)
       })
 
-    // this.setState({ articles: articles })
+
   }
 
   render() {
-    console.log(this.state.articles)
-    console.log(Object.keys(this.state.articles))
     return (
       <div className="source-summary">
-
-        {this.state.articles.bloomberg &&
+        {this.state.articles.reuters &&
           Object.keys(this.state.articles).map(key => (
             <div key={key} className="each-source">
               <div className="source-header">
-                <img
-                  src={this.state.articles[key][0].source.logo}
-                  className="sourcelogo"
-                  alt="logo"
-                />
                 <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
               </div>
 
               <div className="source-content">
                 {this.state.articles[key].map(article => (
-                  <Paper
-                    zDepth={2}
-                    key={article.title}
-                    className="article-card"
-                  >
+                  <Paper zDepth={2} key={article.title} className="article-card">
                     <div className="each-article">
                       <Article article={article} />
                     </div>
