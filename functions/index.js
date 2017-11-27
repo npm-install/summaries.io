@@ -7,6 +7,8 @@ const sendgrid = require('sendgrid')
 const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
+const zipcodes = require ('zipcodes')
+const DarkSkyApi = require('dark-sky-api')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -246,4 +248,47 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     })
     .catch(console.error)
   response.send('emails are being created')
+})
+
+exports.getWeather = functions.https.onRequest((request, response) => {
+  const { weatherKey } = require('./keys')
+
+  var Forecast = require('forecast');
+
+ // Initialize
+ var forecast = new Forecast({
+   service: 'darksky',
+   key: weatherKey,
+   units: 'fahrenheit'
+ });
+
+
+  const zip = '08536'
+
+  const location = zipcodes.lookup(zip)
+
+  // const position = {
+  //   latitude: location.latitude,
+  //   longitude: location.longitude
+  // };
+
+  forecast.get([location.latitude, location.longitude], function(err, weather) {
+    if(err) return console.dir(err);
+    // console.log(weather.daily.data[0]);
+
+    const date = dateMaker();
+
+    admin
+    .firestore()
+    .collection('weather')
+    .doc('days')
+    .collection(date)
+    .doc('zip')
+    .collection(zip)
+    .doc('forecast')
+    .set(weather.daily)
+
+    response.json('check firebase')
+  });
+
 })
