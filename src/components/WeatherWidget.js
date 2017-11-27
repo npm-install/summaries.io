@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import ReactLoading from 'react-loading';
-import { setTimeout } from 'core-js/library/web/timers';
 import zipcodes from 'zipcodes'
 import DarkSkyApi from 'dark-sky-api';
 // import Skycons from 'react-skycons'
@@ -13,7 +12,7 @@ export default class WeatherWidget extends Component {
     super(props);
     this.state = {
       zipCode: '',
-      currentWeather: {},
+      weatherJSON: {},
       forecastWeather: {},
       city: ''
     };
@@ -32,7 +31,7 @@ export default class WeatherWidget extends Component {
       .then(result => {
         this.setState(
           {
-            currentWeather: result,
+            weatherJSON: result,
             city: `${location.city}, ${location.state}`
           }
         )
@@ -59,7 +58,7 @@ export default class WeatherWidget extends Component {
     };
 
     this.setState({ zipCode: zip, weatherJSON: {} })
-    this.getData(position, location)
+    this.getCurrentData(position, location)
 
 
   }
