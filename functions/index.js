@@ -74,58 +74,50 @@ exports.polly = functions.https.onRequest((req, res) => {
   // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
 
   //initialize google cloud storage instance
-  const storage = new Storage()
+  // const storage = new Storage()
 
   return admin
     .firestore()
     .collection(`sources/bloomberg/days/${date}/articles`)
     .get()
-    .then(async querySnapshot =>
-      querySnapshot.forEach(async doc => {
+    .then(querySnapshot => {
+      const summaries = querySnapshot.docs.map(doc => {
+        return {
+          summary: doc.data().summary,
+          title: doc.data().title.replace(/\'+/g, ''),
+        }
+      })
+
+      for (let i = 0; i < summaries.length; i++) {
         const params = {
-          Text: doc.data().title,
+          Text: summaries[i].summary,
           OutputFormat: 'mp3',
           VoiceId: 'Joanna',
         }
-        const title = doc
-          .data()
-          .title.replace(/\'+/, '')
-          .replace(/\s+/, '-')
-        console.log(title)
-
-        /*Regex to rewrite file with title of article without apostraphes and spaces
-          audio file will be in form of buffer from AWS Polly
-          file will have individual name of article title
-        */
-
-        await Polly.synthesizeSpeech(params, async (err, data) => {
-          const title = params.Text.replace(/\'+/, '').replace(/\s+/, '-')
+        Polly.synthesizeSpeech(params, (err, data) => {
           if (err) console.error(err.stack)
           else if (data) {
             if (data.AudioStream instanceof Buffer) {
-              await fs.writeFile(`./audio/${title}.mp3`, data.AudioStream, err => {
-                if (err) return console.error(err)
-                console.log('The file was saved!')
-              })
+              fs.writeFileSync(`./audio/${summaries[i].title}.mp3`, data.AudioStream)
+              console.log(`${summaries[i].title} FILE SAVED`)
             }
           }
         })
-
-        /*Adding to google cloud storage.
-          bucket requires the bucket name
-          upload requires local file path
-        */
-
-        await storage
-          .bucket(`summary-73ccc.appspot.com`)
-          .upload(`/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${title}.mp3`)
-          .then(_ => console.log('uploaded file'))
-          .catch(console.error)
-        return true
-      }),
-    )
-    .then(data => res.json(data))
-    .catch(console.error)
+        // await storage
+        //   .bucket(`summary-73ccc.appspot.com`)
+        //   .upload(
+        //     `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${
+        //       summaries[i].title
+        //     }.mp3`,
+        //   )
+        //   .then(_ => console.log('uploaded file'))
+        //   .catch(console.error.bind(console))
+      }
+      return summaries
+    })
+    .then(async summaries => await console.log(summaries))
+    .then(_ => res.sendStatus(200))
+    .catch(console.error.bind(console))
 })
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
