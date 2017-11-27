@@ -5,7 +5,7 @@ import TextField from 'material-ui/TextField'
 
 function setErrorMsg(error) {
   return {
-    loginMessage: error
+    loginMessage: error,
   }
 }
 
@@ -15,7 +15,7 @@ export default class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      loginMessage: null
+      loginMessage: null,
     }
   }
 
@@ -25,16 +25,12 @@ export default class Login extends Component {
       this.setState(setErrorMsg('Invalid username/password.'))
     })
   }
-  
+
   resetPassword = () => {
     resetPassword(this.state.email, {
-      url: `https://summary-73ccc.firebaseapp.com/login`
+      url: `https://summary-73ccc.firebaseapp.com/login`,
     })
-      .then(() =>
-        this.setState(
-          setErrorMsg(`Password reset email sent to ${this.state.email}.`)
-        )
-      )
+      .then(() => this.setState(setErrorMsg(`Password reset email sent to ${this.state.email}.`)))
       .catch(error => this.setState(setErrorMsg(`Email address not found.`)))
   }
 
@@ -61,10 +57,7 @@ export default class Login extends Component {
         <br />
         {this.state.loginMessage && (
           <div className="alert alert-danger" role="alert">
-            <span
-              className="glyphicon glyphicon-exclamation-sign"
-              aria-hidden="true"
-            />
+            <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true" />
             <span className="sr-only">Error:</span>
             &nbsp;{this.state.loginMessage}{' '}
             <div className="alert-link">
@@ -76,12 +69,7 @@ export default class Login extends Component {
             </div>
           </div>
         )}
-        <RaisedButton
-          label="Login"
-          primary={true}
-          style={style.raisedBtn}
-          type="submit"
-        />
+        <RaisedButton label="Login" primary={true} style={style.raisedBtn} type="submit" />
         <RaisedButton
           label="Login with Google"
           primary={false}
@@ -95,14 +83,14 @@ export default class Login extends Component {
 }
 
 const raisedBtn = {
-  margin: 15
+  margin: 15,
 }
 
 const container = {
-  textAlign: 'center'
+  textAlign: 'center',
 }
 
 const style = {
   raisedBtn,
-  container
+  container,
 }

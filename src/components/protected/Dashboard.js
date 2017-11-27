@@ -1,51 +1,47 @@
-import React, { Component } from "react";
-import { db } from "../../config/constants";
-import { Card, CardHeader, CardText } from "material-ui/Card";
-import Paper from "material-ui/Paper";
-import Toggle from "material-ui/Toggle";
-import Autosuggest from "react-autosuggest";
-import TextField from "material-ui/TextField";
+import React, { Component } from 'react'
+import { db } from '../../config/constants'
+import { Card, CardHeader, CardText } from 'material-ui/Card'
+import Paper from 'material-ui/Paper'
+import Toggle from 'material-ui/Toggle'
+import Autosuggest from 'react-autosuggest'
+import TextField from 'material-ui/TextField'
 // import Snackbar from "material-ui/Snackbar";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
-import Chip from "material-ui/Chip";
-import Avatar from 'material-ui/Avatar';
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
+import Chip from 'material-ui/Chip'
+import Avatar from 'material-ui/Avatar'
 
 export default class Dashboard extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       sources: [],
       preview: [],
       expanded: false,
-      value: "",
+      value: '',
       suggestions: [],
-      open: false
-    };
-    this.handleToggle = this.handleToggle.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(
-      this
-    );
-    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(
-      this
-    );
+      open: false,
+    }
+    this.handleToggle = this.handleToggle.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
     // this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   componentDidMount() {
-    let arr = [];
+    let arr = []
     db
-      .collection("sources")
+      .collection('sources')
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(source) {
-          arr.push(source.data());
-        });
+          arr.push(source.data())
+        })
       })
       .then(() => {
-        this.setState({ sources: arr });
-      });
+        this.setState({ sources: arr })
+      })
   }
 
   //Snack bar helper functions
@@ -65,64 +61,61 @@ export default class Dashboard extends Component {
   //Toggle helper functions
   handleToggle(el) {
     this.setState(state => {
-      const index = state.preview.indexOf(el);
+      const index = state.preview.indexOf(el)
       if (index > -1) {
-        const preview = state.preview.slice(0);
-        preview.splice(index, 1);
-        return { preview };
+        const preview = state.preview.slice(0)
+        preview.splice(index, 1)
+        return { preview }
       }
 
-      return { preview: [...state.preview, el] };
-    });
+      return { preview: [...state.preview, el] }
+    })
   }
-
-
 
   //----------Search bar helper functions-------------
 
   onChange = (event, { newValue }) => {
     this.setState({
-      value: newValue
-    });
-  };
+      value: newValue,
+    })
+  }
 
   onSuggestionsFetchRequested = ({ value }) => {
     const getSuggestions = value => {
-      const inputValue = value.trim().toLowerCase();
-      const inputLength = inputValue.length;
+      const inputValue = value.trim().toLowerCase()
+      const inputLength = inputValue.length
 
       return inputLength === 0
         ? []
         : this.state.sources.filter(
-            source =>
-              source.name.toLowerCase().slice(0, inputLength) === inputValue
-          );
-    };
+            source => source.name.toLowerCase().slice(0, inputLength) === inputValue,
+          )
+    }
 
     this.setState({
-      suggestions: getSuggestions(value)
-    });
-  };
+      suggestions: getSuggestions(value),
+    })
+  }
 
   // Autosuggest will call this function every time you need to clear suggestions.
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
-    });
-  };
+      suggestions: [],
+    })
+  }
 
   render() {
     // const { classes } = this.props;
-    const { value, suggestions } = this.state;
+    const { value, suggestions } = this.state
     const inputProps = {
-      placeholder: "Type a source you want to subscribe",
+      placeholder: 'Type a source you want to subscribe',
       value,
-      onChange: this.onChange
-    };
+      onChange: this.onChange,
+    }
 
-    const getSuggestionValue = suggestion => suggestion.name;
+    const getSuggestionValue = suggestion => suggestion.name
 
-    const renderSuggestion = suggestion => <div>{suggestion.name}</div>;
+    const renderSuggestion = suggestion => <div>{suggestion.name}</div>
 
     return (
       <div>
@@ -140,15 +133,19 @@ export default class Dashboard extends Component {
 
         <div className="mobile-chips">
           {this.state.preview.map(preview => (
-              <Chip
-                key={preview.id}
-                className="news-chip"
-                onRequestDelete={() => this.handleToggle(preview)}
-                style={{marginRight: '.5em', marginTop: '.5em', fontFamily: "'Noto Sans', sans-serif"}}
-              >
+            <Chip
+              key={preview.id}
+              className="news-chip"
+              onRequestDelete={() => this.handleToggle(preview)}
+              style={{
+                marginRight: '.5em',
+                marginTop: '.5em',
+                fontFamily: "'Noto Sans', sans-serif",
+              }}
+            >
               <Avatar src={preview.logo} />
-                {preview.name}
-              </Chip>
+              {preview.name}
+            </Chip>
           ))}
         </div>
 
@@ -158,22 +155,20 @@ export default class Dashboard extends Component {
               .filter(
                 item =>
                   !this.state.value ||
-                  item.name
-                    .toLowerCase()
-                    .indexOf(this.state.value.toLowerCase()) > -1
+                  item.name.toLowerCase().indexOf(this.state.value.toLowerCase()) > -1,
               )
               .map(source => (
                 <div key={source.id}>
-                  <Card className="news-card" style={{ borderRadius: "10px" }}>
+                  <Card className="news-card" style={{ borderRadius: '10px' }}>
                     <CardHeader
                       title={source.name}
                       avatar={source.logo}
                       actAsExpander={true}
                       showExpandableButton={true}
                       titleStyle={{
-                        fontSize: "1em",
-                        fontFamily: "Noto Sans, sans-serif",
-                        marginTop: ".5em"
+                        fontSize: '1em',
+                        fontFamily: 'Noto Sans, sans-serif',
+                        marginTop: '.5em',
                       }}
                     />
                     <Toggle
@@ -183,7 +178,7 @@ export default class Dashboard extends Component {
                     />
                     <CardText
                       expandable={true}
-                      style={{ width: "20em" }}
+                      style={{ width: '20em' }}
                       className="news-card-description"
                     >
                       <p>{source.description}</p>
@@ -192,16 +187,12 @@ export default class Dashboard extends Component {
                     {/* mobile settings */}
                     <CardText
                       expandable={true}
-                      style={{ width: "20em" }}
+                      style={{ width: '20em' }}
                       className="news-card-mobile-settings"
                     >
                       <div className="add-keyword">
-                        <TextField
-                          hintText="Keywords"
-                          name="keywords"
-                          className="keyword-input"
-                        />
-                        <button style={{ border: "none", background: "none" }}>
+                        <TextField hintText="Keywords" name="keywords" className="keyword-input" />
+                        <button style={{ border: 'none', background: 'none' }}>
                           <i className="fa fa-plus-circle" aria-hidden="true" />
                         </button>
                       </div>
@@ -221,16 +212,10 @@ export default class Dashboard extends Component {
           </div>
 
           <div className="column-right">
-            <Paper
-              style={{ width: "800px", height: "100vh", borderRadius: "20px" }}
-              zDepth={3}
-            >
+            <Paper style={{ width: '800px', height: '100vh', borderRadius: '20px' }} zDepth={3}>
               {this.state.preview.map(preview => (
                 <div key={preview.id} className="preview-grid">
-                  <Card
-                    className="preview-card"
-                    style={{ borderRadius: "10px" }}
-                  >
+                  <Card className="preview-card" style={{ borderRadius: '10px' }}>
                     <CardHeader
                       title={preview.name}
                       avatar={preview.logo}
@@ -238,19 +223,15 @@ export default class Dashboard extends Component {
                       actAsExpander={true}
                       showExpandableButton={true}
                       titleStyle={{
-                        fontSize: "1em",
-                        fontFamily: "Noto Sans, sans-serif",
-                        marginTop: ".5em"
+                        fontSize: '1em',
+                        fontFamily: 'Noto Sans, sans-serif',
+                        marginTop: '.5em',
                       }}
                     />
                     <CardText expandable={true} className="expanded">
                       <div className="add-keyword">
-                        <TextField
-                          hintText="Keywords"
-                          name="keywords"
-                          className="keyword-input"
-                        />
-                        <button style={{ border: "none" }}>
+                        <TextField hintText="Keywords" name="keywords" className="keyword-input" />
+                        <button style={{ border: 'none' }}>
                           <i className="fa fa-plus-circle" aria-hidden="true" />
                         </button>
                       </div>
@@ -271,6 +252,6 @@ export default class Dashboard extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

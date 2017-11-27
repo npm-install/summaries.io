@@ -3,6 +3,7 @@ import { Route, BrowserRouter, Link, Redirect, Switch } from 'react-router-dom'
 import Login from './Login'
 import Register from './Register'
 import Home from './Home'
+import Landing from './Landing'
 import Dashboard from './protected/Dashboard'
 import { logout } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
@@ -23,10 +24,9 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
         authed === true ? (
           <Component {...rest} /> // was {...props}
         ) : (
-          <Redirect
-            to={{ pathname: '/login', state: { from: props.location } }}
-          />
-        )}
+          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+        )
+      }
     />
   )
 }
@@ -35,12 +35,7 @@ function PublicRoute({ component: Component, authed, ...rest }) {
   return (
     <Route
       {...rest}
-      render={props =>
-        authed === false ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to="/dashboard" />
-        )}
+      render={props => (authed === false ? <Component {...props} /> : <Redirect to="/dashboard" />)}
     />
   )
 }
@@ -48,7 +43,7 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 export default class App extends Component {
   state = {
     authed: false,
-    loading: true
+    loading: true,
   }
   componentDidMount() {
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
@@ -64,7 +59,7 @@ export default class App extends Component {
               this.setState({
                 authed: true,
                 loading: false,
-                user: doc.data() // make sure this is synchronous
+                user: doc.data(), // make sure this is synchronous
               })
             })
           })
@@ -74,7 +69,7 @@ export default class App extends Component {
       } else {
         this.setState({
           authed: false,
-          loading: false
+          loading: false,
         })
       }
     })
@@ -139,7 +134,7 @@ export default class App extends Component {
       </div>
     )
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} style={{marginLeft:'20px', marginTop:'20px'}}/>
+      <CircularProgress size={80} thickness={5} style={{ marginLeft: '50px', marginTop: '50px' }} />
     ) : (
       <BrowserRouter>
         <div>
@@ -149,31 +144,19 @@ export default class App extends Component {
             iconStyleRight={{
               display: 'flex',
               alignItems: 'center',
-              marginTop: '.5em'
+              marginTop: '.5em',
             }}
-            style={{fontFamily: 'Noto Sans, sans-serif', position: 'fixed'}}
-
+            style={{ fontFamily: 'Noto Sans, sans-serif', position: 'fixed' }}
             showMenuIconButton={false}
+            className="app-bar"
           />
           <div className="container d-flex justify-content-center">
             <div className="row">
               <Switch>
-                <Route path="/" exact component={Home} />
-                <PublicRoute
-                  authed={this.state.authed}
-                  path="/login"
-                  component={Login}
-                />
-                <PublicRoute
-                  authed={this.state.authed}
-                  path="/register"
-                  component={Register}
-                />
-                <PrivateRoute
-                  authed={this.state.authed}
-                  path="/dashboard"
-                  component={Dashboard}
-                />
+                <Route path="/" exact component={this.state.authed ? Home : Landing} />
+                <PublicRoute authed={this.state.authed} path="/login" component={Login} />
+                <PublicRoute authed={this.state.authed} path="/register" component={Register} />
+                <PrivateRoute authed={this.state.authed} path="/dashboard" component={Dashboard} />
                 <PrivateRoute
                   authed={this.state.authed}
                   path="/account"
