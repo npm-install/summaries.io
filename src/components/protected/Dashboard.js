@@ -20,7 +20,7 @@ export default class Dashboard extends Component {
       expanded: false,
       value: '',
       suggestions: [],
-      open: false
+      open: false,
     }
     this.handleToggle = this.handleToggle.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -40,24 +40,24 @@ export default class Dashboard extends Component {
         //   sourceArr.push(source.data())
         // })
       })
-      .then((arr) => {
+      .then(arr => {
         this.setState({ sources: arr })
       })
       .then(() => {
         db
-        .collection('users')
-        .doc('QgFF8KtweB8Ut9TL2jmO')
-        .collection('subscriptions')
-        .get()
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
+          .collection('users')
+          .doc('QgFF8KtweB8Ut9TL2jmO')
+          .collection('subscriptions')
+          .get()
+          .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+              previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
+            })
           })
-        })
-        .then(() => {
-          this.setState({ preview: previewArr })
-        })
-      }) 
+          .then(() => {
+            this.setState({ preview: previewArr })
+          })
+      })
   }
 
   //Snack bar helper functions
@@ -82,28 +82,26 @@ export default class Dashboard extends Component {
         const preview = state.preview.slice(0)
         preview.splice(index, 1)
 
+        db
+        .collection('users')
+        .doc('QgFF8KtweB8Ut9TL2jmO')
+        .collection('subscriptions')
+        .doc(el.id)
+        .delete()
+
         return { preview }
-      }
-      else {
-        db.collection('users').doc('QgFF8KtweB8Ut9TL2jmO').collection('subscriptions').add(el)
+      } else {
+
+        db
+          .collection('users')
+          .doc('QgFF8KtweB8Ut9TL2jmO')
+          .collection('subscriptions')
+          .doc(el.id)
+          .set(el)
+
         return { preview: [...state.preview, el] }
       }
     })
-
-    // //meep meep
-    // db
-    // .collection('users')
-    // .doc('QgFF8KtweB8Ut9TL2jmO')
-    // .collection('subscriptions')
-    // .get()
-    // .then(querySnapshot => {
-    //   querySnapshot.forEach(doc => {
-    //     previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
-    //   })
-    // })
-    // .then(() => {
-    //   this.setState({ preview: previewArr })
-    // })
   }
 
   //----------Search bar helper functions-------------
@@ -167,7 +165,7 @@ export default class Dashboard extends Component {
         </div>
 
         <div className="mobile-chips">
-          {this.state.preview.map(preview => (
+          {this.state.preview.length && this.state.preview.map(preview => (
             <Chip
               key={preview.id}
               className="news-chip"
