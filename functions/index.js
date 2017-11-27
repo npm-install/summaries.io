@@ -50,29 +50,32 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
     })
 )
 
-exports.makeSummaries1 = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require('./keys')
+
+exports.makeSummaries = functions.https.onRequest((request, response) => {
+  const { newsKey, sumKey } = require('./keys');
+  let count = 1;
 
   // First we retrieve the list of sources
   const newsSources = [
-    // "abc-news",
-    // "al-jazeera-english",
-    // "ars-technica",
-    // "associated-press",
-    // "axios",
-    // "bleacher-report",
-    // "bloomberg",
-    // "business-insider",
-    // "buzzfeed",
-    // "cbs-news",
-    // "cnbc",
-    // "cnn",
-    // "crypto-coins-news",
-    // "engadget",
-    // "entertainment-weekly",
-    // "espn"
+    'abc-news',
+    'al-jazeera-english',
+    'ars-technica',
+    'associated-press',
+    'axios',
+    'espn',
+    'bleacher-report',
+    'bloomberg',
+    'business-insider',
+    'buzzfeed',
+    'cbs-news',
+    'cnbc',
+    'cnn',
+    'crypto-coins-news',
+    'engadget',
+    'entertainment-weekly',
+    'espn',
     'fortune',
-    // "hacker-news",
+    'hacker-news',
     'ign',
     'mashable',
     'msnbc',
@@ -94,57 +97,66 @@ exports.makeSummaries1 = functions.https.onRequest((request, response) => {
     'usa-today',
     'vice-news',
     'wired'
-  ]
-  let articles = []
+  ];
+
+  let articles = [];
 
   // What is today's date?
-  const date = dateMaker()
-
-  Promise.map(newsSources, getSource)
-    .then(result => {
-      Promise.map(result, writeSource)
-        .then(_ => {
-          response.json(
-            'Successfully wrote all articles to the database, ayyy :)'
-          )
-        })
-        .catch(err => {
-          console.error(
-            'Error writing to the database on a source,',
-            err.message
-          )
-          response.json(
-            'Error writing to the database on atleast one source, check logs'
-          )
-        })
+  const date = dateMaker();
+  Promise.mapSeries(newsSources, makeSum)
+    .then(() => {
+      response.json('Done')
     })
-    .catch(err => {
-      console.log('Error getting sources or summarizing, ', err.message)
-      response.json('Error getting sources or summarizing')
-    })
+    .catch(console.error('error on a source'));
 
-  // Function definition to getSource
-  function getSource(newsSource) {
-    const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
-      newsSource
-    }&apiKey=${newsKey}`
-
-    return axios.get(newsUrl).then(response => {
-      articles = response.data.articles.map(async article => {
-        const sumsObj = await axios
-          .get(
-            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
-              article.url
-            }`
-          )
-          .catch(console.error)
-        const updatedArticle = Object.assign({}, article, {
-          summary: sumsObj.data.sm_api_content || 'API MAXED OUT'
-        })
-        return updatedArticle
+  function makeSum(source) {
+    Promise.mapSeries([source], getSource)
+      .then(result => {
+        Promise.mapSeries(result, writeSource)
+          .catch((err) => {
+            console.error('Error writing to the database on', source, err.message)
+          })
       })
-      return Promise.all(articles)
-    })
+      .catch((err) => {
+        console.log('Error getting sources')
+        response.json('Atleast one error, check logs for more info')
+      })
+
+
+    // Function definition to getSource
+    function getSource(newsSource) {
+      const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
+
+      return axios.get(newsUrl)
+        .then(response => {
+          articles = response.data.articles.map(async article => {
+
+            // Defaults to description
+            article.summary = article.description
+
+            const sumsObj = await axios
+              .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
+              .catch((err) => {
+                console.error('Error with smmry on', article.url)
+              })
+
+            let updatedArticle;
+
+            // Check to see if article summarized successfully
+            if (sumsObj && sumsObj.data.sm_api_content) {
+              console.log('Summary success')
+              // Article summary success, overwrite description
+              article.summary = sumsObj.data.sm_api_content
+            }
+
+            return article
+          })
+          return Promise.all(response.data.articles)
+        })
+        .catch((err) => {
+          console.error('error on', newsSource)
+        })
+    }
   }
 
   // Write source to the database
@@ -153,163 +165,24 @@ exports.makeSummaries1 = functions.https.onRequest((request, response) => {
     const batch = admin.firestore().batch()
     const dayRef = admin
       .firestore()
-      .collection('sources')
+      .collection("sources")
       .doc(newsSource)
-      .collection('days')
+      .collection("days")
       .doc(date)
-      .collection('articles')
+      .collection("articles")
 
     data.forEach(article => {
       batch.set(dayRef.doc(article.title), { ...article })
-    })
+    });
 
     batch
       .commit()
       .then(() => {
-        console.log(
-          'added ' + articles.length + ' from ' + newsSource + ' to Firestore'
-        )
+        console.log("added " + articles.length + " from " + newsSource + " to Firestore",
+          'source number ' + count++ + '/40')
       })
       .catch(() => {
-        console.log(
-          'ERROR: Failed to write' +
-            articles.length +
-            ' from ' +
-            newsSource +
-            ' to Firestore'
-        )
-      })
-  }
-})
-
-exports.makeSummaries2 = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require('./keys')
-
-  // First we retrieve the list of sources
-  const newsSources = [
-    'abc-news',
-    'al-jazeera-english',
-    'ars-technica',
-    'associated-press',
-    'axios',
-    'bleacher-report',
-    'bloomberg',
-    'business-insider',
-    'buzzfeed',
-    'cbs-news',
-    'cnbc',
-    'cnn',
-    'crypto-coins-news',
-    'engadget'
-    // // "entertainment-weekly",
-    // // "espn"
-    // "fortune",
-    // // // "hacker-news",
-    // // "ign",
-    // // "mashable",
-    // // "msnbc",
-    // // "national-geographic",
-    // // "nbc-news",
-    // // "nfl-news",
-    // // "nhl-news",
-    // // "politico",
-    // // "polygon",
-    // "reuters",
-    // "techcrunch",
-    // "the-hill",
-    // "the-huffington-post",
-    // "the-new-york-times",
-    // "the-verge",
-    // "the-wall-street-journal",
-    // "the-washington-post",
-    // "time",
-    // "usa-today",
-    // "vice-news",
-    // "wired"
-  ]
-  let articles = []
-
-  // What is today's date?
-  const date = dateMaker()
-
-  Promise.map(newsSources, getSource)
-    .then(result => {
-      Promise.map(result, writeSource)
-        .then(_ => {
-          response.json(
-            'Successfully wrote all articles to the database, ayyy :)'
-          )
-        })
-        .catch(err => {
-          console.error(
-            'Error writing to the database on a source,',
-            err.message
-          )
-          response.json(
-            'Error writing to the database on atleast one source, check logs'
-          )
-        })
-    })
-    .catch(err => {
-      console.log('Error getting sources, ', err.message)
-      response.json('Error getting sources')
-    })
-
-  // Function definition to getSource
-  function getSource(newsSource) {
-    const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
-      newsSource
-    }&apiKey=${newsKey}`
-
-    return axios.get(newsUrl).then(response => {
-      articles = response.data.articles.map(async article => {
-        const sumsObj = await axios
-          .get(
-            `http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${
-              article.url
-            }`
-          )
-          .catch(console.error)
-        const updatedArticle = Object.assign({}, article, {
-          summary: sumsObj.data.sm_api_content || 'API MAXED OUT'
-        })
-        return updatedArticle
-      })
-      return Promise.all(articles)
-    })
-  }
-
-  // Write source to the database
-  function writeSource(data) {
-    const newsSource = data[0].source.id
-    const batch = admin.firestore().batch()
-    const dayRef = admin
-      .firestore()
-      .collection('sources')
-      .doc(newsSource)
-      .collection('days')
-      .doc(date)
-      .collection('articles')
-
-    data.forEach(article => {
-      batch.set(dayRef.doc(article.title), { ...article })
-    })
-
-    batch
-      .commit()
-      .then(() => {
-        console.log(
-          'added ' + articles.length + ' from ' + newsSource + ' to Firestore'
-        )
-      })
-      .catch(() => {
-        console.log(
-          'ERROR: Failed to write' +
-            articles.length +
-            ' from ' +
-            newsSource +
-            ' to Firestore'
-        )
+        console.log("ERROR: Failed to write", articles.length, "from", newsSource, "to Firestore")
       })
   }
 })
@@ -322,9 +195,9 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     .collection('users')
     // Here add a where query to filter by requested time
     .get()
-    .then(function(users) {
+    .then(function (users) {
       const batch = admin.firestore().batch()
-      users.forEach(function(user) {
+      users.forEach(function (user) {
         admin
           .firestore()
           .collection('users')
