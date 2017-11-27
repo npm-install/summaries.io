@@ -20,7 +20,7 @@ export default class Dashboard extends Component {
       expanded: false,
       value: '',
       suggestions: [],
-      open: false,
+      open: false
     }
     this.handleToggle = this.handleToggle.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -30,18 +30,33 @@ export default class Dashboard extends Component {
   }
 
   componentDidMount() {
-    let arr = []
+    let sourceArr = [], previewArr = []
     db
       .collection('sources')
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(source) {
-          arr.push(source.data())
+          sourceArr.push(source.data())
         })
       })
       .then(() => {
-        this.setState({ sources: arr })
+        this.setState({ sources: sourceArr })
       })
+      .then(() => {
+        db
+        .collection('users')
+        .doc('QgFF8KtweB8Ut9TL2jmO')
+        .collection('subscriptions')
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            previewArr.push(this.state.sources.filter(source => source.id === doc.id)[0])
+          })
+        })
+        .then(() => {
+          this.setState({ preview: previewArr })
+        })
+      }) 
   }
 
   //Snack bar helper functions
@@ -105,6 +120,7 @@ export default class Dashboard extends Component {
   }
 
   render() {
+    console.log('le state', this.state)
     // const { classes } = this.props;
     const { value, suggestions } = this.state
     const inputProps = {
