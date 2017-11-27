@@ -36,9 +36,6 @@ export default class Dashboard extends Component {
       .get()
       .then(function(querySnapshot) {
         return querySnapshot.docs.map(source => source.data())
-        // querySnapshot.forEach(function(source) {
-        //   sourceArr.push(source.data())
-        // })
       })
       .then(arr => {
         this.setState({ sources: arr })
