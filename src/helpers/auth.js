@@ -36,19 +36,17 @@ export function saveUser(user) {
     .collection(`users`)
     .add({
       email: user.email,
-      uid: user.uid
+      uid: user.uid,
     })
     .then(docRef => {
       const batch = db.batch() // we set a batch up to connect to the database once
       // upon creation we add default subscriptions to the newly created user
-      batch.set(
-        db.collection(docRef.path + '/subscriptions/').doc('bloomberg'),
-        { name: 'Bloomberg' }
-      )
-      batch.set(
-        db.collection(docRef.path + '/subscriptions/').doc('abc-news'),
-        { name: 'ABC News' }
-      )
+      batch.set(db.collection(docRef.path + '/subscriptions/').doc('bloomberg'), {
+        name: 'Bloomberg',
+      })
+      batch.set(db.collection(docRef.path + '/subscriptions/').doc('abc-news'), {
+        name: 'ABC News',
+      })
       batch
         .commit()
         .then(console.log)
