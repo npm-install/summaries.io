@@ -20,8 +20,8 @@ body {
 }
 
 .source-title {
-  margin-top: .1em;
-  margin-left: .4em;
+  margin-top: 0.1em;
+  margin-left: 0.4em;
 }
 
 .sourcelogo {
@@ -68,7 +68,7 @@ body {
   text-decoration: none;
 }
 
-.login-form{
+.login-form {
   margin-top: 7em;
 }
 
@@ -79,7 +79,7 @@ body {
 
 .fa-sliders {
   color: snow;
-  margin-right: .5em;
+  margin-right: 0.5em;
 }
 
 .news-content {
@@ -101,7 +101,7 @@ body {
   margin-left: 5em;
 }
 
-.news-grid{
+.news-grid {
   padding-top: 2em;
   padding-bottom: 1em;
   padding-left: 1em;
@@ -123,7 +123,7 @@ body {
 
 .fa-search {
   margin-right: 1em;
-  color: #FFA14A;
+  color: #ffa14a;
 }
 
 .search-bar {
@@ -213,7 +213,7 @@ body {
 }
 
 .fa-plus-circle {
-  color: #FFA14A;
+  color: #ffa14a;
   font-size: 1.5em;
 }
 
@@ -243,7 +243,7 @@ body {
   display: flex;
   flex-direction: column;
 }
- 
+
 .number-articles {
   margin-left: 2em;
 }
@@ -277,7 +277,7 @@ body {
 
 .landing-hero {
   width: 100vw;
-  background-color: #FFA14A;
+  background-color: #ffa14a;
   text-align: center;
   color: snow;
   padding-bottom: 15em;
@@ -294,7 +294,6 @@ body {
   padding-bottom: 20em;
   text-align: center;
 }
-
 
 /* Mobile */
 @media only screen and (max-width: 667px) {
@@ -317,16 +316,15 @@ body {
     margin-top: -1em;
   }
 
-
   .welcome {
     margin-top: 2em;
-    margin-left: .5em;
+    margin-left: 0.5em;
     line-height: 2em;
   }
 
   .welcome-title {
     margin-bottom: 2em;
-    margin-left: .6em;
+    margin-left: 0.6em;
   }
 
   .source-header {
@@ -350,7 +348,7 @@ body {
     flex-direction: column;
   }
 
-  .column-right{
+  .column-right {
     display: none;
   }
 
@@ -368,7 +366,8 @@ body {
     font-size: 1.5em;
   }
 
-  .react-autosuggest__input,  .react-autosuggest__suggestions-container--open{
+  .react-autosuggest__input,
+  .react-autosuggest__suggestions-container--open {
     width: 20em;
     height: 3em;
     font-size: 14px;
@@ -378,8 +377,9 @@ body {
     display: none;
   }
 
-  .keyword-input, .number-articles {
-    margin-left: .5em;
+  .keyword-input,
+  .number-articles {
+    margin-left: 0.5em;
   }
 
   .mobile-chips {
@@ -389,6 +389,4 @@ body {
     margin-left: 1em;
     margin-top: 1em;
   }
-
 }
-

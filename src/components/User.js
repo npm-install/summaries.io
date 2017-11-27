@@ -1,7 +1,7 @@
-import React from "react";
-import { RaisedButton } from "material-ui";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
+import React from 'react';
+import { RaisedButton } from 'material-ui';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 export default function User(props) {
   const email = props.user.email;
@@ -11,30 +11,16 @@ export default function User(props) {
       <h2 className="welcome-message">Welcome, {email}</h2>
 
       <div className="user-select">
-        <RaisedButton
-          label="Reset Password"
-          secondary={true}
-          className="user-select-btn"
-        />
-        <RaisedButton
-          label="Delete Account"
-          secondary={true}
-          className="user-select-btn"
-        />
-        <SelectField
-          floatingLabelText="Set Email Frequency"
-          className="user-select-btn"
-        >
+        <RaisedButton label="Reset Password" secondary={true} className="user-select-btn" />
+        <RaisedButton label="Delete Account" secondary={true} className="user-select-btn" />
+        <SelectField floatingLabelText="Set Email Frequency" className="user-select-btn">
           <MenuItem value={1} primaryText="Never" />
           <MenuItem value={2} primaryText="Every Night" />
           <MenuItem value={3} primaryText="Weeknights" />
           <MenuItem value={4} primaryText="Weekends" />
           <MenuItem value={5} primaryText="Weekly" />
         </SelectField>
-        <SelectField
-          floatingLabelText="Set Email Sent Time"
-          className="user-select-btn"
-        >
+        <SelectField floatingLabelText="Set Email Sent Time" className="user-select-btn">
           <MenuItem value={1} primaryText="00:00" />
           <MenuItem value={2} primaryText="01:00" />
           <MenuItem value={3} primaryText="02:00" />

@@ -1,42 +1,38 @@
-import React, { Component } from 'react'
-import { login, resetPassword, loginWithGoogle } from '../helpers/auth'
-import RaisedButton from 'material-ui/RaisedButton'
-import TextField from 'material-ui/TextField'
+import React, { Component } from 'react';
+import { login, resetPassword, loginWithGoogle } from '../helpers/auth';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 function setErrorMsg(error) {
   return {
-    loginMessage: error
-  }
+    loginMessage: error,
+  };
 }
 
 export default class Login extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       email: '',
       password: '',
-      loginMessage: null
-    }
+      loginMessage: null,
+    };
   }
 
   handleSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
     login(this.state.email, this.state.password).catch(error => {
-      this.setState(setErrorMsg('Invalid username/password.'))
-    })
-  }
-  
+      this.setState(setErrorMsg('Invalid username/password.'));
+    });
+  };
+
   resetPassword = () => {
     resetPassword(this.state.email, {
-      url: `https://summary-73ccc.firebaseapp.com/login`
+      url: `https://summary-73ccc.firebaseapp.com/login`,
     })
-      .then(() =>
-        this.setState(
-          setErrorMsg(`Password reset email sent to ${this.state.email}.`)
-        )
-      )
-      .catch(error => this.setState(setErrorMsg(`Email address not found.`)))
-  }
+      .then(() => this.setState(setErrorMsg(`Password reset email sent to ${this.state.email}.`)))
+      .catch(error => this.setState(setErrorMsg(`Email address not found.`)));
+  };
 
   render() {
     return (
@@ -61,10 +57,7 @@ export default class Login extends Component {
         <br />
         {this.state.loginMessage && (
           <div className="alert alert-danger" role="alert">
-            <span
-              className="glyphicon glyphicon-exclamation-sign"
-              aria-hidden="true"
-            />
+            <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true" />
             <span className="sr-only">Error:</span>
             &nbsp;{this.state.loginMessage}{' '}
             <div className="alert-link">
@@ -76,12 +69,7 @@ export default class Login extends Component {
             </div>
           </div>
         )}
-        <RaisedButton
-          label="Login"
-          primary={true}
-          style={style.raisedBtn}
-          type="submit"
-        />
+        <RaisedButton label="Login" primary={true} style={style.raisedBtn} type="submit" />
         <RaisedButton
           label="Login with Google"
           primary={false}
@@ -90,19 +78,19 @@ export default class Login extends Component {
           onClick={loginWithGoogle}
         />
       </form>
-    )
+    );
   }
 }
 
 const raisedBtn = {
-  margin: 15
-}
+  margin: 15,
+};
 
 const container = {
-  textAlign: 'center'
-}
+  textAlign: 'center',
+};
 
 const style = {
   raisedBtn,
-  container
-}
+  container,
+};

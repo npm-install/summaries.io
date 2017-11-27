@@ -2,6 +2,24 @@
   "name": "react-router-firebase-auth",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
+  },
+  "precommit": "precommit",
+  "lint-staged": {
+    "src/**/*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100,
+    "trailingComma": "all"
+  },
   "dependencies": {
     "axios": "^0.17.1",
     "dark-sky-api": "^0.6.21",
@@ -22,21 +40,14 @@
     "skycons": "^1.0.0",
     "zipcodes": "^6.0.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
-  },
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 100,
-    "trailingComma": "all"
-  },
   "devDependencies": {
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "lint-staged": "^5.0.0",
+    "precommit": "^1.2.2",
+    "prettier": "^1.8.2"
   }
 }
