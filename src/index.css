@@ -9,6 +9,10 @@ body {
   line-height: 2em;
 }
 
+.welcome-message {
+  margin-top: 5em;
+}
+
 .source-header {
   display: flex;
   flex-direction: row;
@@ -126,6 +130,17 @@ body {
   margin-left: -2em;
   margin-top: 7em;
   display: inline-flex;
+}
+
+.user-select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 2em;
+}
+
+.user-select-btn {
+  margin-bottom: 1em;
 }
 
 /* --------search bar styles------------ */
@@ -257,7 +272,7 @@ body {
 }
 
 .logo {
-  margin-top: 5em;
+  margin-top: 7em;
 }
 
 .landing-hero {
