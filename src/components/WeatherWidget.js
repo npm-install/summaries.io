@@ -10,7 +10,7 @@ export default class WeatherWidget extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      zipCode: '08536',
+      zipCode: '10001',
       weather: {},
       location: {}
     };
@@ -63,10 +63,9 @@ export default class WeatherWidget extends Component {
       <div>
         <Paper zDepth={2} className="article-card">
           <div className="weather-widget">
-            <h3>Weather for {`${location.city}, ${location.state}`}</h3>
-            <h5>{weather.summary}</h5>
+            <h3>Weather for today in {`${location.city}, ${location.state}`}</h3>
             <div>
-              <WeatherItem forecast={weather.data[0]} />
+              <WeatherItem forecast={weather} />
             </div>
           </div>
         </Paper>

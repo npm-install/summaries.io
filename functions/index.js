@@ -277,7 +277,6 @@ exports.getWeather = functions.https.onRequest((request, response) => {
 function writeWeather(location) {
     forecast.get([location.latitude, location.longitude], function (err, weather) {
       if (err) return console.dir(err);
-      // console.log(weather.daily.data[0]);
 
       const date = dateMaker();
       return admin
@@ -288,7 +287,7 @@ function writeWeather(location) {
         .doc('zip')
         .collection(location.zip)
         .doc('forecast')
-        .set(weather.hourly)
+        .set(weather.daily.data[0])
         .then((succ) => {
           console.log('wrote weather for', location.zip)
         })

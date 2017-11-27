@@ -2,18 +2,18 @@ import React from 'react'
 import ReactAnimatedWeather from 'react-animated-weather'
 
 const WeatherItem = ({ forecast }) => {
-  console.log(forecast)
-  console.log(new Date(+forecast.time))
+
   return (
     <div>
       <ReactAnimatedWeather
-        icon={'CLEAR_DAY'}
+        icon={forecast.icon.toUpperCase().split('-').join('_')}
         color={'#FFA14A'}
-        size={64}
+        size={128}
         animate={true}
       />
       <h5>{forecast.summary}</h5>
-      <h6>{Math.round(forecast.apparentTemperature)}° F</h6>
+      <h6>High: {Math.round(forecast.apparentTemperatureHigh)}° F</h6>
+      <h6>Low: {Math.round(forecast.apparentTemperatureLow)}° F</h6>
     </div>
   )
 }
