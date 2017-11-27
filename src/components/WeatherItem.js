@@ -9,14 +9,14 @@ const WeatherItem = ({ forecast }) => {
         <ReactAnimatedWeather
           icon={forecast.icon.toUpperCase().split('-').join('_')}
           color={'#FFA14A'}
-          size={128}
+          size={100}
           animate={true}
         />
       </div>
       <div id="weather_info">
         <h3>{forecast.summary}</h3>
-        <h4>High: {Math.round(forecast.apparentTemperatureHigh)}° F</h4>
-        <h4>Low: {Math.round(forecast.apparentTemperatureLow)}° F</h4>
+        <h5>High: {Math.round(forecast.apparentTemperatureHigh)}° F</h5>
+        <h5>Low: {Math.round(forecast.apparentTemperatureLow)}° F</h5>
       </div>
     </div>
   )
