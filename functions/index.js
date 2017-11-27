@@ -52,51 +52,51 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
 
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require("./keys");
+  const { newsKey, sumKey } = require('./keys');
   let count = 1;
 
   // First we retrieve the list of sources
   const newsSources = [
-    "abc-news",
-    "al-jazeera-english",
-    "ars-technica",
-    "associated-press",
-    "axios",
-    "espn",
-    "bleacher-report",
-    "bloomberg",
-    "business-insider",
-    "buzzfeed",
-    "cbs-news",
-    "cnbc",
-    "cnn",
-    "crypto-coins-news",
-    "engadget",
-    "entertainment-weekly",
-    "espn",
-    "fortune",
-    "hacker-news",
-    "ign",
-    "mashable",
-    "msnbc",
-    "national-geographic",
-    "nbc-news",
-    "nfl-news",
-    "nhl-news",
-    "politico",
-    "polygon",
-    "reuters",
-    "techcrunch",
-    "the-hill",
-    "the-huffington-post",
-    "the-new-york-times",
-    "the-verge",
-    "the-wall-street-journal",
-    "the-washington-post",
-    "time",
-    "usa-today",
-    "vice-news",
-    "wired"
+    'abc-news',
+    'al-jazeera-english',
+    'ars-technica',
+    'associated-press',
+    'axios',
+    'espn',
+    'bleacher-report',
+    'bloomberg',
+    'business-insider',
+    'buzzfeed',
+    'cbs-news',
+    'cnbc',
+    'cnn',
+    'crypto-coins-news',
+    'engadget',
+    'entertainment-weekly',
+    'espn',
+    'fortune',
+    'hacker-news',
+    'ign',
+    'mashable',
+    'msnbc',
+    'national-geographic',
+    'nbc-news',
+    'nfl-news',
+    'nhl-news',
+    'politico',
+    'polygon',
+    'reuters',
+    'techcrunch',
+    'the-hill',
+    'the-huffington-post',
+    'the-new-york-times',
+    'the-verge',
+    'the-wall-street-journal',
+    'the-washington-post',
+    'time',
+    'usa-today',
+    'vice-news',
+    'wired'
   ];
 
   let articles = [];
@@ -125,22 +125,20 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 
     // Function definition to getSource
     function getSource(newsSource) {
-      const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${
-        newsSource
-        }&apiKey=${newsKey}`;
+      const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
 
       return axios.get(newsUrl)
         .then(response => {
           articles = response.data.articles.map(async article => {
 
             // Defaults to description
-            article.summary = article.description;
+            article.summary = article.description
 
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
               .catch((err) => {
                 console.error('Error with smmry on', article.url)
-              });
+              })
 
             let updatedArticle;
 
@@ -151,13 +149,13 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
               article.summary = sumsObj.data.sm_api_content
             }
 
-            return article;
-          });
-          return Promise.all(response.data.articles);
+            return article
+          })
+          return Promise.all(response.data.articles)
         })
         .catch((err) => {
           console.error('error on', newsSource)
-        });
+        })
     }
   }
 
@@ -171,29 +169,21 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .doc(newsSource)
       .collection("days")
       .doc(date)
-      .collection("articles");
+      .collection("articles")
 
     data.forEach(article => {
-      batch.set(dayRef.doc(article.title), { ...article });
+      batch.set(dayRef.doc(article.title), { ...article })
     });
 
     batch
       .commit()
       .then(() => {
         console.log("added " + articles.length + " from " + newsSource + " to Firestore",
-          'source number ' + count++ + '/40'
-        );
+          'source number ' + count++ + '/40')
       })
       .catch(() => {
-        console.log(
-          "ERROR: Failed to write" +
-          articles.length +
-          " from " +
-          newsSource +
-          " to Firestore"
-        );
-      });
-
+        console.log("ERROR: Failed to write", articles.length, "from", newsSource, "to Firestore")
+      })
   }
 })
 
