@@ -296,7 +296,7 @@ body {
 }
 
 /* Mobile */
-@media only screen and (max-width: 736px) {
+@media only screen and (max-width: 750px) {
   .stepper {
     display: none;
   }
