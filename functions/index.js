@@ -113,7 +113,6 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     "wired"
   ];
 
-  console.log('length', newsSources.length)
   let articles = [];
 
   // What is today's date?
@@ -128,10 +127,6 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     Promise.mapSeries([source], getSource)
       .then(result => {
         Promise.mapSeries(result, writeSource)
-          // .then(_ => {
-          //   console.log('Wrote ', source)
-          //   // response.json("Successfully wrote all articles to the database, ayyy :)");
-          // })
           .catch((err) => {
             console.error('Error writing to the database on', source, err.message)
           })
