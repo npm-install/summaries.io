@@ -1,7 +1,6 @@
 const functions = require('firebase-functions')
 const Storage = require('@google-cloud/storage')
 
-
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -28,7 +27,7 @@ function parseBody(body) {
   return mail.toJSON()
 }
 
-exports.httpEmail = functions.https.onRequest((req, res) =>
+exports.httpEmail = functions.https.onRequest((req, res) => {
   Promise.resolve()
     .then(_ => {
       if (req.method !== 'POST') {
@@ -40,7 +39,7 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
       const request = client.emptyRequest({
         method: 'POST',
         path: '/v3/mail/send',
-        body: parseBody(req.body)
+        body: parseBody(req.body),
       })
 
       return client.API(request)
@@ -50,13 +49,10 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
       console.error(err)
       return Promise.reject(err)
     })
-)
-
+})
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send(
-    'Hello from summaries.io, where your we summarize your news while you sleep!'
-  )
+  response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
 })
 
 //Polly requirements
@@ -64,13 +60,13 @@ const AWS = require('aws-sdk')
 const fs = require('fs')
 const credentials = new AWS.Credentials(
   process.env.REACT_APP_awsKey,
-  process.env.REACT_APP_awsSecret
+  process.env.REACT_APP_awsSecret,
 )
 
 exports.polly = functions.https.onRequest((req, res) => {
   const Polly = new AWS.Polly({
     signatureVersion: 'v4',
-    region: 'us-east-1'
+    region: 'us-east-1',
   })
 
   //set current date
@@ -89,7 +85,7 @@ exports.polly = functions.https.onRequest((req, res) => {
         const params = {
           Text: doc.data().title,
           OutputFormat: 'mp3',
-          VoiceId: 'Joanna'
+          VoiceId: 'Joanna',
         }
         const title = doc
           .data()
@@ -107,14 +103,10 @@ exports.polly = functions.https.onRequest((req, res) => {
           if (err) console.error(err.stack)
           else if (data) {
             if (data.AudioStream instanceof Buffer) {
-              await fs.writeFile(
-                `./audio/${title}.mp3`,
-                data.AudioStream,
-                err => {
-                  if (err) return console.error(err)
-                  console.log('The file was saved!')
-                }
-              )
+              await fs.writeFile(`./audio/${title}.mp3`, data.AudioStream, err => {
+                if (err) return console.error(err)
+                console.log('The file was saved!')
+              })
             }
           }
         })
@@ -126,13 +118,11 @@ exports.polly = functions.https.onRequest((req, res) => {
 
         await storage
           .bucket(`summary-73ccc.appspot.com`)
-          .upload(
-            `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${title}.mp3`
-          )
+          .upload(`/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${title}.mp3`)
           .then(_ => console.log('uploaded file'))
           .catch(console.error)
         return true
-      })
+      }),
     )
     .then(data => res.json(data))
     .catch(console.error)
@@ -140,11 +130,7 @@ exports.polly = functions.https.onRequest((req, res) => {
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
-exports.makeSummaries1 = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require("./keys");
-exports.makeSummaries = functions.https.onRequest((request, response) => {
-  const { newsKey, sumKey } = require('./keys');
-  let count = 1;
+  let count = 1
 
   // First we retrieve the list of sources
   const newsSources = [
@@ -187,51 +173,49 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'time',
     'usa-today',
     'vice-news',
-    'wired'
-  ];
+    'wired',
+  ]
 
-  let articles = [];
+  let articles = []
 
   // What is today's date?
-  const date = dateMaker();
+  const date = dateMaker()
   Promise.mapSeries(newsSources, makeSum)
     .then(() => {
       response.json('Done')
     })
-    .catch(console.error('error on a source'));
+    .catch(console.error('error on a source'))
 
   function makeSum(source) {
     Promise.mapSeries([source], getSource)
       .then(result => {
-        Promise.mapSeries(result, writeSource)
-          .catch((err) => {
-            console.error('Error writing to the database on', source, err.message)
-          })
+        Promise.mapSeries(result, writeSource).catch(err => {
+          console.error('Error writing to the database on', source, err.message)
+        })
       })
-      .catch((err) => {
+      .catch(err => {
         console.log('Error getting sources')
         response.json('Atleast one error, check logs for more info')
       })
-
 
     // Function definition to getSource
     function getSource(newsSource) {
       const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
 
-      return axios.get(newsUrl)
+      return axios
+        .get(newsUrl)
         .then(response => {
           articles = response.data.articles.map(async article => {
-
             // Defaults to description
             article.summary = article.description
 
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
-              .catch((err) => {
+              .catch(err => {
                 console.error('Error with smmry on', article.url)
               })
 
-            let updatedArticle;
+            let updatedArticle
 
             // Check to see if article summarized successfully
             if (sumsObj && sumsObj.data.sm_api_content) {
@@ -244,7 +228,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           })
           return Promise.all(response.data.articles)
         })
-        .catch((err) => {
+        .catch(err => {
           console.error('error on', newsSource)
         })
     }
@@ -256,24 +240,26 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     const batch = admin.firestore().batch()
     const dayRef = admin
       .firestore()
-      .collection("sources")
+      .collection('sources')
       .doc(newsSource)
-      .collection("days")
+      .collection('days')
       .doc(date)
-      .collection("articles")
+      .collection('articles')
 
     data.forEach(article => {
       batch.set(dayRef.doc(article.title), { ...article })
-    });
+    })
 
     batch
       .commit()
       .then(() => {
-        console.log("added " + articles.length + " from " + newsSource + " to Firestore",
-          'source number ' + count++ + '/40')
+        console.log(
+          'added ' + articles.length + ' from ' + newsSource + ' to Firestore',
+          'source number ' + count++ + '/40',
+        )
       })
       .catch(() => {
-        console.log("ERROR: Failed to write", articles.length, "from", newsSource, "to Firestore")
+        console.log('ERROR: Failed to write', articles.length, 'from', newsSource, 'to Firestore')
       })
   }
 })
@@ -286,9 +272,9 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
     .collection('users')
     // Here add a where query to filter by requested time
     .get()
-    .then(function (users) {
+    .then(function(users) {
       const batch = admin.firestore().batch()
-      users.forEach(function (user) {
+      users.forEach(function(user) {
         admin
           .firestore()
           .collection('users')
@@ -319,7 +305,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      { ...articleContent }
+                      { ...articleContent },
                     )
                   })
                 })
