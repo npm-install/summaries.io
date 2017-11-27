@@ -145,7 +145,7 @@ export default class App extends Component {
       <CircularProgress
         size={80}
         thickness={5}
-        style={{ marginLeft: "20px", marginTop: "20px" }}
+        style={{ marginLeft: "50px", marginTop: "50px" }}
       />
     ) : (
       <BrowserRouter>
@@ -160,9 +160,10 @@ export default class App extends Component {
             }}
             style={{ fontFamily: "Noto Sans, sans-serif", position: "fixed" }}
             showMenuIconButton={false}
+            className="app-bar"
           />
-          <div className="container d-flex justify-content-center">
-            <div className="row">
+          <div className="container d-flex justify-content-center"> 
+             <div className="row">
               <Switch>
                 <Route path="/" exact component={this.state.authed ? Home : Landing} />
                 <PublicRoute
@@ -188,7 +189,7 @@ export default class App extends Component {
                 />
                 <Route render={() => <h3>No Match</h3>} />
               </Switch>
-            </div>
+            </div> 
           </div>
         </div>
       </BrowserRouter>

@@ -283,6 +283,26 @@ body {
 
 /* Mobile */
 @media only screen and (max-width: 667px) {
+  .stepper {
+    display: none;
+  }
+
+  .landing-hero {
+    width: 100%;
+    padding-bottom: 10em;
+  }
+
+  .logo {
+    width: 100%;
+    margin-left: -5.5em;
+    margin-top: 3em;
+  }
+
+  .hero-title {
+    margin-top: -1em;
+  }
+
+
   .welcome {
     margin-top: 2em;
     margin-left: .5em;
