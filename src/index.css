@@ -399,5 +399,20 @@ body {
   }
 }
 .weather-widget {
-  padding: 1em
+  padding: 1em;
+  margin-bottom: 3em;
+  margin-top: 1em;
+}
+
+#wea_widget {
+  margin-bottom: 5em;
+}
+
+#weather {
+  display: flex;
+}
+
+#weather_info {
+  margin-top: 1em;
+  margin-left: 3em;
 }
