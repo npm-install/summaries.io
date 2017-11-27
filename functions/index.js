@@ -57,20 +57,14 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
 })
 
-//Polly requirements
-const AWS = require('aws-sdk')
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+// const text_to_speech = new TextToSpeechV1({
+//   username: process.env.REACT_APP_watsonUsername,
+//   password: process.env.REACT_APP_watsonPassword,
+// })
 const fs = require('fs')
-const credentials = new AWS.Credentials(
-  process.env.REACT_APP_awsKey,
-  process.env.REACT_APP_awsSecret,
-)
 
-exports.polly = functions.https.onRequest((req, res) => {
-  const Polly = new AWS.Polly({
-    signatureVersion: 'v4',
-    region: 'us-east-1',
-  })
-
+exports.speech = functions.https.onRequest((req, res) => {
   //set current date
   const date = dateMaker()
   // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
@@ -78,7 +72,7 @@ exports.polly = functions.https.onRequest((req, res) => {
   //initialize google cloud storage instance
   // const storage = new Storage()
 
-  return admin
+  admin
     .firestore()
     .collection(`sources/bloomberg/days/${date}/articles`)
     .get()
@@ -89,35 +83,74 @@ exports.polly = functions.https.onRequest((req, res) => {
           title: doc.data().title.replace(/\'+/g, ''),
         }
       })
-
-      for (let i = 0; i < summaries.length; i++) {
-        const params = {
-          Text: summaries[i].summary,
-          OutputFormat: 'mp3',
-          VoiceId: 'Joanna',
-        }
-        Polly.synthesizeSpeech(params, (err, data) => {
-          if (err) console.error(err.stack)
-          else if (data) {
-            if (data.AudioStream instanceof Buffer) {
-              fs.writeFileSync(`./audio/${summaries[i].title}.mp3`, data.AudioStream)
-              console.log(`${summaries[i].title} FILE SAVED`)
-            }
-          }
-        })
-        // await storage
-        //   .bucket(`summary-73ccc.appspot.com`)
-        //   .upload(
-        //     `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${
-        //       summaries[i].title
-        //     }.mp3`,
-        //   )
-        //   .then(_ => console.log('uploaded file'))
-        //   .catch(console.error.bind(console))
-      }
+      console.log(summaries)
       return summaries
     })
-    .then(async summaries => await console.log(summaries))
+    // .then(summaries => {
+    //   summaries.forEach(summary => {
+    //     const params = {
+    //       text: summary.summary,
+    //       voice: 'en-US_AllisonVoice',
+    //       accept: 'audio/mp3',
+    //     }
+
+    //     // Pipe the synthesized text to a file.
+    //     text_to_speech
+    //       .synthesize(params)
+    //       .on('error', function(error) {
+    //         console.log('Error:', error)
+    //       })
+    //       .pipe(fs.createWriteStream(`/audio/${summary.title}.mp3`))
+    //   })
+    //   return summaries
+    // })
+    // .then(summaries => {
+    //   const storage = new Storage()
+    //   summaries.forEach(summary => {
+    //     storage
+    //       .bucket(`summary-73ccc.appspot.com`)
+    //       .upload(
+    //         `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${summary.title}.mp3`,
+    //       )
+    //       .then(_ => console.log('uploaded file'))
+    //       .catch(console.error.bind(console))
+    //   })
+    // })
+    // for (let i = 0; i < summaries.length; i++) {
+    //   const params = {
+    //     Text: summaries[i].summary,
+    //     OutputFormat: 'mp3',
+    //     VoiceId: 'Joanna',
+    //   }
+
+    // (err, data) => {
+    //   console.log(params)
+    //   if (err) console.error(err.stack)
+    //   else if (data) {
+    //     if (data.AudioStream instanceof Buffer) {
+    //       try {
+    //         fs.writeFileSync(`./audio/${summaries[i].title}.mp3`, data.AudioStream)
+    //         console.log(`${summaries[i].title} FILE SAVED`)
+    //       } catch (error) {
+    //         console.log('could not write all the files', error)
+    //       }
+    //     }
+    //   }
+    // },
+    // )
+
+    // await storage
+    //   .bucket(`summary-73ccc.appspot.com`)
+    //   .upload(
+    //     `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${
+    //       summaries[i].title
+    //     }.mp3`,
+    //   )
+    //   .then(_ => console.log('uploaded file'))
+    //   .catch(console.error.bind(console))
+    // }
+    // })
+    // .then(summaries => console.log(summaries))
     .then(_ => res.sendStatus(200))
     .catch(console.error.bind(console))
 })
@@ -322,15 +355,14 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
 exports.getWeather = functions.https.onRequest((request, response) => {
   const { weatherKey } = require('./keys')
 
-  var Forecast = require('forecast');
+  var Forecast = require('forecast')
 
   // Initialize
   var forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
-    units: 'fahrenheit'
-  });
-
+    units: 'fahrenheit',
+  })
 
   // Gett all zipcodes from database
   const zipsArray = ['08536', '10001', '08648', '08807']
@@ -338,18 +370,16 @@ exports.getWeather = functions.https.onRequest((request, response) => {
   const locations = zipsArray.map(zip => zipcodes.lookup(zip))
 
   // Write each location to db
-  Promise.each(locations, writeWeather)
-    .then(() => {
-      response.json('Writing to DB, check logs')
-    })
+  Promise.each(locations, writeWeather).then(() => {
+    response.json('Writing to DB, check logs')
+  })
 
-
-function writeWeather(location) {
-    const fora = forecast.get([location.latitude, location.longitude], function (err, weather) {
-      if (err) return console.dir(err);
+  function writeWeather(location) {
+    const fora = forecast.get([location.latitude, location.longitude], function(err, weather) {
+      if (err) return console.dir(err)
       // console.log(weather.daily.data[0]);
 
-      const date = dateMaker();
+      const date = dateMaker()
 
       return admin
         .firestore()
@@ -360,12 +390,10 @@ function writeWeather(location) {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily)
-        .then((succ) => {
+        .then(succ => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
     })
   }
-
-
 })
