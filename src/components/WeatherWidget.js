@@ -58,7 +58,6 @@ export default class WeatherWidget extends Component {
     }
     const weather = this.state.weather
     const location = this.state.location
-    console.log(weather)
     return (
       <div>
         <Paper zDepth={2} className="article-card">
