@@ -13,7 +13,6 @@ build
 .DS_Store
 .env
 npm-debug.log
-yarn.lock
 firebase-debug.log
 functions/keys.js
 yarn-error.log

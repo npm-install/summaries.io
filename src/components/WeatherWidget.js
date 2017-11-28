@@ -1,90 +1,53 @@
-import React, { Component } from 'react'
-import Paper from 'material-ui/Paper'
-import ReactLoading from 'react-loading'
-import { setTimeout } from 'core-js/library/web/timers'
+import React, { Component } from 'react';
+import Paper from 'material-ui/Paper';
+import ReactLoading from 'react-loading';
 import zipcodes from 'zipcodes'
-import DarkSkyApi from 'dark-sky-api'
-// import Skycons from 'react-skycons'
-// const { weatherKey } = require('../functions/keys.js');
-let count = 1
+import WeatherItem from './WeatherItem'
+import { db } from '../config/constants'
+
 
 export default class WeatherWidget extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      zipCode: '',
-      weatherJSON: {},
-      city: '',
-    }
-
-    this.submitHandler = this.submitHandler.bind(this)
+      zipCode: '10001',
+      weather: {},
+      location: {}
+    };
   }
 
-  getData(zip) {
-    const weatherKey = '3802941ad5b8c716614249ea1cf918b8'
+  componentDidMount() {
+    const date = dateMaker()
+    const zipCode = this.state.zipCode;
 
-    DarkSkyApi.apiKey = weatherKey
+    db
+      .collection('weather')
+      .doc('days')
+      .collection(date)
+      .doc('zip')
+      .collection(zipCode)
+      .get()
+      .then(snapshot => {
+        let weatherForecast = []
 
-    const location = zipcodes.lookup(zip)
+        snapshot.forEach(doc => {
+          weatherForecast.push(doc.data())
+        })
+        weatherForecast = weatherForecast[0];
 
-    const position = {
-      latitude: location.latitude,
-      longitude: location.longitude,
-    }
-
-    DarkSkyApi.loadCurrent(position)
-      .then(result => {
         this.setState({
-          weatherJSON: result,
-          city: location.city,
+          weather: weatherForecast,
+          location: zipcodes.lookup(zipCode)
         })
       })
-      .catch(console.error)
-  }
-
-  submitHandler(event) {
-    event.preventDefault()
-    let zip = event.target.zip.value
-
-    while (zip.length < 5) zip = '0' + zip
-
-    this.setState({ zipCode: zip, weatherJSON: {} })
-
-    setTimeout(() => {
-      this.getData(zip)
-    }, 2000)
+      .catch(err => {
+        console.log('Error getting documents', err)
+      })
   }
 
   render() {
-    console.log('Component rendered', count++, 'time(s)')
-    console.log(this.state)
-    // if (count === 2) this.getData()
 
-    if (!this.state.zipCode) {
-      return (
-        <div>
-          <Paper zDepth={2} className="article-card">
-            <div className="zipcode-input">
-              <h3>Enter your zip code to get weather!</h3>
-              <form onSubmit={this.submitHandler}>
-                <label htmlFor="zip">Zip Code:</label>
-                <input
-                  name="zip"
-                  placeholder="10001"
-                  type="number"
-                  step="1"
-                  min="00000"
-                  max="99999"
-                />
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
-              </form>
-            </div>
-          </Paper>
-        </div>
-      )
-    } else if (Object.keys(this.state.weatherJSON).length === 0) {
+    if (Object.keys(this.state.weather).length === 0) {
       return (
         <Paper zDepth={2} className="article-card">
           <div className="loading-weather">
@@ -93,17 +56,24 @@ export default class WeatherWidget extends Component {
         </Paper>
       )
     }
-    const weather = this.state.weatherJSON
-    console.log(weather)
+    const weather = this.state.weather
+    const location = this.state.location
     return (
-      <div>
+      <div id="wea_widget">
         <Paper zDepth={2} className="article-card">
-          <h1>Weather for {this.state.city}</h1>
-          <div>
-            <p>Temperature: {Math.floor(weather.temperature)} Degrees</p>
+          <div className="weather-widget">
+            <h3>Weather for today in {`${location.city}, ${location.state}`}</h3>
+            <div>
+              <WeatherItem forecast={weather} />
+            </div>
           </div>
         </Paper>
       </div>
     )
   }
+}
+
+function dateMaker() {
+  const date = new Date()
+  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }

@@ -1,83 +1,76 @@
 import React, { Component } from 'react'
 import Article from './Article'
 import Paper from 'material-ui/Paper'
-import { NYT, IGN, TechCrunch } from './DumbyData'
 import { db, firebaseAuth } from '../config/constants'
 
 function today() {
   const dt = new Date()
-  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + (dt.getDate() - 1)
+  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
 }
-
 
 export default class SourceSummary extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      articles: {}
+      articles: {},
     }
   }
 
   componentDidMount() {
-    const articles = {
-      newyorktimes: NYT,
-      ignnews: IGN,
-      tc: TechCrunch
-    }
+    let sourceArr = []
 
-    const currentUser = firebaseAuth().currentUser // will be used when we have emails as user ids
-
-    console.log(today())
     db
       .collection('users')
-      .doc('5CmbNogIFYyCBcWTVrrS')
-      .collection('emails')
-      .doc(today())
-      .collection('bloomberg')
+      .doc(firebaseAuth().currentUser.email)
+      .collection('subscriptions')
       .get()
-      .then(snapshot => {
-        const artFromSource = []
-        snapshot.forEach(doc => {
-          artFromSource.push(doc.data())
+      .then(querySnapshot => {
+        querySnapshot.forEach(function(source) {
+          sourceArr.push(source.id)
         })
-        this.setState({
-          articles: {
-            bloomberg: artFromSource
-          }
+      })
+      .then(() => {
+        const promises = sourceArr.map(async source => {
+          const articles = await db
+            .collection('users')
+            .doc(firebaseAuth().currentUser.email)
+            .collection('emails')
+            .doc(today())
+            .collection(source)
+            .get()
+            .then(snapshot => {
+              const artFromSource = []
+              snapshot.forEach(doc => {
+                artFromSource.push(doc.data())
+              })
+              return artFromSource
+            })
+
+          return { [source]: articles }
         })
+
+        return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+      })
+      .then(arr => {
+        this.setState({ articles: arr });
       })
       .catch(err => {
         console.log('Error getting documents', err)
       })
-
-    // this.setState({ articles: articles })
   }
 
   render() {
-    console.log(this.state.articles)
-    console.log(Object.keys(this.state.articles))
     return (
       <div className="source-summary">
-
-        {this.state.articles.bloomberg &&
-          Object.keys(this.state.articles).map(key => (
+        {Object.keys(this.state.articles).map(key => (
             <div key={key} className="each-source">
               <div className="source-header">
-                <img
-                  src={this.state.articles[key][0].source.logo}
-                  className="sourcelogo"
-                  alt="logo"
-                />
                 <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
               </div>
 
               <div className="source-content">
                 {this.state.articles[key].map(article => (
-                  <Paper
-                    zDepth={2}
-                    key={article.title}
-                    className="article-card"
-                  >
+                  <Paper zDepth={2} key={article.title} className="article-card">
                     <div className="each-article">
                       <Article article={article} />
                     </div>
