@@ -22,12 +22,12 @@ export default class SourceSummary extends Component {
     db
       .collection('users')
       .doc(firebaseAuth().currentUser.email)
-      .collection('subscriptions')
+      .collection('emails')
+      .doc(today())
       .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(function(source) {
-          sourceArr.push(source.id)
-        })
+      .then(doc => {
+        let obj = doc.data()
+        sourceArr = Object.keys(obj)
       })
       .then(() => {
         const promises = sourceArr.map(async source => {

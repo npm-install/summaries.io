@@ -206,8 +206,14 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .collection('subscriptions')
           .get()
           .then(subscriptions => {
-            return subscriptions.forEach(subscription => {
-              console.log(subscription.id, today)
+            subscriptions.forEach(subscription => {
+              const sub = subscription.id
+              batch.set(admin
+                .firestore()
+                .collection('users')
+                .doc(user.id)
+                .collection('emails')
+                .doc(today), {[sub]: true}, {merge: true})
               admin
                 .firestore()
                 .collection('sources')
@@ -219,7 +225,6 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                 .then(articles => {
                   articles.forEach(article => {
                     const articleContent = article.data()
-                    console.log('batch add')
                     batch.set(
                       admin
                         .firestore()
@@ -229,7 +234,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      { ...articleContent },
+                      { ...articleContent }
                     )
                   })
                 })
