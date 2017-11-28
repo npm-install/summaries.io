@@ -98,7 +98,6 @@ export default class WeatherWidget extends Component {
           weather: weatherToday,
           location
         })
-        console.log(weatherToday)
       })
       .catch(console.error);
 
@@ -106,17 +105,15 @@ export default class WeatherWidget extends Component {
 
   render() {
 
-    console.log(this.state)
-
     if (!Object.keys(this.state.location).length) {
       return (
         <div>
           <Paper zDepth={2} className="article-card">
             <div className="zipcode-input">
               <h3>Enter your zip code to get weather!</h3>
-              <form onSubmit={this.submitHandler}>
+              <form onSubmit={this.submitHandler} className="form-zip">
                 <label htmlFor="zip">Zip Code:</label>
-                <input name="zip" placeholder="10001" type="number" step="1" min="00000" max="99999" />
+                <input id="zip-input" name="zip" placeholder="10001" type="number" step="1" min="00000" max="99999" />
                 <button type="submit" id="weather-btn" className="btn btn-primary">
                   Submit
               </button>
