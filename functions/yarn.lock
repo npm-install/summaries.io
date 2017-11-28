@@ -109,6 +109,29 @@
     string-format-obj "^1.1.0"
     through2 "^2.0.3"
 
+"@google-cloud/common@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@google-cloud/common/-/common-0.15.1.tgz#a6f79535de626cc0e05b0ccda9db0c36099e47a3"
+  dependencies:
+    array-uniq "^1.0.3"
+    arrify "^1.0.1"
+    concat-stream "^1.6.0"
+    create-error-class "^3.0.2"
+    duplexify "^3.5.0"
+    ent "^2.2.0"
+    extend "^3.0.1"
+    google-auto-auth "^0.8.0"
+    is "^3.2.0"
+    log-driver "^1.2.5"
+    methmeth "^1.1.0"
+    modelo "^4.2.0"
+    request "^2.79.0"
+    retry-request "^3.0.0"
+    split-array-stream "^1.0.0"
+    stream-events "^1.0.1"
+    string-format-obj "^1.1.0"
+    through2 "^2.0.3"
+
 "@google-cloud/firestore@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-0.10.0.tgz#9c5328c7b09922dce99413f5366c41fb5d86c4b3"
@@ -141,6 +164,30 @@
     mime-types "^2.0.8"
     once "^1.3.1"
     pumpify "^1.3.3"
+    safe-buffer "^5.1.1"
+    snakeize "^0.1.0"
+    stream-events "^1.0.1"
+    string-format-obj "^1.0.0"
+    through2 "^2.0.0"
+
+"@google-cloud/storage@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/storage/-/storage-1.5.0.tgz#41f0cf8a7301ee73bc670b14b5cc430aca611768"
+  dependencies:
+    "@google-cloud/common" "^0.15.1"
+    arrify "^1.0.0"
+    async "^2.0.1"
+    concat-stream "^1.5.0"
+    create-error-class "^3.0.2"
+    duplexify "^3.5.0"
+    extend "^3.0.0"
+    gcs-resumable-upload "^0.8.2"
+    hash-stream-validation "^0.2.1"
+    is "^3.0.1"
+    mime-types "^2.0.8"
+    once "^1.3.1"
+    pumpify "^1.3.3"
+    request "^2.83.0"
     safe-buffer "^5.1.1"
     snakeize "^0.1.0"
     stream-events "^1.0.1"
@@ -1012,21 +1059,9 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
 
-fs-extra@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-4.0.2.tgz#f91704c53d1b461f893452b0c307d9997647ab6b"
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
-
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
-
-fs@^0.0.1-security:
-  version "0.0.1-security"
-  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
 
 fstream-ignore@^1.0.5:
   version "1.0.5"
@@ -1131,6 +1166,16 @@ google-auth-library@^0.10.0:
     lodash.noop "^3.0.1"
     request "^2.74.0"
 
+google-auth-library@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-0.12.0.tgz#a3fc6c296d00bb54e4d877ef581a05947330d07f"
+  dependencies:
+    gtoken "^1.2.3"
+    jws "^3.1.4"
+    lodash.isstring "^4.0.1"
+    lodash.merge "^4.6.0"
+    request "^2.81.0"
+
 google-auto-auth@^0.7.1, google-auto-auth@^0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/google-auto-auth/-/google-auto-auth-0.7.2.tgz#bf9352d5c4a0897bf31fd9c491028b765fbea71e"
@@ -1138,6 +1183,15 @@ google-auto-auth@^0.7.1, google-auto-auth@^0.7.2:
     async "^2.3.0"
     gcp-metadata "^0.3.0"
     google-auth-library "^0.10.0"
+    request "^2.79.0"
+
+google-auto-auth@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/google-auto-auth/-/google-auto-auth-0.8.0.tgz#2f73b120fe6f305f7de118876a83f23548757f09"
+  dependencies:
+    async "^2.3.0"
+    gcp-metadata "^0.3.0"
+    google-auth-library "^0.12.0"
     request "^2.79.0"
 
 google-gax@^0.14.1:
@@ -1166,7 +1220,7 @@ google-proto-files@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/google-proto-files/-/google-proto-files-0.13.1.tgz#fcf123637d1811612d6a4cb030fd14516b5aec4b"
 
-graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
+graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
@@ -1180,7 +1234,7 @@ grpc@^1.2, grpc@^1.6.0, grpc@^1.7.1:
     node-pre-gyp "^0.6.39"
     protobufjs "^5.0.0"
 
-gtoken@^1.2.1:
+gtoken@^1.2.1, gtoken@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/gtoken/-/gtoken-1.2.3.tgz#5509571b8afd4322e124cf66cf68115284c476d8"
   dependencies:
@@ -1341,10 +1395,6 @@ inflight@^1.0.4:
 inherits@2, inherits@2.0.3, inherits@^2.0.1, inherits@^2.0.3, inherits@~2.0.0, inherits@~2.0.1, inherits@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
-
-inherits@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.1.tgz#b17d08d326b4423e568eff719f91b0b1cbdf69f1"
 
 ini@~1.3.0:
   version "1.3.5"
@@ -1557,12 +1607,6 @@ json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
-jsonfile@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
-  optionalDependencies:
-    graceful-fs "^4.1.6"
-
 jsonify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
@@ -1628,6 +1672,14 @@ lodash.get@^4.0.0:
 lodash.isnull@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash.isnull/-/lodash.isnull-3.0.0.tgz#fafbe59ea1dca27eed786534039dd84c2e07c56e"
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+
+lodash.merge@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.0.tgz#69884ba144ac33fe699737a6086deffadd0f89c5"
 
 lodash.noop@^3.0.1:
   version "3.0.1"
@@ -2156,7 +2208,7 @@ request@2.81.0, request@~2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@^2.72.0, request@^2.74.0, request@^2.79.0, request@^2.81.0, request@~2.83.0:
+request@^2.72.0, request@^2.74.0, request@^2.79.0, request@^2.81.0, request@^2.83.0, request@~2.83.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -2577,10 +2629,6 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
-universalify@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
-
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -2588,12 +2636,6 @@ unpipe@1.0.0, unpipe@~1.0.0:
 util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
-
-util@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/util/-/util-0.10.3.tgz#7afb1afe50805246489e3db7fe0ed379336ac0f9"
-  dependencies:
-    inherits "2.0.1"
 
 utils-merge@1.0.1:
   version "1.0.1"
