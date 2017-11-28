@@ -58,19 +58,17 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 })
 
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
-// const text_to_speech = new TextToSpeechV1({
-//   username: process.env.REACT_APP_watsonUsername,
-//   password: process.env.REACT_APP_watsonPassword,
-// })
+const text_to_speech = new TextToSpeechV1({
+  username: `${process.env.REACT_APP_watsonUsername}`,
+  password: `${process.env.REACT_APP_watsonPassword}`,
+})
 const fs = require('fs')
 
 exports.speech = functions.https.onRequest((req, res) => {
+  require('./keys')
   //set current date
   const date = dateMaker()
   // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
-
-  //initialize google cloud storage instance
-  // const storage = new Storage()
 
   admin
     .firestore()
@@ -83,74 +81,35 @@ exports.speech = functions.https.onRequest((req, res) => {
           title: doc.data().title.replace(/\'+/g, ''),
         }
       })
-      console.log(summaries)
       return summaries
     })
-    // .then(summaries => {
-    //   summaries.forEach(summary => {
-    //     const params = {
-    //       text: summary.summary,
-    //       voice: 'en-US_AllisonVoice',
-    //       accept: 'audio/mp3',
-    //     }
-
-    //     // Pipe the synthesized text to a file.
-    //     text_to_speech
-    //       .synthesize(params)
-    //       .on('error', function(error) {
-    //         console.log('Error:', error)
-    //       })
-    //       .pipe(fs.createWriteStream(`/audio/${summary.title}.mp3`))
-    //   })
-    //   return summaries
-    // })
-    // .then(summaries => {
-    //   const storage = new Storage()
-    //   summaries.forEach(summary => {
-    //     storage
-    //       .bucket(`summary-73ccc.appspot.com`)
-    //       .upload(
-    //         `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${summary.title}.mp3`,
-    //       )
-    //       .then(_ => console.log('uploaded file'))
-    //       .catch(console.error.bind(console))
-    //   })
-    // })
-    // for (let i = 0; i < summaries.length; i++) {
-    //   const params = {
-    //     Text: summaries[i].summary,
-    //     OutputFormat: 'mp3',
-    //     VoiceId: 'Joanna',
-    //   }
-
-    // (err, data) => {
-    //   console.log(params)
-    //   if (err) console.error(err.stack)
-    //   else if (data) {
-    //     if (data.AudioStream instanceof Buffer) {
-    //       try {
-    //         fs.writeFileSync(`./audio/${summaries[i].title}.mp3`, data.AudioStream)
-    //         console.log(`${summaries[i].title} FILE SAVED`)
-    //       } catch (error) {
-    //         console.log('could not write all the files', error)
-    //       }
-    //     }
-    //   }
-    // },
-    // )
-
-    // await storage
-    //   .bucket(`summary-73ccc.appspot.com`)
-    //   .upload(
-    //     `/Users/Mueed-1/Desktop/capstone/summaries.io/functions/audio/${
-    //       summaries[i].title
-    //     }.mp3`,
-    //   )
-    //   .then(_ => console.log('uploaded file'))
-    //   .catch(console.error.bind(console))
-    // }
-    // })
-    // .then(summaries => console.log(summaries))
+    .then(async summaries => {
+      await summaries.forEach(summary => {
+        const params = {
+          text: summary.summary,
+          voice: 'en-US_AllisonVoice',
+          accept: 'audio/mp3',
+        }
+        // Pipe the synthesized text to a file.
+        text_to_speech
+          .synthesize(params)
+          .on('error', error => console.error(error))
+          .pipe(fs.createWriteStream(`${summary.title}.mp3`))
+      })
+      console.log('ending audio files')
+      return summaries
+    })
+    .then(async summaries => {
+      const storage = new Storage()
+      console.log('time to store this shit boiiiiiiiii')
+      // await summaries.forEach(async summary => {
+      //   await storage
+      //     .bucket(`summary-73ccc.appspot.com`)
+      //     .upload(`/Users/Mueed-1/Desktop/capstone/summaries.io/functions/${summary.title}.mp3`)
+      //     .then(_ => console.log('uploaded file'))
+      //     .catch(console.error.bind(console))
+      // })
+    })
     .then(_ => res.sendStatus(200))
     .catch(console.error.bind(console))
 })
