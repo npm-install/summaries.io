@@ -16,24 +16,6 @@ export default class WeatherWidget extends Component {
     };
   }
 
-  componentWillMount() {
-
-    // const userEmail = firebaseAuth().currentUser.providerData[0].email;
-    // const usersRef = db.collection('users')
-
-    // const userQuery = usersRef.where('email', '==', userEmail)
-
-    // userQuery
-    //   .get()
-    //   .then(Users => {
-    //     let zipCode;
-
-    //     Users.forEach(user => {
-    //       zipCode = user.data().zip
-    //     })
-    //   })
-  }
-
   componentDidMount() {
     const date = dateMaker()
     const userEmail = firebaseAuth().currentUser.providerData[0].email;
