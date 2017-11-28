@@ -9,7 +9,6 @@ const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
-const DarkSkyApi = require('dark-sky-api')
 
 const firebase = require('firebase')
 const admin = require('firebase-admin')
@@ -347,8 +346,18 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .collection('subscriptions')
           .get()
           .then(subscriptions => {
-            return subscriptions.forEach(subscription => {
-              console.log(subscription.id, today)
+            subscriptions.forEach(subscription => {
+              const sub = subscription.id
+              batch.set(
+                admin
+                  .firestore()
+                  .collection('users')
+                  .doc(user.id)
+                  .collection('emails')
+                  .doc(today),
+                { [sub]: true },
+                { merge: true },
+              )
               admin
                 .firestore()
                 .collection('sources')
@@ -360,7 +369,6 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                 .then(articles => {
                   articles.forEach(article => {
                     const articleContent = article.data()
-                    console.log('batch add')
                     batch.set(
                       admin
                         .firestore()
@@ -393,24 +401,39 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
 exports.getWeather = functions.https.onRequest((request, response) => {
   const { weatherKey } = require('./keys')
 
-  var Forecast = require('forecast')
-
   // Initialize
-  var forecast = new Forecast({
+  const Forecast = require('forecast')
+
+  const forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
     units: 'fahrenheit',
   })
 
-  // Gett all zipcodes from database
-  const zipsArray = ['08536', '10001', '08648', '08807']
+  // Get users from db
+  admin
+    .firestore()
+    .collection('users')
+    .get()
+    .then(users => {
+      // get all zipCodes from the users in a set to avoid duplicates
+      const zipCodesSet = new Set()
 
-  const locations = zipsArray.map(zip => zipcodes.lookup(zip))
+      users.forEach(user => {
+        zipCodesSet.add(user.data().zip)
+      })
 
-  // Write each location to db
-  Promise.each(locations, writeWeather).then(() => {
-    response.json('Writing to DB, check logs')
-  })
+      //convert set to an array
+      const zipCodes = Array.from(zipCodesSet)
+
+      // Get locations array of object location
+      const locations = zipCodes.map(zip => zipcodes.lookup(zip))
+
+      // Write each location to db
+      Promise.each(locations, writeWeather).then(() => {
+        response.json('Writing to DB, check logs')
+      })
+    })
 
   function writeWeather(location) {
     forecast.get([location.latitude, location.longitude], function(err, weather) {
