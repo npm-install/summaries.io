@@ -11,6 +11,7 @@ const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const DarkSkyApi = require('dark-sky-api')
 
+const firebase = require('firebase')
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
 
@@ -58,60 +59,138 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 })
 
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
-const text_to_speech = new TextToSpeechV1({
-  username: `${process.env.REACT_APP_watsonUsername}`,
-  password: `${process.env.REACT_APP_watsonPassword}`,
+const { watsonUser, watsonPass } = require('./keys')
+const textToSpeech = new TextToSpeechV1({
+  username: watsonUser,
+  password: watsonPass,
+  url: 'https://stream.watsonplatform.net/text-to-speech/api',
 })
-const fs = require('fs')
+const fs = require('fs-extra')
 
-exports.speech = functions.https.onRequest((req, res) => {
-  require('./keys')
+exports.speechCreation = functions.https.onRequest((req, res) => {
+  // const { newsKey, sumKey } = require('./keys')
   //set current date
   const date = dateMaker()
   // const newsUrl = `https://newsapi.org/v2/top-headlines?sources=${newsSource}&apiKey=${newsKey}`
+  // const storageRef = admin.storage()
+  // const summaryRef = storageref.child(`test`)
 
-  admin
-    .firestore()
-    .collection(`sources/bloomberg/days/${date}/articles`)
-    .get()
-    .then(querySnapshot => {
-      const summaries = querySnapshot.docs.map(doc => {
-        return {
-          summary: doc.data().summary,
-          title: doc.data().title.replace(/\'+/g, ''),
-        }
+  // function getPublicUrl (filename) {
+  //   return `https.storage.googleapis.com/summary-73ccc.appspot.com/test-audio.mp3`
+  // }
+
+  // const storage = new Storage()
+  // const file = storage.bucket(`summary-73ccc.appspot.com`).file('test-audio.mp3')
+
+  // const stream = file.createWriteStream()
+  // stream.on('finish', _ => {
+  //   file.cloudStorageObject = 'test-audio.mp3'
+  //   file.makePublic().then(_ => {
+  //     file.cloudStoragePublicUrl = getPublicUrl('test-audio.mp3')
+  //   })
+  // })
+  // stream.end(file.buffer)
+
+  async function speechCreation() {
+    const params = {
+      text: `There are many variations of passages of Lorem Ipsum available, 
+      but the majority have suffered alteration in some form, by injected humour, 
+      or randomised words which don't look even slightly believable. If you are going to use a passage of 
+      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. 
+      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
+      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, 
+      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
+      The generated Lorem Ipsum is therefore always free from repetition, injected humour, 
+      or non-characteristic words etc.`,
+      voice: 'en-US_AllisonVoice',
+      accept: 'audio/mp3',
+    }
+    // Pipe the synthesized text to a file.
+    await textToSpeech.synthesize(params, (err, audio) => {
+      if (err) console.log(err)
+      return fs.writeFileSync(`Test.mp3`, audio, error => {
+        if (error) console.error(error)
+        console.log('done done done done done')
       })
-      return summaries
     })
-    .then(async summaries => {
-      await summaries.forEach(summary => {
-        const params = {
-          text: summary.summary,
-          voice: 'en-US_AllisonVoice',
-          accept: 'audio/mp3',
-        }
-        // Pipe the synthesized text to a file.
-        text_to_speech
-          .synthesize(params)
-          .on('error', error => console.error(error))
-          .pipe(fs.createWriteStream(`${summary.title}.mp3`))
-      })
-      console.log('ending audio files')
-      return summaries
-    })
-    .then(async summaries => {
-      const storage = new Storage()
-      console.log('time to store this shit boiiiiiiiii')
-      // await summaries.forEach(async summary => {
-      //   await storage
-      //     .bucket(`summary-73ccc.appspot.com`)
-      //     .upload(`/Users/Mueed-1/Desktop/capstone/summaries.io/functions/${summary.title}.mp3`)
-      //     .then(_ => console.log('uploaded file'))
-      //     .catch(console.error.bind(console))
-      // })
-    })
-    .then(_ => res.sendStatus(200))
+  }
+
+  function speechStorage() {
+    const storage = new Storage()
+    storage
+      .bucket(`summary-73ccc.appspot.com`)
+      .upload(`Test.mp3`)
+      .then(_ => console.log('uploaded file to cloud storage'))
+      .catch(console.error.bind(console))
+  }
+
+  Promise.all(Promise.resolve(speechCreation()), Promise.resolve(speechStorage()))
+    .then(_ => console.log('maybe'))
     .catch(console.error.bind(console))
+
+  res.sendStatus(200)
+  // .on('error', error => console.error(error))
+  // .pipe(fs.createWriteStream(`${params.text}.mp3`))
+  // .then((err, data) => console.log('err', err, 'data', data))
+
+  // admin
+  //   .firestore()
+  //   .collection(`sources/bloomberg/days/${date}/articles`)
+  //   .get()
+  //   .then(querySnapshot => {
+  //     const summaries = querySnapshot.docs.map(doc => {
+  //       return {
+  //         summary: doc.data().summary,
+  //         title: doc.data().title.replace(/\'+/g, ''),
+  //       }
+  //     })
+  //     return summaries
+  //   })
+  //   .then(async summaries => {
+  //     await summaries.forEach(summary => {
+  //       const params = {
+  //         text: summary.summary,
+  //         voice: 'en-US_AllisonVoice',
+  //         accept: 'audio/mp3',
+  //       }
+  //       // Pipe the synthesized text to a file.
+  //       // let audioStream = fs.createWriteStream(`./${params.text}.mp3`)
+  //       // const streamPromise = streamToPromise(audioStream)
+  //       textToSpeech.synthesize(params, (err, audio) => {
+  //         if (err) console.error(err, err.stack)
+  //         fs.writeFileSync(`${summary.title}.mp3`, audio)
+  //       })
+  //       // .on('error', error => console.error(error))
+  //       // .pipe(fs.createWriteStream(`./${summary.title}.mp3`))
+  //       // .on('finish', _ => summaryAudio)
+  //     })
+  //     // audioStream.end()
+  //     return summaries
+  //   })
+  //   .then(async summaries => {
+  //     const storage = new Storage()
+  //     await summaries.forEach(summary => {
+  //       console.log('starting to store')
+  //       storage
+  //         .bucket(`summary-73ccc.appspot.com`)
+  //         .upload(`${summary.title}.mp3`)
+  //         .then(_ => console.log('uploaded file to cloud storage'))
+  //         .catch(console.error.bind(console))
+  //     })
+  //   })
+  //   .then(_ => console.log('yoyoyooyoyoyoyoyoyo'))
+  //   .then(_ => res.sendStatus(200))
+  //   .catch(console.error.bind(console))
+})
+
+exports.speechStorage = functions.https.onRequest((req, res) => {
+  const storage = new Storage()
+  storage
+    .bucket(`summary-73ccc.appspot.com`)
+    .upload(`Test.mp3`)
+    .then(_ => console.log('uploaded file to cloud storage'))
+    .catch(console.error.bind(console))
+  res.sendStatus(200)
 })
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
@@ -333,12 +412,11 @@ exports.getWeather = functions.https.onRequest((request, response) => {
     response.json('Writing to DB, check logs')
   })
 
+  function writeWeather(location) {
+    forecast.get([location.latitude, location.longitude], function(err, weather) {
+      if (err) return console.dir(err)
 
-function writeWeather(location) {
-    forecast.get([location.latitude, location.longitude], function (err, weather) {
-      if (err) return console.dir(err);
-
-      const date = dateMaker();
+      const date = dateMaker()
       return admin
         .firestore()
         .collection('weather')
@@ -348,7 +426,7 @@ function writeWeather(location) {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then((succ) => {
+        .then(succ => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
