@@ -3,7 +3,7 @@ import Paper from 'material-ui/Paper';
 import ReactLoading from 'react-loading';
 import zipcodes from 'zipcodes'
 import WeatherItem from './WeatherItem'
-import { db } from '../config/constants'
+import { db, firebaseAuth } from '../config/constants'
 
 
 export default class WeatherWidget extends Component {
@@ -16,33 +16,71 @@ export default class WeatherWidget extends Component {
     };
   }
 
+  componentWillMount() {
+
+    // const userEmail = firebaseAuth().currentUser.providerData[0].email;
+    // const usersRef = db.collection('users')
+
+    // const userQuery = usersRef.where('email', '==', userEmail)
+
+    // userQuery
+    //   .get()
+    //   .then(Users => {
+    //     let zipCode;
+
+    //     Users.forEach(user => {
+    //       zipCode = user.data().zip
+    //     })
+    //   })
+  }
+
   componentDidMount() {
     const date = dateMaker()
-    const zipCode = this.state.zipCode;
 
-    db
-      .collection('weather')
-      .doc('days')
-      .collection(date)
-      .doc('zip')
-      .collection(zipCode)
+    const userEmail = firebaseAuth().currentUser.providerData[0].email;
+    const usersRef = db.collection('users')
+
+    const userQuery = usersRef.where('email', '==', userEmail)
+    let zipCode;
+
+    // Get user info
+    userQuery
       .get()
-      .then(snapshot => {
-        let weatherForecast = []
+      .then(Users => {
 
-        snapshot.forEach(doc => {
-          weatherForecast.push(doc.data())
+        Users.forEach(user => {
+          zipCode = user.data().zip
         })
-        weatherForecast = weatherForecast[0];
 
-        this.setState({
-          weather: weatherForecast,
-          location: zipcodes.lookup(zipCode)
-        })
+        // Get weather data for the users zipcode from firebase
+        db
+          .collection('weather')
+          .doc('days')
+          .collection(date)
+          .doc('zip')
+          .collection(zipCode)
+          .get()
+          .then(snapshot => {
+            let weatherForecast = []
+
+            snapshot.forEach(doc => {
+              weatherForecast.push(doc.data())
+            })
+            weatherForecast = weatherForecast[0];
+
+            this.setState({
+              weather: weatherForecast,
+              location: zipcodes.lookup(zipCode)
+            })
+          })
+          .catch(err => {
+            console.log('Error getting documents', err)
+          })
       })
       .catch(err => {
-        console.log('Error getting documents', err)
+        console.error('Error getting user info', err)
       })
+
   }
 
   render() {
