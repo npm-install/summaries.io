@@ -427,3 +427,8 @@ body {
   height: 4rem;
   width: 4rem;
 }
+
+#weather-btn {
+
+  margin-left: 5em;
+}
