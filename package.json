@@ -6,11 +6,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/boilermaker-test' mocha ./server/**/*.spec.js ./server/**/**/*.spec.js ./client/**/*.spec.js --compilers js:babel-register"
   },
   "precommit": "precommit",
   "lint-staged": {
-    "src/**/*.{js,css}": ["prettier --write", "git add"]
+    "src/**/*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "singleQuote": true,
@@ -38,7 +42,15 @@
     "zipcodes": "^6.0.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "chai": "^4.1.2",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
     "eslint": "^4.12.0",
     "eslint-config-fullstack": "^3.0.0",
     "eslint-config-standard": "^10.2.1",
