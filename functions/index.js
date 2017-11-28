@@ -36,7 +36,7 @@ exports.httpEmail = functions.https.onRequest((req, res) => {
   })
 
   const mailOptions = {
-    from: 'your@summaries.io',
+    from: '⚡ summaries.io ⚡ <your@summaries.io>',
     to: 'verblodung@gmail.com', // list of receivers
     subject: 'Your daily summaries', // Subject line
     html: '<p>Super duper email</p>' // plain text body
