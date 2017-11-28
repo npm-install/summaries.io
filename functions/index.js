@@ -1,4 +1,5 @@
 const functions = require('firebase-functions')
+const Storage = require('@google-cloud/storage')
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -8,7 +9,6 @@ const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
-
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -28,7 +28,7 @@ function parseBody(body) {
   return mail.toJSON()
 }
 
-exports.httpEmail = functions.https.onRequest((req, res) =>
+exports.httpEmail = functions.https.onRequest((req, res) => {
   Promise.resolve()
     .then(_ => {
       if (req.method !== 'POST') {
@@ -49,8 +49,49 @@ exports.httpEmail = functions.https.onRequest((req, res) =>
     .catch(err => {
       console.error(err)
       return Promise.reject(err)
-    }),
-)
+    })
+})
+
+exports.helloWorld = functions.https.onRequest((request, response) => {
+  response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
+})
+
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+const { watsonUser, watsonPass } = require('./keys')
+const textToSpeech = new TextToSpeechV1({
+  username: watsonUser,
+  password: watsonPass,
+  url: 'https://stream.watsonplatform.net/text-to-speech/api',
+})
+
+exports.speech = functions.https.onRequest((req, res) => {
+  console.log('Running speach creation...')
+  const params = {
+    text: `There are many variations of passages of Lorem Ipsum available, 
+      but the majority have suffered alteration in some form, by injected humour, 
+      or randomised words which don't look even slightly believable. If you are going to use a passage of 
+      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. 
+      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
+      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, 
+      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
+      The generated Lorem Ipsum is therefore always free from repetition, injected humour, 
+      or non-characteristic words etc.`,
+    voice: 'en-US_AllisonVoice',
+    accept: 'audio/mp3',
+  }
+  // Pipe the synthesized text to a file.
+  const storage = new Storage()
+  const newAudioFile = storage.bucket(`summary-73ccc.appspot.com`).file(`StreamTest.mp3`)
+  const audioStream = newAudioFile.createWriteStream()
+
+  textToSpeech
+    .synthesize(params)
+    .on('error', err => console.error(err))
+    .pipe(audioStream)
+
+  console.log('Stream complete!')
+  res.sendStatus(200)
+})
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
@@ -208,12 +249,16 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .then(subscriptions => {
             subscriptions.forEach(subscription => {
               const sub = subscription.id
-              batch.set(admin
-                .firestore()
-                .collection('users')
-                .doc(user.id)
-                .collection('emails')
-                .doc(today), {[sub]: true}, {merge: true})
+              batch.set(
+                admin
+                  .firestore()
+                  .collection('users')
+                  .doc(user.id)
+                  .collection('emails')
+                  .doc(today),
+                { [sub]: true },
+                { merge: true },
+              )
               admin
                 .firestore()
                 .collection('sources')
@@ -234,7 +279,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      { ...articleContent }
+                      { ...articleContent },
                     )
                   })
                 })
@@ -258,13 +303,13 @@ exports.getWeather = functions.https.onRequest((request, response) => {
   const { weatherKey } = require('./keys')
 
   // Initialize
-  const Forecast = require('forecast');
+  const Forecast = require('forecast')
 
   const forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
-    units: 'fahrenheit'
-  });
+    units: 'fahrenheit',
+  })
 
   // Get users from db
   admin
@@ -272,7 +317,6 @@ exports.getWeather = functions.https.onRequest((request, response) => {
     .collection('users')
     .get()
     .then(users => {
-
       // get all zipCodes from the users in a set to avoid duplicates
       const zipCodesSet = new Set()
 
@@ -286,19 +330,17 @@ exports.getWeather = functions.https.onRequest((request, response) => {
       // Get locations array of object location
       const locations = zipCodes.map(zip => zipcodes.lookup(zip))
 
-       // Write each location to db
-      Promise.each(locations, writeWeather)
-        .then(() => {
-          response.json('Writing to DB, check logs')
-        })
+      // Write each location to db
+      Promise.each(locations, writeWeather).then(() => {
+        response.json('Writing to DB, check logs')
+      })
     })
 
+  function writeWeather(location) {
+    forecast.get([location.latitude, location.longitude], function(err, weather) {
+      if (err) return console.dir(err)
 
-function writeWeather(location) {
-    forecast.get([location.latitude, location.longitude], function (err, weather) {
-      if (err) return console.dir(err);
-
-      const date = dateMaker();
+      const date = dateMaker()
       return admin
         .firestore()
         .collection('weather')
@@ -308,12 +350,10 @@ function writeWeather(location) {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then((succ) => {
+        .then(succ => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
     })
   }
-
-
 })
