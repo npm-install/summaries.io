@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import Article from './Article'
 import Paper from 'material-ui/Paper'
 import { db, firebaseAuth } from '../config/constants'
+import { imageSources } from './SourceImgData'
 
 function today() {
-  const dt = new Date()
-  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
-}
+    const dt = new Date()
+    return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
+  }
 
 export default class SourceSummary extends Component {
   constructor(props) {
@@ -63,22 +64,23 @@ export default class SourceSummary extends Component {
     return (
       <div className="source-summary">
         {Object.keys(this.state.articles).map(key => (
-            <div key={key} className="each-source">
-              <div className="source-header">
-                <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
-              </div>
-
-              <div className="source-content">
-                {this.state.articles[key].map(article => (
-                  <Paper zDepth={2} key={article.title} className="article-card">
-                    <div className="each-article">
-                      <Article article={article} />
-                    </div>
-                  </Paper>
-                ))}
-              </div>
+          <div key={key} className="each-source">
+            <div className="source-header">
+              <img src={imageSources[this.state.articles[key][0].source.id]} alt="" className="source-image" />
+              <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
             </div>
-          ))}
+
+            <div className="source-content">
+              {this.state.articles[key].map(article => (
+                <Paper zDepth={2} key={article.title} className="article-card">
+                  <div className="each-article">
+                    <Article article={article} />
+                  </div>
+                </Paper>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     )
   }
