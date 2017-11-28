@@ -24,6 +24,58 @@ function parseBody(body) {
   return mail.toJSON()
 }
 
+exports.formatEmail = functions.https.onRequest((req, res) => {
+  let userSource = []
+  admin.firestore()
+    .collection('users')
+    .doc('verblodung@gmail.com')
+    .collection('emails')
+    .doc(dateMaker())
+    .get()
+    .then(doc => {userSource = Object.keys(doc.data())}) // ['NYT', 'vice-news']
+    .then(() => {
+      const promises = userSource.map(async source => {
+        const articles = await admin.firestore()
+          .collection('users')
+          .doc('verblodung@gmail.com')
+          .collection('emails')
+          .doc(dateMaker())
+          .collection(source)
+          .get()
+          .then(snapshot => {
+            const artFromSource = []
+            snapshot.forEach(doc => {
+              artFromSource.push(doc.data())
+            })
+            return artFromSource
+          })
+
+        return { [source]: articles }
+      })
+
+      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+    })
+    .then(arr => {
+      //[{'new-york-times': [...]}, {'vice-news': [..]}]
+      const allSources = Object.keys(arr).map(key => {
+          const header = `<h3>${arr[key][0].source.name}</h3>`
+          const content = arr[key].map(article =>
+            `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
+          ).join('')
+          const body = header + content
+          return body
+      })
+      const html = allSources.join('')
+      res.send(html)
+      return html
+    })
+    .catch(err => {
+      console.log('Error getting documents', err)
+    })
+
+})
+
+
 exports.httpEmail = functions.https.onRequest((req, res) => {
   const { gmail } = require('./keys')
 
