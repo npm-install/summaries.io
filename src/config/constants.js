@@ -1,4 +1,4 @@
-const firebase = require('firebase')
+import firebase from 'firebase'
 // Required for side-effects
 require('firebase/firestore')
 
