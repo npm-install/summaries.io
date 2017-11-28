@@ -1,14 +1,10 @@
 const functions = require('firebase-functions')
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-
 const sendgrid = require('sendgrid')
-const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
-
+const nodemailer = require('nodemailer')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -28,29 +24,29 @@ function parseBody(body) {
   return mail.toJSON()
 }
 
-exports.httpEmail = functions.https.onRequest((req, res) =>
-  Promise.resolve()
-    .then(_ => {
-      if (req.method !== 'POST') {
-        const error = new Error('Only POST requests are accepted')
-        error.code = 405
-        throw error
-      }
+exports.httpEmail = functions.https.onRequest((req, res) => {
+  const { gmail } = require('./keys')
 
-      const request = client.emptyRequest({
-        method: 'POST',
-        path: '/v3/mail/send',
-        body: parseBody(req.body),
-      })
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'summariesio@gmail.com',
+      pass: gmail
+    }
+  })
 
-      return client.API(request)
-    })
-    .then(response => (response.body ? res.send(response.body) : res.end()))
-    .catch(err => {
-      console.error(err)
-      return Promise.reject(err)
-    }),
-)
+  const mailOptions = {
+    from: 'your@summaries.io',
+    to: 'verblodung@gmail.com', // list of receivers
+    subject: 'Your daily summaries', // Subject line
+    html: '<p>Super duper email</p>' // plain text body
+  }
+
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) console.log(err)
+    else res.send(info)
+  })
+})
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
@@ -97,7 +93,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'time',
     'usa-today',
     'vice-news',
-    'wired',
+    'wired'
   ]
 
   let articles = []
@@ -179,7 +175,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .then(() => {
         console.log(
           'added ' + articles.length + ' from ' + newsSource + ' to Firestore',
-          'source number ' + count++ + '/40',
+          'source number ' + count++ + '/40'
         )
       })
       .catch(() => {
@@ -208,12 +204,16 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .then(subscriptions => {
             subscriptions.forEach(subscription => {
               const sub = subscription.id
-              batch.set(admin
-                .firestore()
-                .collection('users')
-                .doc(user.id)
-                .collection('emails')
-                .doc(today), {[sub]: true}, {merge: true})
+              batch.set(
+                admin
+                  .firestore()
+                  .collection('users')
+                  .doc(user.id)
+                  .collection('emails')
+                  .doc(today),
+                { [sub]: true },
+                { merge: true }
+              )
               admin
                 .firestore()
                 .collection('sources')
@@ -258,13 +258,13 @@ exports.getWeather = functions.https.onRequest((request, response) => {
   const { weatherKey } = require('./keys')
 
   // Initialize
-  const Forecast = require('forecast');
+  const Forecast = require('forecast')
 
   const forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
     units: 'fahrenheit'
-  });
+  })
 
   // Get users from db
   admin
@@ -272,7 +272,6 @@ exports.getWeather = functions.https.onRequest((request, response) => {
     .collection('users')
     .get()
     .then(users => {
-
       // get all zipCodes from the users in a set to avoid duplicates
       const zipCodesSet = new Set()
 
@@ -286,19 +285,17 @@ exports.getWeather = functions.https.onRequest((request, response) => {
       // Get locations array of object location
       const locations = zipCodes.map(zip => zipcodes.lookup(zip))
 
-       // Write each location to db
-      Promise.each(locations, writeWeather)
-        .then(() => {
-          response.json('Writing to DB, check logs')
-        })
+      // Write each location to db
+      Promise.each(locations, writeWeather).then(() => {
+        response.json('Writing to DB, check logs')
+      })
     })
 
+  function writeWeather(location) {
+    forecast.get([location.latitude, location.longitude], function(err, weather) {
+      if (err) return console.dir(err)
 
-function writeWeather(location) {
-    forecast.get([location.latitude, location.longitude], function (err, weather) {
-      if (err) return console.dir(err);
-
-      const date = dateMaker();
+      const date = dateMaker()
       return admin
         .firestore()
         .collection('weather')
@@ -308,12 +305,10 @@ function writeWeather(location) {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then((succ) => {
+        .then(succ => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
     })
   }
-
-
 })
