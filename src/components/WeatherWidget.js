@@ -36,10 +36,8 @@ export default class WeatherWidget extends Component {
 
   componentDidMount() {
     const date = dateMaker()
-
     const userEmail = firebaseAuth().currentUser.providerData[0].email;
     const usersRef = db.collection('users')
-
     const userQuery = usersRef.where('email', '==', userEmail)
     let zipCode;
 
