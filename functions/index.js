@@ -4,6 +4,7 @@ const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
+const RSS = require('rss')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
