@@ -64,7 +64,6 @@ export default class WeatherWidget extends Component {
   }
 
   render() {
-
     if (Object.keys(this.state.weather).length === 0) {
       return (
         <Paper zDepth={2} className="article-card">

@@ -33,7 +33,7 @@ export default class Landing extends Component {
   getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return 'Sign up with us or connect your gmail account'
+        return `Sign up with us or connect using your Gmail account`
       case 1:
         return 'Pick from our diverse selection of news sources and set gist receiving time'
       case 2:
