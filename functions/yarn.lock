@@ -982,7 +982,7 @@ firebase-admin@^5.5.0:
     jsonwebtoken "7.4.3"
     node-forge "0.7.1"
 
-firebase-functions@^0.7.1:
+firebase-functions@^0.7.3:
   version "0.7.3"
   resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-0.7.3.tgz#11433990c69df3af784a927c6f2b3d6cd7eaf498"
   dependencies:

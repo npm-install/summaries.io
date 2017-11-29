@@ -13,21 +13,40 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-exports.httpEmail = functions.https.onRequest((req, res) => {
+exports.userEmail = functions.https.onRequest((req, res) => {
+  // Here we decide which users we notify
+  // sendEmail('verblodung@gmail.com')
 
-  let user = 'verblodung@gmail.com'
+  admin
+    .firestore()
+    .collection('users')
+    // Here add a where query to filter by requested time
+    .get()
+    .then(function(users) {
+      users.forEach(function(user) {
+        console.log('user.id', user.id)
+        makeEmail(user.id)
+      })
+    })
+    .then(() => res.send('hello summaries.io'))
+})
 
+function makeEmail(user) {
   let userSource = []
-  admin.firestore()
+  admin
+    .firestore()
     .collection('users')
     .doc(user)
     .collection('emails')
     .doc(dateMaker())
     .get()
-    .then(doc => {userSource = Object.keys(doc.data())})
+    .then(doc => {
+      userSource = Object.keys(doc.data())
+    })
     .then(() => {
       const promises = userSource.map(async source => {
-        const articles = await admin.firestore()
+        const articles = await admin
+          .firestore()
           .collection('users')
           .doc(user)
           .collection('emails')
@@ -49,26 +68,25 @@ exports.httpEmail = functions.https.onRequest((req, res) => {
     })
     .then(arr => {
       const allSources = Object.keys(arr).map(key => {
-          const header = `<h3>${arr[key][0].source.name}</h3>`
-          const content = arr[key].map(article =>
-            `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
-          ).join('')
-          const body = header + content
-          return body
+        const header = `<h3>${arr[key][0].source.name}</h3>`
+        const content = arr[key]
+          .map(
+            article =>
+              `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
+          )
+          .join('')
+        const body = header + content
+        return body
       })
       const html = '<div style={{}}>' + allSources.join('') + '</div>'
       return html
     })
     .then(html => {
-      return sendEmail(html)
+      return sendEmail(user, html)
     })
-    .then(resp => {
-      res.send(resp)
-    })
-})
+}
 
-
-function sendEmail(html) {
+function sendEmail(user, html) {
   const { gmail } = require('./keys')
   var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -80,7 +98,7 @@ function sendEmail(html) {
 
   const mailOptions = {
     from: '⚡ summaries.io ⚡ <your@summaries.io>',
-    to: 'verblodung@gmail.com',
+    to: user,
     subject: 'Your daily summaries',
     html: html
   }
@@ -91,33 +109,28 @@ function sendEmail(html) {
   })
 }
 
-
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
-})
-
-const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
-const { watsonUser, watsonPass } = require('./keys')
-const textToSpeech = new TextToSpeechV1({
-  username: watsonUser,
-  password: watsonPass,
-  url: 'https://stream.watsonplatform.net/text-to-speech/api',
-})
+// const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+// const { watsonUser, watsonPass } = require('./keys')
+// const textToSpeech = new TextToSpeechV1({
+//   username: watsonUser,
+//   password: watsonPass,
+//   url: 'https://stream.watsonplatform.net/text-to-speech/api'
+// })
 
 exports.speech = functions.https.onRequest((req, res) => {
   console.log('Running speach creation...')
   const params = {
-    text: `There are many variations of passages of Lorem Ipsum available, 
-      but the majority have suffered alteration in some form, by injected humour, 
-      or randomised words which don't look even slightly believable. If you are going to use a passage of 
-      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. 
-      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
-      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, 
-      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
-      The generated Lorem Ipsum is therefore always free from repetition, injected humour, 
+    text: `There are many variations of passages of Lorem Ipsum available,
+      but the majority have suffered alteration in some form, by injected humour,
+      or randomised words which don't look even slightly believable. If you are going to use a passage of
+      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.
+      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary,
+      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words,
+      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
+      The generated Lorem Ipsum is therefore always free from repetition, injected humour,
       or non-characteristic words etc.`,
     voice: 'en-US_AllisonVoice',
-    accept: 'audio/mp3',
+    accept: 'audio/mp3'
   }
   // Pipe the synthesized text to a file.
   const storage = new Storage()
@@ -272,7 +285,6 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
   admin
     .firestore()
     .collection('users')
-    // Here add a where query to filter by requested time
     .get()
     .then(function(users) {
       const batch = admin.firestore().batch()
@@ -316,7 +328,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      { ...articleContent },
+                      { ...articleContent }
                     )
                   })
                 })
