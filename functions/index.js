@@ -79,7 +79,7 @@ function makeEmail(user) {
               <p style="font-size: 1em;">${article.summary}</p></div>`
           )
           .join('')
-        const audioContent = `Here are your summaries from ${arr[key][0].source.name}.  
+        const audioContent = `Here are your summaries from ${arr[key][0].source.name}.
         ${arr[key]
           .map(article => `You are now listening to ${article.title}. ${article.summary}. `)
           .join('')}`
@@ -305,6 +305,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
   function makeSum(source) {
     Promise.mapSeries([source], getSource)
       .then(result => {
+        result[0] = result[0].slice(0, 3)
         Promise.mapSeries(result, writeSource).catch(err => {
           console.error('Error writing to the database on', source, err.message)
         })
@@ -321,22 +322,22 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       return axios
         .get(newsUrl)
         .then(response => {
-          articles = response.data.articles.map(async article => {
+          articles = response.data.articles.map(article => {
             // Defaults to description
             article.summary = article.description
 
-            const sumsObj = await axios
-              .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
-              .catch(err => {
-                if (err) console.error('Error with smmry on', article.url)
-              })
+            // const sumsObj = await axios
+            //   .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
+            //   .catch(err => {
+            //     if (err) console.error('Error with smmry on', article.url)
+            //   })
 
-            // Check to see if article summarized successfully
-            if (sumsObj && sumsObj.data.sm_api_content) {
-              console.log('Summary success')
-              // Article summary success, overwrite description
-              article.summary = sumsObj.data.sm_api_content
-            }
+            // // Check to see if article summarized successfully
+            // if (sumsObj && sumsObj.data.sm_api_content) {
+            //   console.log('Summary success')
+            //   // Article summary success, overwrite description
+            //   article.summary = sumsObj.data.sm_api_content
+            // }
 
             return article
           })
@@ -368,7 +369,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .commit()
       .then(() => {
         console.log(
-          'added ' + articles.length + ' from ' + newsSource + ' to Firestore',
+          'added ' + data.length + ' from ' + newsSource + ' to Firestore',
           'source number ' + count++ + '/40'
         )
       })
