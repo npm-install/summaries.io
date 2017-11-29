@@ -7,6 +7,9 @@
         "function": "podcast"
       }
     ],
+    "functions": {
+      "source": "functions"
+    },
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
