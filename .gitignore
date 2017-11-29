@@ -17,3 +17,4 @@ firebase-debug.log
 functions/yarn-error.log
 functions/keys.js
 yarn-error.log
+src/keys.js
