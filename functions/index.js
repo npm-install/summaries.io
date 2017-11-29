@@ -1,14 +1,9 @@
 const functions = require('firebase-functions')
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-
-const sendgrid = require('sendgrid')
-const client = sendgrid('YOUR_SG_API_KEY')
+const Storage = require('@google-cloud/storage')
 const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
-
+const nodemailer = require('nodemailer')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -18,39 +13,138 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-function parseBody(body) {
-  const helper = sendgrid.mail
-  const fromEmail = new helper.Email(body.from)
-  const toEmail = new helper.Email(body.to)
-  const subject = body.subject
-  const content = new helper.Content('text/html', body.content)
-  const mail = new helper.Mail(fromEmail, subject, toEmail, content)
-  return mail.toJSON()
-}
+exports.userEmail = functions.https.onRequest((req, res) => {
+  // Here we decide which users we notify
+  // sendEmail('verblodung@gmail.com')
 
-exports.httpEmail = functions.https.onRequest((req, res) =>
-  Promise.resolve()
-    .then(_ => {
-      if (req.method !== 'POST') {
-        const error = new Error('Only POST requests are accepted')
-        error.code = 405
-        throw error
-      }
+  admin
+    .firestore()
+    .collection('users')
+    // Here add a where query to filter by requested time
+    .get()
+    .then(function(users) {
+      users.forEach(function(user) {
+        console.log('user.id', user.id)
+        makeEmail(user.id)
+      })
+    })
+    .then(() => res.send('hello summaries.io'))
+})
 
-      const request = client.emptyRequest({
-        method: 'POST',
-        path: '/v3/mail/send',
-        body: parseBody(req.body),
+function makeEmail(user) {
+  let userSource = []
+  admin
+    .firestore()
+    .collection('users')
+    .doc(user)
+    .collection('emails')
+    .doc(dateMaker())
+    .get()
+    .then(doc => {
+      userSource = Object.keys(doc.data())
+    })
+    .then(() => {
+      const promises = userSource.map(async source => {
+        const articles = await admin
+          .firestore()
+          .collection('users')
+          .doc(user)
+          .collection('emails')
+          .doc(dateMaker())
+          .collection(source)
+          .get()
+          .then(snapshot => {
+            const artFromSource = []
+            snapshot.forEach(doc => {
+              artFromSource.push(doc.data())
+            })
+            return artFromSource
+          })
+
+        return { [source]: articles }
       })
 
-      return client.API(request)
+      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
     })
-    .then(response => (response.body ? res.send(response.body) : res.end()))
-    .catch(err => {
-      console.error(err)
-      return Promise.reject(err)
-    }),
-)
+    .then(arr => {
+      const allSources = Object.keys(arr).map(key => {
+        const header = `<h3>${arr[key][0].source.name}</h3>`
+        const content = arr[key]
+          .map(
+            article =>
+              `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
+          )
+          .join('')
+        const body = header + content
+        return body
+      })
+      const html = '<div style={{}}>' + allSources.join('') + '</div>'
+      return html
+    })
+    .then(html => {
+      return sendEmail(user, html)
+    })
+}
+
+function sendEmail(user, html) {
+  const { gmail } = require('./keys')
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'summariesio@gmail.com',
+      pass: gmail
+    }
+  })
+
+  const mailOptions = {
+    from: '⚡ summaries.io ⚡ <your@summaries.io>',
+    to: user,
+    subject: 'Your daily summaries',
+    html: html
+  }
+
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) return err
+    else return info
+  })
+}
+
+// const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+// const { watsonUser, watsonPass } = require('./keys')
+// const textToSpeech = new TextToSpeechV1({
+//   username: watsonUser,
+//   password: watsonPass,
+//   url: 'https://stream.watsonplatform.net/text-to-speech/api'
+// })
+
+exports.speech = functions.https.onRequest((req, res) => {
+  console.log('Running speach creation...')
+  const params = {
+    text: `There are many variations of passages of Lorem Ipsum available,
+      but the majority have suffered alteration in some form, by injected humour,
+      or randomised words which don't look even slightly believable. If you are going to use a passage of
+      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.
+      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary,
+      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words,
+      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
+      The generated Lorem Ipsum is therefore always free from repetition, injected humour,
+      or non-characteristic words etc.`,
+    voice: 'en-US_AllisonVoice',
+    accept: 'audio/mp3'
+  }
+  // Pipe the synthesized text to a file.
+  const storage = new Storage()
+  const newAudioFile = storage.bucket(`summary-73ccc.appspot.com`).file(`StreamTest.mp3`)
+  const audioStream = newAudioFile.createWriteStream()
+
+  textToSpeech
+    .synthesize(params)
+    .on('error', err => console.error(err))
+    .pipe(audioStream)
+
+  console.log('Stream complete!')
+  res.sendStatus(200)
+})
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
@@ -97,12 +191,11 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'time',
     'usa-today',
     'vice-news',
-    'wired',
+    'wired'
   ]
 
   let articles = []
 
-  // What is today's date?
   const date = dateMaker()
   Promise.mapSeries(newsSources, makeSum)
     .then(() => {
@@ -118,7 +211,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
         })
       })
       .catch(err => {
-        console.log('Error getting sources')
+        console.log('Error getting sources', err)
         response.json('Atleast one error, check logs for more info')
       })
 
@@ -136,10 +229,8 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
               .catch(err => {
-                console.error('Error with smmry on', article.url)
+                console.error('Error with smmry on', article.url, 'error:', err)
               })
-
-            let updatedArticle
 
             // Check to see if article summarized successfully
             if (sumsObj && sumsObj.data.sm_api_content) {
@@ -153,7 +244,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           return Promise.all(response.data.articles)
         })
         .catch(err => {
-          console.error('error on', newsSource)
+          console.error('error on', newsSource, 'err:', err)
         })
     }
   }
@@ -179,7 +270,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .then(() => {
         console.log(
           'added ' + articles.length + ' from ' + newsSource + ' to Firestore',
-          'source number ' + count++ + '/40',
+          'source number ' + count++ + '/40'
         )
       })
       .catch(() => {
@@ -191,10 +282,9 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 exports.makeEmails = functions.https.onRequest((request, response) => {
   const today = dateMaker()
 
-  const rec = admin
+  admin
     .firestore()
     .collection('users')
-    // Here add a where query to filter by requested time
     .get()
     .then(function(users) {
       const batch = admin.firestore().batch()
@@ -208,12 +298,16 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
           .then(subscriptions => {
             subscriptions.forEach(subscription => {
               const sub = subscription.id
-              batch.set(admin
-                .firestore()
-                .collection('users')
-                .doc(user.id)
-                .collection('emails')
-                .doc(today), {[sub]: true}, {merge: true})
+              batch.set(
+                admin
+                  .firestore()
+                  .collection('users')
+                  .doc(user.id)
+                  .collection('emails')
+                  .doc(today),
+                { [sub]: true },
+                { merge: true }
+              )
               admin
                 .firestore()
                 .collection('sources')
@@ -238,7 +332,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                     )
                   })
                 })
-                .then(res => {
+                .then(() => {
                   batch
                     .commit()
                     .then(console.log)
@@ -258,13 +352,13 @@ exports.getWeather = functions.https.onRequest((request, response) => {
   const { weatherKey } = require('./keys')
 
   // Initialize
-  const Forecast = require('forecast');
+  const Forecast = require('forecast')
 
   const forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
     units: 'fahrenheit'
-  });
+  })
 
   // Get users from db
   admin
@@ -272,7 +366,6 @@ exports.getWeather = functions.https.onRequest((request, response) => {
     .collection('users')
     .get()
     .then(users => {
-
       // get all zipCodes from the users in a set to avoid duplicates
       const zipCodesSet = new Set()
 
@@ -290,20 +383,26 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         if (location) locations.push(location)
       })
 
+<<<<<<< HEAD
        // Write each location to db
       Promise.each(locations, writeWeather)
         .then(() => {
           response.json('Writing to DB, check logs')
         })
         .catch(console.error)
+=======
+      // Write each location to db
+      Promise.each(locations, writeWeather).then(() => {
+        response.json('Writing to DB, check logs')
+      })
+>>>>>>> master
     })
 
+  function writeWeather(location) {
+    forecast.get([location.latitude, location.longitude], function(err, weather) {
+      if (err) return console.dir(err)
 
-function writeWeather(location) {
-    forecast.get([location.latitude, location.longitude], function (err, weather) {
-      if (err) return console.dir(err);
-
-      const date = dateMaker();
+      const date = dateMaker()
       return admin
         .firestore()
         .collection('weather')
@@ -313,12 +412,10 @@ function writeWeather(location) {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then((succ) => {
+        .then(() => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
     })
   }
-
-
 })
