@@ -14,7 +14,7 @@
     "dark-sky-api": "^0.6.21",
     "firebase": "^4.6.2",
     "firebase-admin": "^5.5.0",
-    "firebase-functions": "^0.7.1",
+    "firebase-functions": "^0.7.3",
     "forecast": "^0.3.2",
     "geo-loc-utils": "^0.0.2",
     "nodemailer": "^4.4.0",
