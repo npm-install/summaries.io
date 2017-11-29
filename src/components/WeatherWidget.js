@@ -53,10 +53,13 @@ export default class WeatherWidget extends Component {
                 weatherForecast.push(doc.data())
               })
               weatherForecast = weatherForecast[0];
-              this.setState({
-                weather: weatherForecast,
-                location: zipcodes.lookup(zipCode)
-              })
+
+              if (weatherForecast) {
+                this.setState({
+                  weather: weatherForecast,
+                  location: zipcodes.lookup(zipCode)
+                })
+              }
             })
             .catch(err => {
               console.log('Error getting documents', err)
@@ -94,10 +97,44 @@ export default class WeatherWidget extends Component {
     DarkSkyApi.loadForecast(position)
       .then(result => {
         const weatherToday = result.daily.data[0]
-        this.setState({
-          weather: weatherToday,
-          location
-        })
+
+        // write zipcode to current user
+
+        // Get current users
+        const userEmail = firebaseAuth().currentUser.providerData[0].email;
+
+        // Check to see if the user has an email
+        db
+          .collection('users')
+          .doc(userEmail)
+          .set({ zip }, { merge: true })
+          .then(() => {
+            console.log('zip', zip)
+            console.log('weather', weatherToday)
+            const weather = {
+              apparentTemperatureHigh: weatherToday.apparentTemperatureHigh,
+              apparentTemperatureLow: weatherToday.apparentTemperatureLow,
+              icon: weatherToday.icon,
+              summary: weatherToday.summary
+            }
+            // save weather for this zipcode
+            db
+              .collection('weather')
+              .doc('days')
+              .collection(dateMaker())
+              .doc('zip')
+              .collection(zip)
+              .doc('forecast')
+              .set(weather)
+              .then(() => {
+                this.setState({
+                  weather,
+                  location
+                })
+              })
+              .catch(console.error)
+          })
+          .catch(console.error)
       })
       .catch(console.error);
 
