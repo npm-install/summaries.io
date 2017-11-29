@@ -22,6 +22,8 @@ body {
 .source-title {
   margin-top: 0.1em;
   margin-left: 0.4em;
+  padding-top: .5em;
+  padding-left: .25em
 }
 
 .sourcelogo {
@@ -419,4 +421,9 @@ body {
 #weather_info {
   margin-top: 1em;
   margin-left: 1.5em;
+}
+
+.source-image {
+  height: 4rem;
+  width: 4rem;
 }

@@ -1,4 +1,5 @@
 const functions = require('firebase-functions')
+const Storage = require('@google-cloud/storage')
 
 const sendgrid = require('sendgrid')
 const axios = require('axios')
@@ -103,6 +104,47 @@ function sendEmail(html) {
   })
 }
 
+
+exports.helloWorld = functions.https.onRequest((request, response) => {
+  response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
+})
+
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+const { watsonUser, watsonPass } = require('./keys')
+const textToSpeech = new TextToSpeechV1({
+  username: watsonUser,
+  password: watsonPass,
+  url: 'https://stream.watsonplatform.net/text-to-speech/api',
+})
+
+exports.speech = functions.https.onRequest((req, res) => {
+  console.log('Running speach creation...')
+  const params = {
+    text: `There are many variations of passages of Lorem Ipsum available, 
+      but the majority have suffered alteration in some form, by injected humour, 
+      or randomised words which don't look even slightly believable. If you are going to use a passage of 
+      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. 
+      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, 
+      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, 
+      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. 
+      The generated Lorem Ipsum is therefore always free from repetition, injected humour, 
+      or non-characteristic words etc.`,
+    voice: 'en-US_AllisonVoice',
+    accept: 'audio/mp3',
+  }
+  // Pipe the synthesized text to a file.
+  const storage = new Storage()
+  const newAudioFile = storage.bucket(`summary-73ccc.appspot.com`).file(`StreamTest.mp3`)
+  const audioStream = newAudioFile.createWriteStream()
+
+  textToSpeech
+    .synthesize(params)
+    .on('error', err => console.error(err))
+    .pipe(audioStream)
+
+  console.log('Stream complete!')
+  res.sendStatus(200)
+})
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
@@ -290,7 +332,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                         .doc(today)
                         .collection(subscription.id)
                         .doc(article.id),
-                      { ...articleContent }
+                      { ...articleContent },
                     )
                   })
                 })
