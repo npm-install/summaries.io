@@ -215,35 +215,35 @@ exports.podcast = functions.https.onRequest((request, response) => {
   response.type('text/xml').send(xml)
 })
 
-const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
-const { watsonUser, watsonPass } = require('./keys')
-const textToSpeech = new TextToSpeechV1({
-  username: watsonUser,
-  password: watsonPass,
-  url: 'https://stream.watsonplatform.net/text-to-speech/api'
-})
+// const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+// const { watsonUser, watsonPass } = require('./keys')
+// const textToSpeech = new TextToSpeechV1({
+//   username: watsonUser,
+//   password: watsonPass,
+//   url: 'https://stream.watsonplatform.net/text-to-speech/api'
+// })
 
-function speech(email, audioString) {
-  console.log('Running speach creation...')
-  const params = {
-    text: audioString,
-    voice: 'en-US_AllisonVoice',
-    accept: 'audio/mp3'
-  }
-  // Pipe the synthesized text to a file.
-  const storage = new Storage()
-  const newAudioFile = storage
-    .bucket(`summary-73ccc.appspot.com`)
-    .file(`/${email}/${dateMaker()}.mp3`)
-  const audioStream = newAudioFile.createWriteStream()
+// function speech(email, audioString) {
+//   console.log('Running speach creation...')
+//   const params = {
+//     text: audioString,
+//     voice: 'en-US_AllisonVoice',
+//     accept: 'audio/mp3'
+//   }
+//   // Pipe the synthesized text to a file.
+//   const storage = new Storage()
+//   const newAudioFile = storage
+//     .bucket(`summary-73ccc.appspot.com`)
+//     .file(`/${email}/${dateMaker()}.mp3`)
+//   const audioStream = newAudioFile.createWriteStream()
 
-  textToSpeech
-    .synthesize(params)
-    .on('error', err => console.error(err))
-    .pipe(audioStream)
+//   textToSpeech
+//     .synthesize(params)
+//     .on('error', err => console.error(err))
+//     .pipe(audioStream)
 
-  console.log('Stream complete!')
-}
+//   console.log('Stream complete!')
+// }
 
 // exports.makeSummaries = functions.https.onRequest((request, response) => {
 //   const { newsKey, sumKey } = require('./keys')
