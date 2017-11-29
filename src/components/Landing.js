@@ -43,6 +43,12 @@ export default class Landing extends Component {
     }
   }
 
+  componentWillMount(){
+    window.setInterval(this.handleNext, 3000)
+    window.setInterval(() => this.setState({ stepIndex: 0, finished: false }), 12000)
+  }
+
+
   render() {
     const { finished, stepIndex } = this.state
     const contentStyle = {
