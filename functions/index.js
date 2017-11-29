@@ -4,7 +4,6 @@ const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
-var RSS = require('rss')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -30,6 +29,7 @@ exports.userEmail = functions.https.onRequest((req, res) => {
       })
     })
     .then(() => res.send('hello summaries.io'))
+    .catch(err => console.log('error: ', err))
 })
 
 function makeEmail(user) {
@@ -69,11 +69,14 @@ function makeEmail(user) {
     })
     .then(arr => {
       const allSources = Object.keys(arr).map(key => {
-        const header = `<h3>${arr[key][0].source.name}</h3>`
+        const header = `<h2 style="margin-top: 1.5em;">${arr[key][0].source.name}</h2>`
         const content = arr[key]
           .map(
             article =>
-              `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
+              `<div style="border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); width: 80vw; padding: 1.5em; margin-bottom: 1em;"><a href=${
+                article.url
+              } style="font-size: 1.2em;">${article.title}</a>
+              <p style="font-size: 1em;">${article.summary}</p></div>`
           )
           .join('')
         const audioContent = `Here are your summaries from ${arr[key][0].source.name}.  
@@ -83,17 +86,23 @@ function makeEmail(user) {
         const body = header + content
         return { body, audioContent }
       })
+      const logo = `<div style="text-align: center;"><img src="https://i.imgur.com/RgjJeBb.png" alt="email-logo" style="width: 50vw; height: auto;"></div>`
+      const welcome = '<h2 style="font-size: 1.8em;">Welcome to your daily summary</h2>'
 
-      const html = `<div style={{}}> ${allSources.map(source => source.body).join('')} </div>`
+      const html = `<html>${logo}${welcome} <div style="line-height: 1.5em"> ${allSources
+        .map(source => source.body)
+        .join('')} </div></html>`
       const audio = `Welcome to Summaries dot I O. ${allSources
         .map(source => source.audioContent)
         .join('')}. Those were your summaries for today. See you tomorrow!`
+
       return { html, audio }
     })
     .then(({ html, audio }) => {
       speech(user, audio)
       return sendEmail(user, html)
     })
+    .catch(err => console.log('error: ', err))
 }
 
 function sendEmail(user, html) {
@@ -118,6 +127,93 @@ function sendEmail(user, html) {
     else return info
   })
 }
+
+exports.podcast = functions.https.onRequest((request, response) => {
+  /* lets create an rss feed */
+  var feed = new RSS({
+    title: 'Your daily summaries',
+    description: 'description',
+    feed_url: 'http://example.com/rss.xml',
+    site_url: 'http://example.com',
+    image_url: 'http://example.com/icon.png',
+    docs: 'http://example.com/rss/docs.html',
+    managingEditor: 'Dylan Greene',
+    webMaster: 'Dylan Greene',
+    copyright: '2013 Dylan Greene',
+    language: 'en',
+    categories: ['Category 1', 'Category 2', 'Category 3'],
+    pubDate: 'May 20, 2012 04:00:00 GMT',
+    ttl: '60',
+    custom_namespaces: {
+      itunes: 'http://www.itunes.com/dtds/podcast-1.0.dtd'
+    },
+    custom_elements: [
+      { 'itunes:subtitle': 'A show about everything' },
+      { 'itunes:author': 'John Doe' },
+      {
+        'itunes:summary':
+          'All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our podcast in the Podcasts app or in the iTunes Store'
+      },
+      {
+        'itunes:owner': [{ 'itunes:name': 'John Doe' }, { 'itunes:email': 'john.doe@example.com' }]
+      },
+      {
+        'itunes:image': {
+          _attr: {
+            href: 'http://example.com/podcasts/everything/AllAboutEverything.jpg'
+          }
+        }
+      },
+      {
+        'itunes:category': [
+          {
+            _attr: {
+              text: 'Technology'
+            }
+          },
+          {
+            'itunes:category': {
+              _attr: {
+                text: 'Gadgets'
+              }
+            }
+          }
+        ]
+      }
+    ]
+  })
+
+  /* loop over data and add to feed */
+  feed.item({
+    title: 'item title',
+    description: 'use this for the content. It can include html.',
+    url:
+      'https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/verblodung%40gmail.com%2F2017-11-29.mp3?alt=media&token=1b726323-da41-4e3d-81ca-4036ad964164', // link to the item
+    guid: '1123', // optional - defaults to url
+    categories: ['Category 1', 'Category 2', 'Category 3', 'Category 4'], // optional - array of item categories
+    author: 'Guest Author', // optional - defaults to feed author property
+    date: 'May 27, 2012', // any format that js Date can parse.
+    lat: 33.417974, //optional latitude field for GeoRSS
+    long: -111.933231, //optional longitude field for GeoRSS
+    // enclosure: { url: '...' }, // optional enclosure
+    custom_elements: [
+      { 'itunes:author': 'John Doe' },
+      { 'itunes:subtitle': 'A short primer on table spices' },
+      {
+        'itunes:image': {
+          _attr: {
+            href: 'http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg'
+          }
+        }
+      },
+      { 'itunes:duration': '7:04' }
+    ]
+  })
+
+  // cache the xml to send to clients
+  var xml = feed.xml()
+  response.type('text/xml').send(xml)
+})
 
 const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
 const { watsonUser, watsonPass } = require('./keys')
@@ -215,7 +311,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       })
       .catch(err => {
         console.log('Error getting sources', err)
-        response.json('Atleast one error, check logs for more info')
+        response.json('At least one error, check logs for more info')
       })
 
     // Function definition to getSource
@@ -414,91 +510,4 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         .catch(console.error.bind(console))
     })
   }
-})
-
-exports.podcast = functions.https.onRequest((request, response) => {
-  /* lets create an rss feed */
-  var feed = new RSS({
-    title: 'Your daily summaries',
-    description: 'description',
-    feed_url: 'http://example.com/rss.xml',
-    site_url: 'http://example.com',
-    image_url: 'http://example.com/icon.png',
-    docs: 'http://example.com/rss/docs.html',
-    managingEditor: 'Dylan Greene',
-    webMaster: 'Dylan Greene',
-    copyright: '2013 Dylan Greene',
-    language: 'en',
-    categories: ['Category 1', 'Category 2', 'Category 3'],
-    pubDate: 'May 20, 2012 04:00:00 GMT',
-    ttl: '60',
-    custom_namespaces: {
-      itunes: 'http://www.itunes.com/dtds/podcast-1.0.dtd'
-    },
-    custom_elements: [
-      { 'itunes:subtitle': 'A show about everything' },
-      { 'itunes:author': 'John Doe' },
-      {
-        'itunes:summary':
-          'All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our podcast in the Podcasts app or in the iTunes Store'
-      },
-      {
-        'itunes:owner': [{ 'itunes:name': 'John Doe' }, { 'itunes:email': 'john.doe@example.com' }]
-      },
-      {
-        'itunes:image': {
-          _attr: {
-            href: 'http://example.com/podcasts/everything/AllAboutEverything.jpg'
-          }
-        }
-      },
-      {
-        'itunes:category': [
-          {
-            _attr: {
-              text: 'Technology'
-            }
-          },
-          {
-            'itunes:category': {
-              _attr: {
-                text: 'Gadgets'
-              }
-            }
-          }
-        ]
-      }
-    ]
-  })
-
-  /* loop over data and add to feed */
-  feed.item({
-    title: 'item title',
-    description: 'use this for the content. It can include html.',
-    url:
-      'https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/verblodung%40gmail.com%2F2017-11-29.mp3?alt=media&token=1b726323-da41-4e3d-81ca-4036ad964164', // link to the item
-    guid: '1123', // optional - defaults to url
-    categories: ['Category 1', 'Category 2', 'Category 3', 'Category 4'], // optional - array of item categories
-    author: 'Guest Author', // optional - defaults to feed author property
-    date: 'May 27, 2012', // any format that js Date can parse.
-    lat: 33.417974, //optional latitude field for GeoRSS
-    long: -111.933231, //optional longitude field for GeoRSS
-    // enclosure: { url: '...' }, // optional enclosure
-    custom_elements: [
-      { 'itunes:author': 'John Doe' },
-      { 'itunes:subtitle': 'A short primer on table spices' },
-      {
-        'itunes:image': {
-          _attr: {
-            href: 'http://example.com/podcasts/everything/AllAboutEverything/Episode1.jpg'
-          }
-        }
-      },
-      { 'itunes:duration': '7:04' }
-    ]
-  })
-
-  // cache the xml to send to clients
-  var xml = feed.xml()
-  response.type('text/xml').send(xml)
 })
