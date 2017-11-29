@@ -15,19 +15,9 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-function parseBody(body) {
-  const helper = sendgrid.mail
-  const fromEmail = new helper.Email(body.from)
-  const toEmail = new helper.Email(body.to)
-  const subject = body.subject
-  const content = new helper.Content('text/html', body.content)
-  const mail = new helper.Mail(fromEmail, subject, toEmail, content)
-  return mail.toJSON()
-}
-
 exports.httpEmail = functions.https.onRequest((req, res) => {
 
-  user = 'verblodung@gmail.com'
+  let user = 'verblodung@gmail.com'
 
   let userSource = []
   admin.firestore()
@@ -36,7 +26,7 @@ exports.httpEmail = functions.https.onRequest((req, res) => {
     .collection('emails')
     .doc(dateMaker())
     .get()
-    .then(doc => {userSource = Object.keys(doc.data())}) // ['NYT', 'vice-news']
+    .then(doc => {userSource = Object.keys(doc.data())})
     .then(() => {
       const promises = userSource.map(async source => {
         const articles = await admin.firestore()
@@ -60,7 +50,6 @@ exports.httpEmail = functions.https.onRequest((req, res) => {
       return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
     })
     .then(arr => {
-      //[{'new-york-times': [...]}, {'vice-news': [..]}]
       const allSources = Object.keys(arr).map(key => {
           const header = `<h3>${arr[key][0].source.name}</h3>`
           const content = arr[key].map(article =>
@@ -93,8 +82,8 @@ function sendEmail(html) {
 
   const mailOptions = {
     from: '⚡ summaries.io ⚡ <your@summaries.io>',
-    to: 'verblodung@gmail.com', // list of receivers
-    subject: 'Your daily summaries', // Subject line
+    to: 'verblodung@gmail.com',
+    subject: 'Your daily summaries',
     html: html
   }
 
@@ -196,7 +185,6 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 
   let articles = []
 
-  // What is today's date?
   const date = dateMaker()
   Promise.mapSeries(newsSources, makeSum)
     .then(() => {
@@ -212,7 +200,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
         })
       })
       .catch(err => {
-        console.log('Error getting sources')
+        console.log('Error getting sources', err)
         response.json('Atleast one error, check logs for more info')
       })
 
@@ -230,10 +218,8 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
               .catch(err => {
-                console.error('Error with smmry on', article.url)
+                console.error('Error with smmry on', article.url, 'error:', err)
               })
-
-            let updatedArticle
 
             // Check to see if article summarized successfully
             if (sumsObj && sumsObj.data.sm_api_content) {
@@ -247,7 +233,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           return Promise.all(response.data.articles)
         })
         .catch(err => {
-          console.error('error on', newsSource)
+          console.error('error on', newsSource, 'err:', err)
         })
     }
   }
@@ -285,7 +271,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 exports.makeEmails = functions.https.onRequest((request, response) => {
   const today = dateMaker()
 
-  const rec = admin
+  admin
     .firestore()
     .collection('users')
     // Here add a where query to filter by requested time
@@ -336,7 +322,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                     )
                   })
                 })
-                .then(res => {
+                .then(() => {
                   batch
                     .commit()
                     .then(console.log)
@@ -403,7 +389,7 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then(succ => {
+        .then(() => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
