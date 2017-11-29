@@ -24,11 +24,14 @@ function parseBody(body) {
   return mail.toJSON()
 }
 
-exports.formatEmail = functions.https.onRequest((req, res) => {
+exports.httpEmail = functions.https.onRequest((req, res) => {
+
+  user = 'verblodung@gmail.com'
+
   let userSource = []
   admin.firestore()
     .collection('users')
-    .doc('verblodung@gmail.com')
+    .doc(user)
     .collection('emails')
     .doc(dateMaker())
     .get()
@@ -37,7 +40,7 @@ exports.formatEmail = functions.https.onRequest((req, res) => {
       const promises = userSource.map(async source => {
         const articles = await admin.firestore()
           .collection('users')
-          .doc('verblodung@gmail.com')
+          .doc(user)
           .collection('emails')
           .doc(dateMaker())
           .collection(source)
@@ -65,20 +68,20 @@ exports.formatEmail = functions.https.onRequest((req, res) => {
           const body = header + content
           return body
       })
-      const html = allSources.join('')
-      res.send(html)
+      const html = '<div style={{}}>' + allSources.join('') + '</div>'
       return html
     })
-    .catch(err => {
-      console.log('Error getting documents', err)
+    .then(html => {
+      return sendEmail(html)
     })
-
+    .then(resp => {
+      res.send(resp)
+    })
 })
 
 
-exports.httpEmail = functions.https.onRequest((req, res) => {
+function sendEmail(html) {
   const { gmail } = require('./keys')
-
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -91,14 +94,15 @@ exports.httpEmail = functions.https.onRequest((req, res) => {
     from: '⚡ summaries.io ⚡ <your@summaries.io>',
     to: 'verblodung@gmail.com', // list of receivers
     subject: 'Your daily summaries', // Subject line
-    html: '<p>Super duper email</p>' // plain text body
+    html: html
   }
 
   transporter.sendMail(mailOptions, function(err, info) {
-    if (err) console.log(err)
-    else res.send(info)
+    if (err) return err
+    else return info
   })
-})
+}
+
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
