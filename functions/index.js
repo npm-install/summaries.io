@@ -284,13 +284,18 @@ exports.getWeather = functions.https.onRequest((request, response) => {
       const zipCodes = Array.from(zipCodesSet)
 
       // Get locations array of object location
-      const locations = zipCodes.map(zip => zipcodes.lookup(zip))
+      const locations = []
+      zipCodes.forEach(zip => {
+        const location = zipcodes.lookup(zip)
+        if (location) locations.push(location)
+      })
 
        // Write each location to db
       Promise.each(locations, writeWeather)
         .then(() => {
           response.json('Writing to DB, check logs')
         })
+        .catch(console.error)
     })
 
 
