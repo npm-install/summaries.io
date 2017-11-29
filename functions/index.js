@@ -229,7 +229,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
               .catch(err => {
-                console.error('Error with smmry on', article.url, 'error:', err)
+                if (err) console.error('Error with smmry on', article.url)
               })
 
             // Check to see if article summarized successfully
@@ -244,7 +244,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           return Promise.all(response.data.articles)
         })
         .catch(err => {
-          console.error('error on', newsSource, 'err:', err)
+          if (err) console.error('error on', newsSource, 'err:', err)
         })
     }
   }
