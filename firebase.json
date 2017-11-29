@@ -3,7 +3,7 @@
     "public": "build",
     "rewrites": [
       {
-        "source": "/podcast",
+        "source": "/podcast/",
         "function": "podcast"
       }
     ],
