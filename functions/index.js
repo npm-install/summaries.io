@@ -81,7 +81,7 @@ function makeEmail(user) {
           .join('')
         const audioContent = `Here are your summaries from ${arr[key][0].source.name}.  
         ${arr[key]
-          .map(article => `You are now listening to ${article.title}. ${article.summary}. `)
+          .map(article => `You are now listening to ${article.title}. ${article.summary} `)
           .join('')}`
         const body = header + content
         return { body, audioContent }
