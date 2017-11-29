@@ -27,7 +27,6 @@
     "dark-sky-api": "^0.6.21",
     "firebase": "4.6.0",
     "firebase-admin": "^5.5.1",
-    "firebase-functions": "^0.7.3",
     "material-ui": "^0.19.4",
     "react": "^16.1.1",
     "react-animated-weather": "^1.0.3",
@@ -37,7 +36,6 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "react-skycons": "^0.7.0",
-    "sendgrid": "^5.2.3",
     "skycons": "^1.0.0",
     "zipcodes": "^6.0.0"
   },
