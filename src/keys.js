@@ -1,6 +1,6 @@
 module.exports = {
-  newsKey: '4c03f9810de44abea57691eccab2ce6a',
-  sumKey: '7A17E5DE03',
-  weatherKey: '3802941ad5b8c716614249ea1cf918b8',
+  newsKey: '44d285a75b4845a9b7082e6ab3bfa449',
+  sumKey: '388945AEF8',
+  weatherKey: 'a98c3cf990001a704c721f40c6c78c',
   gmail: 'youcatchmydrift'
 }
