@@ -10,7 +10,10 @@
   },
   "precommit": "precommit",
   "lint-staged": {
-    "src/**/*.{js,css}": ["prettier --write", "git add"]
+    "src/**/*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "singleQuote": true,
@@ -34,6 +37,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
     "react-skycons": "^0.7.0",
+    "rss": "^1.2.2",
     "sendgrid": "^5.2.3",
     "skycons": "^1.0.0",
     "zipcodes": "^6.0.0"
