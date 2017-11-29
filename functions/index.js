@@ -383,19 +383,12 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         if (location) locations.push(location)
       })
 
-<<<<<<< HEAD
        // Write each location to db
       Promise.each(locations, writeWeather)
         .then(() => {
           response.json('Writing to DB, check logs')
         })
         .catch(console.error)
-=======
-      // Write each location to db
-      Promise.each(locations, writeWeather).then(() => {
-        response.json('Writing to DB, check logs')
-      })
->>>>>>> master
     })
 
   function writeWeather(location) {
