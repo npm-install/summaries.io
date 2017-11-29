@@ -7,14 +7,12 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "precommit": "lint-staged",
-    "test": "NODE_ENV='test' mocha ./src/**/*.spec.js ./src/**/**/*.spec.js ./functions/*.spec.js --compilers js:babel-register"
+    "test":
+      "NODE_ENV='test' mocha ./src/**/*.spec.js ./src/**/**/*.spec.js ./functions/*.spec.js --compilers js:babel-register"
   },
   "precommit": "precommit",
   "lint-staged": {
-    "src/**/*.{js,css}": [
-      "prettier --write",
-      "git add"
-    ]
+    "src/**/*.{js,css}": ["prettier --write", "git add"]
   },
   "prettier": {
     "singleQuote": true,

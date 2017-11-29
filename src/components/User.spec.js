@@ -6,6 +6,7 @@ import { User } from './User'
 
 const adapter = new Adapter()
 enzyme.configure({ adapter })
+
 describe('User', () => {
   let user
   beforeEach(() => {
