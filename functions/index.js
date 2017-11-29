@@ -79,23 +79,27 @@ function makeEmail(user) {
               <p style="font-size: 1em;">${article.summary}</p></div>`
           )
           .join('')
+        const audioContent = `Here are your summaries from ${arr[key][0].source.name}.  
+        ${arr[key]
+          .map(article => `You are now listening to ${article.title}. ${article.summary}. `)
+          .join('')}`
         const body = header + content
-        return body
+        return { body, audioContent }
       })
       const logo = `<div style="text-align: center;"><img src="https://i.imgur.com/RgjJeBb.png" alt="email-logo" style="width: 50vw; height: auto;"></div>`
-
       const welcome = '<h2 style="font-size: 1.8em;">Welcome to your daily summary</h2>'
 
-      const html =
-        '<html>' +
-        logo +
-        welcome +
-        '<div style="line-height: 1.5em;">' +
-        allSources.join('') +
-        '</div></html>'
-      return html
+      const html = `<html>${logo}${welcome} <div style="line-height: 1.5em"> ${allSources
+        .map(source => source.body)
+        .join('')} </div></html>`
+      const audio = `Welcome to Summaries dot I O. ${allSources
+        .map(source => source.audioContent)
+        .join('')}. Those were your summaries for today. See you tomorrow!`
+
+      return { html, audio }
     })
-    .then(html => {
+    .then(({ html, audio }) => {
+      speech(user, audio)
       return sendEmail(user, html)
     })
     .catch(err => console.log('error: ', err))
@@ -211,32 +215,26 @@ exports.podcast = functions.https.onRequest((request, response) => {
   response.type('text/xml').send(xml)
 })
 
-// const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
-// const { watsonUser, watsonPass } = require('./keys')
-// const textToSpeech = new TextToSpeechV1({
-//   username: watsonUser,
-//   password: watsonPass,
-//   url: 'https://stream.watsonplatform.net/text-to-speech/api'
-// })
+const TextToSpeechV1 = require('watson-developer-cloud/text-to-speech/v1')
+const { watsonUser, watsonPass } = require('./keys')
+const textToSpeech = new TextToSpeechV1({
+  username: watsonUser,
+  password: watsonPass,
+  url: 'https://stream.watsonplatform.net/text-to-speech/api'
+})
 
-exports.speech = functions.https.onRequest((req, res) => {
+function speech(email, audioString) {
   console.log('Running speach creation...')
   const params = {
-    text: `There are many variations of passages of Lorem Ipsum available,
-      but the majority have suffered alteration in some form, by injected humour,
-      or randomised words which don't look even slightly believable. If you are going to use a passage of
-      Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.
-      All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary,
-      making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words,
-      combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable.
-      The generated Lorem Ipsum is therefore always free from repetition, injected humour,
-      or non-characteristic words etc.`,
+    text: audioString,
     voice: 'en-US_AllisonVoice',
     accept: 'audio/mp3'
   }
   // Pipe the synthesized text to a file.
   const storage = new Storage()
-  const newAudioFile = storage.bucket(`summary-73ccc.appspot.com`).file(`StreamTest.mp3`)
+  const newAudioFile = storage
+    .bucket(`summary-73ccc.appspot.com`)
+    .file(`/${email}/${dateMaker()}.mp3`)
   const audioStream = newAudioFile.createWriteStream()
 
   textToSpeech
@@ -245,8 +243,7 @@ exports.speech = functions.https.onRequest((req, res) => {
     .pipe(audioStream)
 
   console.log('Stream complete!')
-  res.sendStatus(200)
-})
+}
 
 exports.makeSummaries = functions.https.onRequest((request, response) => {
   const { newsKey, sumKey } = require('./keys')
