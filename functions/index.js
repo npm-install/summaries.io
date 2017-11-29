@@ -1,11 +1,11 @@
 const functions = require('firebase-functions')
 const Storage = require('@google-cloud/storage')
 const axios = require('axios')
-// const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
 const RSS = require('rss')
 const admin = require('firebase-admin')
+const Forecast = require('forecast')
 admin.initializeApp(functions.config().firebase)
 
 function dateMaker() {
@@ -13,120 +13,152 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-// exports.userEmail = functions.https.onRequest((req, res) => {
-//   // Here we decide which users we notify
-//   // sendEmail('verblodung@gmail.com')
+exports.userEmail = functions.https.onRequest((req, res) => {
+  // Here we decide which users we notify
+  // sendEmail('verblodung@gmail.com')
 
-//   admin
-//     .firestore()
-//     .collection('users')
-//     // Here add a where query to filter by requested time
-//     .get()
-//     .then(function(users) {
-//       users.forEach(function(user) {
-//         console.log('user.id', user.id)
-//         makeEmail(user.id)
-//       })
-//     })
-//     .then(() => res.send('hello summaries.io'))
-//     .catch(err => console.log('error: ', err))
-// })
+  admin
+    .firestore()
+    .collection('users')
+    // Here add a where query to filter by requested time
+    .get()
+    .then(function(users) {
+      users.forEach(function(user) {
+        console.log('user.id', user.id)
+        makeEmail(user.id)
+      })
+    })
+    .then(() => res.send('hello summaries.io'))
+    .catch(err => console.log('error: ', err))
+})
 
-// function makeEmail(user) {
-//   let userSource = []
-//   admin
-//     .firestore()
-//     .collection('users')
-//     .doc(user)
-//     .collection('emails')
-//     .doc(dateMaker())
-//     .get()
-//     .then(doc => {
-//       userSource = Object.keys(doc.data())
-//     })
-//     .then(() => {
-//       const promises = userSource.map(async source => {
-//         const articles = await admin
-//           .firestore()
-//           .collection('users')
-//           .doc(user)
-//           .collection('emails')
-//           .doc(dateMaker())
-//           .collection(source)
-//           .get()
-//           .then(snapshot => {
-//             const artFromSource = []
-//             snapshot.forEach(doc => {
-//               artFromSource.push(doc.data())
-//             })
-//             return artFromSource
-//           })
+function makeEmail(user) {
+  let userSource = []
+  admin
+    .firestore()
+    .collection('users')
+    .doc(user)
+    .collection('emails')
+    .doc(dateMaker())
+    .get()
+    .then(doc => {
+      userSource = Object.keys(doc.data())
+    })
+    .then(() => {
+      const promises = userSource.map(async source => {
+        const articles = await admin
+          .firestore()
+          .collection('users')
+          .doc(user)
+          .collection('emails')
+          .doc(dateMaker())
+          .collection(source)
+          .get()
+          .then(snapshot => {
+            const artFromSource = []
+            snapshot.forEach(doc => {
+              artFromSource.push(doc.data())
+            })
+            return artFromSource
+          })
 
-//         return { [source]: articles }
-//       })
+        return { [source]: articles }
+      })
 
-//       return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
-//     })
-//     .then(arr => {
-//       const allSources = Object.keys(arr).map(key => {
-//         const header = `<h2 style="margin-top: 1.5em;">${arr[key][0].source.name}</h2>`
-//         const content = arr[key]
-//           .map(
-//             article =>
-//               `<div style="border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); width: 80vw; padding: 1.5em; margin-bottom: 1em;"><a href=${
-//                 article.url
-//               } style="font-size: 1.2em;">${article.title}</a>
-//               <p style="font-size: 1em;">${article.summary}</p></div>`
-//           )
-//           .join('')
-//         const audioContent = `Here are your summaries from ${arr[key][0].source.name}.
-//         ${arr[key]
-//           .map(article => `You are now listening to ${article.title}. ${article.summary} `)
-//           .join('')}`
-//         const body = header + content
-//         return { body, audioContent }
-//       })
-//       const logo = `<div style="text-align: center;"><img src="https://i.imgur.com/RgjJeBb.png" alt="email-logo" style="width: 50vw; height: auto;"></div>`
-//       const welcome = '<h2 style="font-size: 1.8em;">Welcome to your daily summary</h2>'
+      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+    })
+    .then(arr => {
+      const allSources = Object.keys(arr).map(key => {
+        const header = `<h2 style="margin-top: 1.5em;">${arr[key][0].source.name}</h2>`
+        const content = arr[key]
+          .map(
+            article =>
+              `<div style="border-radius: 20px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); width: 80vw; padding: 1.5em; margin-bottom: 1em;"><a href=${
+                article.url
+              } style="font-size: 1.2em;">${article.title}</a>
+              <p style="font-size: 1em;">${article.summary}</p></div>`
+          )
+          .join('')
+        const audioContent = `Here are your summaries from ${arr[key][0].source.name}.
+        ${arr[key]
+          .map(article => `You are now listening to ${article.title}. ${article.summary} `)
+          .join('')}`
+        const body = header + content
+        return { body, audioContent }
+      })
+      const logo = `<div style="text-align: center;"><img src="https://i.imgur.com/RgjJeBb.png" alt="email-logo" style="width: 50vw; height: auto;"></div>`
+      const welcome = '<h2 style="font-size: 1.8em;">Welcome to your daily summary</h2>'
 
-//       const html = `<html>${logo}${welcome} <div style="line-height: 1.5em"> ${allSources
-//         .map(source => source.body)
-//         .join('')} </div></html>`
-//       const audio = `Welcome to Summaries dot I O. ${allSources
-//         .map(source => source.audioContent)
-//         .join('')}. Those were your summaries for today. See you tomorrow!`
+      const { weatherKey } = require('./keys')
+      const forecast = new Forecast({
+        service: 'darksky',
+        key: weatherKey,
+        units: 'fahrenheit'
+      })
+      admin
+        .firestore()
+        .collection('users')
+        .doc(user)
+        .get()
+        .then(foundUser => {
+          admin
+            .firestore()
+            .collection('weather')
+            .doc('days')
+            .collection(dateMaker())
+            .doc('zip')
+            .collection(foundUser.zip)
+            .doc('forecast')
+            .get()
+            .then(forecast => {
+              const weather =
+                '<p>The weather today is ' +
+                forecast.summary +
+                'with a high of ' +
+                forecast.apparentTemperatureHigh +
+                'degrees and a low of' +
+                forecast.apparentTemperatureLow +
+                'degrees.'
+            })
+        })
+      const html = `<html>${logo}${welcome} <div style="line-height: 1.5em"> ${allSources
+        .map(source => source.body)
+        .join('')} </div></html>`
+      const audio = `Welcome to Summaries dot I O. ${allSources
+        .map(source => source.audioContent)
+        .join('')}. Those were your summaries for today. See you tomorrow!`
 
-//       return { html, audio }
-//     })
-//     .then(({ html, audio }) => {
-//       speech(user, audio)
-//       return sendEmail(user, html)
-//     })
-//     .catch(err => console.log('error: ', err))
-// }
+      return { html, audio }
+    })
+    .then(({ html, audio }) => {
+      speech(user, audio)
+      return sendEmail(user, html)
+    })
+    .catch(err => console.log('error: ', err))
+}
 
-// function sendEmail(user, html) {
-//   const { gmail } = require('./keys')
-//   var transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//       user: 'summariesio@gmail.com',
-//       pass: gmail
-//     }
-//   })
+function sendEmail(user, html) {
+  const { gmail } = require('./keys')
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'summariesio@gmail.com',
+      pass: gmail
+    }
+  })
 
-//   const mailOptions = {
-//     from: '⚡ summaries.io ⚡ <your@summaries.io>',
-//     to: user,
-//     subject: 'Your daily summaries',
-//     html: html
-//   }
+  const mailOptions = {
+    from: '⚡ summaries.io ⚡ <your@summaries.io>',
+    to: user,
+    subject: 'Your daily summaries',
+    html: html
+  }
 
-//   transporter.sendMail(mailOptions, function(err, info) {
-//     if (err) return err
-//     else return info
-//   })
-// }
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) return err
+    else return info
+  })
+}
 
 exports.podcast = functions.https.onRequest((request, response) => {
   /* lets create an rss feed */
