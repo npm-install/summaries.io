@@ -1,7 +1,7 @@
 const functions = require('firebase-functions')
 const Storage = require('@google-cloud/storage')
 const axios = require('axios')
-const Promise = require('bluebird')
+// const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
 
