@@ -10,10 +10,7 @@
   },
   "precommit": "precommit",
   "lint-staged": {
-    "src/**/*.{js,css}": [
-      "prettier --write",
-      "git add"
-    ]
+    "src/**/*.{js,css}": ["prettier --write", "git add"]
   },
   "prettier": {
     "singleQuote": true,
@@ -21,6 +18,7 @@
     "semi": false
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.4.0",
     "axios": "^0.17.1",
     "dark-sky-api": "^0.6.21",
     "firebase": "4.6.0",
