@@ -1,14 +1,9 @@
 const functions = require('firebase-functions')
 const Storage = require('@google-cloud/storage')
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-
-const sendgrid = require('sendgrid')
-const client = sendgrid('YOUR_SG_API_KEY')
 const axios = require('axios')
 const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
+const nodemailer = require('nodemailer')
 
 const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase)
@@ -18,39 +13,84 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-function parseBody(body) {
-  const helper = sendgrid.mail
-  const fromEmail = new helper.Email(body.from)
-  const toEmail = new helper.Email(body.to)
-  const subject = body.subject
-  const content = new helper.Content('text/html', body.content)
-  const mail = new helper.Mail(fromEmail, subject, toEmail, content)
-  return mail.toJSON()
-}
-
 exports.httpEmail = functions.https.onRequest((req, res) => {
-  Promise.resolve()
-    .then(_ => {
-      if (req.method !== 'POST') {
-        const error = new Error('Only POST requests are accepted')
-        error.code = 405
-        throw error
-      }
 
-      const request = client.emptyRequest({
-        method: 'POST',
-        path: '/v3/mail/send',
-        body: parseBody(req.body),
+  let user = 'verblodung@gmail.com'
+
+  let userSource = []
+  admin.firestore()
+    .collection('users')
+    .doc(user)
+    .collection('emails')
+    .doc(dateMaker())
+    .get()
+    .then(doc => {userSource = Object.keys(doc.data())})
+    .then(() => {
+      const promises = userSource.map(async source => {
+        const articles = await admin.firestore()
+          .collection('users')
+          .doc(user)
+          .collection('emails')
+          .doc(dateMaker())
+          .collection(source)
+          .get()
+          .then(snapshot => {
+            const artFromSource = []
+            snapshot.forEach(doc => {
+              artFromSource.push(doc.data())
+            })
+            return artFromSource
+          })
+
+        return { [source]: articles }
       })
 
-      return client.API(request)
+      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
     })
-    .then(response => (response.body ? res.send(response.body) : res.end()))
-    .catch(err => {
-      console.error(err)
-      return Promise.reject(err)
+    .then(arr => {
+      const allSources = Object.keys(arr).map(key => {
+          const header = `<h3>${arr[key][0].source.name}</h3>`
+          const content = arr[key].map(article =>
+            `<div><a href=${article.url}>${article.title}</a><li>${article.summary}</li><div>`
+          ).join('')
+          const body = header + content
+          return body
+      })
+      const html = '<div style={{}}>' + allSources.join('') + '</div>'
+      return html
+    })
+    .then(html => {
+      return sendEmail(html)
+    })
+    .then(resp => {
+      res.send(resp)
     })
 })
+
+
+function sendEmail(html) {
+  const { gmail } = require('./keys')
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'summariesio@gmail.com',
+      pass: gmail
+    }
+  })
+
+  const mailOptions = {
+    from: '⚡ summaries.io ⚡ <your@summaries.io>',
+    to: 'verblodung@gmail.com',
+    subject: 'Your daily summaries',
+    html: html
+  }
+
+  transporter.sendMail(mailOptions, function(err, info) {
+    if (err) return err
+    else return info
+  })
+}
+
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send('Hello from summaries.io, where your we summarize your news while you sleep!')
@@ -138,12 +178,11 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'time',
     'usa-today',
     'vice-news',
-    'wired',
+    'wired'
   ]
 
   let articles = []
 
-  // What is today's date?
   const date = dateMaker()
   Promise.mapSeries(newsSources, makeSum)
     .then(() => {
@@ -159,7 +198,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
         })
       })
       .catch(err => {
-        console.log('Error getting sources')
+        console.log('Error getting sources', err)
         response.json('Atleast one error, check logs for more info')
       })
 
@@ -177,10 +216,8 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
             const sumsObj = await axios
               .get(`http://api.smmry.com/&SM_API_KEY=${sumKey}&&SM_LENGTH=2&SM_URL=${article.url}`)
               .catch(err => {
-                console.error('Error with smmry on', article.url)
+                console.error('Error with smmry on', article.url, 'error:', err)
               })
-
-            let updatedArticle
 
             // Check to see if article summarized successfully
             if (sumsObj && sumsObj.data.sm_api_content) {
@@ -194,7 +231,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
           return Promise.all(response.data.articles)
         })
         .catch(err => {
-          console.error('error on', newsSource)
+          console.error('error on', newsSource, 'err:', err)
         })
     }
   }
@@ -220,7 +257,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       .then(() => {
         console.log(
           'added ' + articles.length + ' from ' + newsSource + ' to Firestore',
-          'source number ' + count++ + '/40',
+          'source number ' + count++ + '/40'
         )
       })
       .catch(() => {
@@ -232,7 +269,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
 exports.makeEmails = functions.https.onRequest((request, response) => {
   const today = dateMaker()
 
-  const rec = admin
+  admin
     .firestore()
     .collection('users')
     // Here add a where query to filter by requested time
@@ -257,7 +294,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                   .collection('emails')
                   .doc(today),
                 { [sub]: true },
-                { merge: true },
+                { merge: true }
               )
               admin
                 .firestore()
@@ -283,7 +320,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                     )
                   })
                 })
-                .then(res => {
+                .then(() => {
                   batch
                     .commit()
                     .then(console.log)
@@ -308,7 +345,7 @@ exports.getWeather = functions.https.onRequest((request, response) => {
   const forecast = new Forecast({
     service: 'darksky',
     key: weatherKey,
-    units: 'fahrenheit',
+    units: 'fahrenheit'
   })
 
   // Get users from db
@@ -350,7 +387,7 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         .collection(location.zip)
         .doc('forecast')
         .set(weather.daily.data[0])
-        .then(succ => {
+        .then(() => {
           console.log('wrote weather for', location.zip)
         })
         .catch(console.error.bind(console))
