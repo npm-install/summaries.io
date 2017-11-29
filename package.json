@@ -24,6 +24,7 @@
     "firebase": "4.6.0",
     "firebase-admin": "^5.5.1",
     "firebase-functions": "^0.7.3",
+    "forecast": "^0.3.2",
     "material-ui": "^0.19.4",
     "react": "^16.1.1",
     "react-animated-weather": "^1.0.3",

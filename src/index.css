@@ -427,3 +427,16 @@ body {
   height: 4rem;
   width: 4rem;
 }
+
+#weather-btn {
+  margin-left: 2em;
+}
+
+#zip-input {
+  margin-left: 1em;
+  width: 5em;
+}
+
+.form-zip {
+  margin-top: 2em
+}
