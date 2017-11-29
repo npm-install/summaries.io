@@ -29,6 +29,7 @@ exports.userEmail = functions.https.onRequest((req, res) => {
       })
     })
     .then(() => res.send('hello summaries.io'))
+    .catch(err => console.log('error: ', err))
 })
 
 function makeEmail(user) {
@@ -97,6 +98,7 @@ function makeEmail(user) {
     .then(html => {
       return sendEmail(user, html)
     })
+    .catch(err => console.log('error: ', err))
 }
 
 function sendEmail(user, html) {
@@ -225,7 +227,7 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
       })
       .catch(err => {
         console.log('Error getting sources', err)
-        response.json('Atleast one error, check logs for more info')
+        response.json('At least one error, check logs for more info')
       })
 
     // Function definition to getSource
