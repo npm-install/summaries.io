@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { auth } from '../helpers/auth'
+import { auth, loginWithGoogle } from '../helpers/auth'
 
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
 function setErrorMsg(error) {
   return {
-    registerError: error.message,
+    registerError: error.message
   }
 }
 
@@ -16,7 +16,7 @@ export default class Register extends Component {
     this.state = {
       registerError: null,
       email: '',
-      password: '',
+      password: ''
     }
   }
 
@@ -49,20 +49,27 @@ export default class Register extends Component {
           </div>
         )}
         <RaisedButton label="Register" primary={true} style={style.raisedBtn} type="submit" />
+        <RaisedButton
+          label="Sign up with Google"
+          primary={false}
+          style={style.raisedBtn}
+          // type="submit"
+          onClick={loginWithGoogle}
+        />
       </form>
     )
   }
 }
 
 const raisedBtn = {
-  margin: 15,
+  margin: 15
 }
 
 const container = {
-  textAlign: 'center',
+  textAlign: 'center'
 }
 
 const style = {
   raisedBtn,
-  container,
+  container
 }
