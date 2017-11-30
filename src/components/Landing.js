@@ -86,7 +86,7 @@ export default class Landing extends Component {
               d="M334.769 324.216v-90.955L295.385 256v45.477L216.615 256l-39.384 22.739 118.154 68.216z"
             />
           </svg>
-          <h1 className="hero-title">Summaries.io</h1>
+          <h1 className="hero-title">summaries.io</h1>
           <h4 className="hero-description">Your news, your way</h4>
         </div>
 
