@@ -281,6 +281,10 @@ body {
   padding-bottom: 15em;
 }
 
+.mobile-hero{
+  display: none;
+}
+
 .hero-description {
   margin-top: 1em;
 }
@@ -304,26 +308,77 @@ body {
   display: none;
 }
 
+.weather-widget {
+  padding: 1em;
+  margin-bottom: 3em;
+  margin-top: 1em;
+}
+
+#wea_widget {
+  margin-bottom: 3em;
+}
+
+#weather_img {
+  margin-top: 1em;
+}
+
+#weather {
+  display: flex;
+}
+
+#weather_info {
+  margin-top: 1em;
+  margin-left: 1.5em;
+}
+
+.source-image {
+  height: 4rem;
+  width: 4rem;
+}
+
+#weather-btn {
+  margin-left: 2em;
+}
+
+#zip-input {
+  margin-left: 1em;
+  width: 5em;
+}
+
+.form-zip {
+  margin-top: 2em
+}
+
 /* Mobile */
 /* @media only screen and (max-width: 667px) { */
-  @media all and (max-width: 839px){
+  @media only screen and (max-width: 736px){
   .stepper {
     display: none;
   }
 
   .landing-hero {
-    width: 100%;
-    padding-bottom: 10em;
+    display: none;
   }
 
-  .logo {
-    width: 100%;
-    margin-left: -5.5em;
-    margin-top: 3em;
+  .mobile-hero {
+    display: block;
+    background-color: #ffa14a;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+    padding-top: 8vh;
+    color: snow;
+  }
+
+  .mobile-logo{
+    width: 100vw;
+    margin-left: -20vw;
+    margin-top: -5vh;
+    margin-bottom: -8vh;
   }
 
   .hero-title {
-    margin-top: -1em;
+    margin-bottom: -3vh;
   }
 
   .welcome {
@@ -400,43 +455,4 @@ body {
     margin-top: 1em;
   }
 }
-.weather-widget {
-  padding: 1em;
-  margin-bottom: 3em;
-  margin-top: 1em;
-}
 
-#wea_widget {
-  margin-bottom: 3em;
-}
-
-#weather_img {
-  margin-top: 1em;
-}
-
-#weather {
-  display: flex;
-}
-
-#weather_info {
-  margin-top: 1em;
-  margin-left: 1.5em;
-}
-
-.source-image {
-  height: 4rem;
-  width: 4rem;
-}
-
-#weather-btn {
-  margin-left: 2em;
-}
-
-#zip-input {
-  margin-left: 1em;
-  width: 5em;
-}
-
-.form-zip {
-  margin-top: 2em
-}
