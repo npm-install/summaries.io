@@ -6,6 +6,7 @@ const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
 const RSS = require('rss')
 const admin = require('firebase-admin')
+const Promise = require('bluebird')
 admin.initializeApp(functions.config().firebase)
 
 function dateMaker() {
@@ -493,6 +494,7 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         })
         .catch(console.error)
     })
+    .catch(console.error)
 
   function writeWeather(location) {
     forecast.get([location.latitude, location.longitude], function(err, weather) {
