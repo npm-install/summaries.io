@@ -248,6 +248,8 @@ export default class Dashboard extends Component {
                 <p>To: {firebaseAuth().currentUser.email}</p>
                 <p>Subject: Your Daily Gist</p>
               </div>
+
+              <div className="preview-cards">
               {this.state.preview.map(preview => (
                 <div key={preview.id} className="preview-grid">
                   <Card className="preview-card" style={{ borderRadius: '10px' }}>
@@ -283,6 +285,7 @@ export default class Dashboard extends Component {
                   </Card>
                 </div>
               ))}
+              </div>
             </Paper>
           </div>
         </div>
