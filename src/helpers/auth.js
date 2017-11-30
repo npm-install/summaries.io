@@ -27,8 +27,11 @@ export function saveUser(user) {
   db
     .collection(`users`)
     .doc(user.email)
-    .set({
-      email: user.email,
-      uid: user.uid
-    })
+    .set(
+      {
+        email: user.email,
+        uid: user.uid
+      },
+      { merge: true }
+    )
 }
