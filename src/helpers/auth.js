@@ -17,14 +17,6 @@ export function login(email, pw) {
 export function loginWithGoogle() {
   const provider = new firebaseAuth.GoogleAuthProvider()
   firebaseAuth().signInWithRedirect(provider)
-  firebaseAuth()
-    .getRedirectResult()
-    .then(function(authData) {
-      console.log(authData)
-    })
-    .catch(function(error) {
-      console.log(error)
-    })
 }
 
 export function resetPassword(email, actionCodeSettings) {
@@ -37,6 +29,6 @@ export function saveUser(user) {
     .doc(user.email)
     .set({
       email: user.email,
-      uid: user.uid,
+      uid: user.uid
     })
 }

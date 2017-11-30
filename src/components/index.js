@@ -5,7 +5,7 @@ import Register from './Register'
 import Home from './Home'
 import Landing from './Landing'
 import Dashboard from './protected/Dashboard'
-import { logout } from '../helpers/auth'
+import { logout, saveUser } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
 import User from './User'
@@ -43,11 +43,22 @@ function PublicRoute({ component: Component, authed, ...rest }) {
 export default class App extends Component {
   state = {
     authed: false,
-    loading: true,
+    loading: true
   }
   componentDidMount() {
+    firebaseAuth()
+      .getRedirectResult()
+      .then(function(authData) {
+        console.log(authData)
+        saveUser(authData.user)
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       // Now let's modify the state with user information and auth
+      console.log('auth has changed', user)
       if (user) {
         // Let's retrieve the user's information
         var userRef = db.collection('users')
@@ -59,7 +70,7 @@ export default class App extends Component {
               this.setState({
                 authed: true,
                 loading: false,
-                user: doc.data(), // make sure this is synchronous
+                user: doc.data() // make sure this is synchronous
               })
             })
           })
@@ -69,7 +80,7 @@ export default class App extends Component {
       } else {
         this.setState({
           authed: false,
-          loading: false,
+          loading: false
         })
       }
     })
@@ -144,7 +155,7 @@ export default class App extends Component {
             iconStyleRight={{
               display: 'flex',
               alignItems: 'center',
-              marginTop: '.5em',
+              marginTop: '.5em'
             }}
             style={{ fontFamily: 'Noto Sans, sans-serif', position: 'fixed' }}
             showMenuIconButton={false}
