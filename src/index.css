@@ -462,3 +462,17 @@ body {
   }
 }
 
+#new_user_load {
+  margin-top: 3em;
+  margin-left: auto;
+  margin-right: auto;
+  height: 5em;
+  width: 50vw;
+}
+
+#user_img_load {
+  height: 15em;
+  width: 15em;
+  margin-left: auto;
+  margin-right: auto;
+}
