@@ -102,7 +102,6 @@ export default class App extends Component {
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
         iconStyle={{ color: '#fff' }}
       >
-        <MenuItem primaryText="View Past Summaries" />
         <Link to="/account" style={{ textDecoration: 'none' }}>
           <MenuItem primaryText="My Profile" />
         </Link>
@@ -145,7 +144,7 @@ export default class App extends Component {
       </div>
     )
     return this.state.loading === true ? (
-      <CircularProgress size={80} thickness={5} style={{ marginLeft: '50px', marginTop: '50px' }} />
+      <CircularProgress size={80} thickness={5} style={{ marginLeft: '45vw', marginTop: '45vh' }} />
     ) : (
       <BrowserRouter>
         <div>
