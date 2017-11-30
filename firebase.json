@@ -1,12 +1,20 @@
 {
   "hosting": {
-    "public": "build",
+    "public": "build/index.html",
     "rewrites": [
       {
-        "source": "/podcast/",
+        "source": "/podcast",
         "function": "podcast"
+      },
+      {
+        "source": "/public/**",
+        "destination": "/public.html"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
       }
     ],
-    "ignore": ["**/.*", "**/node_modules/**"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
