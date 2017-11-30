@@ -231,6 +231,11 @@ body {
   justify-content: center;
 }
 
+.preview-cards {
+  height: 70vh;
+  overflow-y: scroll;
+}
+
 .preview-card {
   font-family: 'Noto Sans', sans-serif;
   margin-top: 1.5em;
