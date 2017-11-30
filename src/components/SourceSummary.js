@@ -3,11 +3,13 @@ import Article from './Article'
 import Paper from 'material-ui/Paper'
 import { db, firebaseAuth } from '../config/constants'
 import { imageSources } from './SourceImgData'
+import ReactLoading from 'react-loading';
+
 
 function today() {
-    const dt = new Date()
-    return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
-  }
+  const dt = new Date()
+  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate()
+}
 
 export default class SourceSummary extends Component {
   constructor(props) {
@@ -61,8 +63,25 @@ export default class SourceSummary extends Component {
   }
 
   render() {
+
+    console.log('state', this.state.articles)
+    if (Object.keys(this.state.articles).length === 0) {
+      return (
+        <div>
+          <h3>Come back tomorrow for your daily summaries</h3>
+          <div id="new_user_load">
+            <h4>We are working hard to generate them</h4>
+            <div id="user_img_load">
+            <ReactLoading type="bubbles" color="#ffa14a" height="25" width="25" />
+            </div>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="source-summary">
+        <h2 className="welcome-title">Here is your summary for today: </h2>
         {Object.keys(this.state.articles).map(key => (
           <div key={key} className="each-source">
             <div className="source-header">
