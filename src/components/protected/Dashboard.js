@@ -26,7 +26,6 @@ export default class Dashboard extends Component {
     this.onChange = this.onChange.bind(this)
     this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
-    // this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   componentDidMount() {
@@ -56,20 +55,6 @@ export default class Dashboard extends Component {
           })
       })
   }
-
-  //Snack bar helper functions
-
-  // handleTouchTap = () => {
-  //   this.setState({
-  //     open: true
-  //   });
-  // };
-
-  // handleRequestClose = () => {
-  //   this.setState({
-  //     open: false
-  //   });
-  // };
 
   //Toggle helper functions
   handleToggle(el) {
@@ -134,8 +119,6 @@ export default class Dashboard extends Component {
   }
 
   render() {
-    console.log('le state', this.state)
-    // const { classes } = this.props;
     const { value, suggestions } = this.state
     const inputProps = {
       placeholder: 'Type a source you want to subscribe',
