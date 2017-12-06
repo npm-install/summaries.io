@@ -6,7 +6,7 @@ node_js:
 cache:
   directories:
   - node_modules
-install: true
+install: npm install
 env:
   global:
     - USE_YARN=no

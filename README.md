@@ -11,7 +11,7 @@ _Using React 16, React Router 4, Material UI, IBM Watson, Firebase, Firestore an
 #### Instructions:
 
 * Swap out the firebase config in `config/constants` with your own
-* create `.env` file which holds api keys and secrets for AWS
+* create `.env` or `secrets.js` or `keys.js` file which holds api keys and secrets
 * `yarn install`
 * `yarn start`
 * Visit `localhost:3000`
