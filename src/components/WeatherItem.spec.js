@@ -19,7 +19,7 @@ describe('WeatherItem', () => {
   }
 
   beforeEach(() => {
-    weatherItem = shallow(<WeatherItem forcast={todayForcast} />)
+    weatherItem = shallow(<WeatherItem forecast={todayForcast} />)
   })
 
   it('renders the email in an h3', () => {
