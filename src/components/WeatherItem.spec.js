@@ -22,7 +22,16 @@ describe('WeatherItem', () => {
     weatherItem = shallow(<WeatherItem forecast={todayForcast} />)
   })
 
-  it('renders the email in an h3', () => {
+  it('Loads the summary in an h3', () => {
     expect(weatherItem.find('h3').text()).to.be.equal('cloud day')
   })
+
+  it('Loads the correct apparent temperature', () => {
+    expect(weatherItem.find('#high').text()).to.be.equal('High: 60° F')
+  })
+
+  it('Loads the correct apparent temperature', () => {
+    expect(weatherItem.find('#low').text()).to.be.equal('Low: 40° F')
+  })
+
 })
