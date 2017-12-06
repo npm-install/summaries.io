@@ -6,9 +6,6 @@ node_js:
 cache:
   directories:
   - node_modules
-install: npm install
-env:
-  global:
-    - USE_YARN=no
+install: yarn install
 notifications:
     slack: fullstackacademy:Go9zrVGvhitNEJKH6UN6WdtS
