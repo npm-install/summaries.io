@@ -12,7 +12,10 @@
   },
   "precommit": "precommit",
   "lint-staged": {
-    "src/**/*.{js,css}": ["prettier --write", "git add"]
+    "src/**/*.{js,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "prettier": {
     "singleQuote": true,
@@ -24,6 +27,7 @@
     "dark-sky-api": "^0.6.21",
     "firebase": "4.6.0",
     "firebase-admin": "^5.5.1",
+    "forecast": "^0.3.2",
     "material-ui": "^0.19.4",
     "react": "^16.1.1",
     "react-animated-weather": "^1.0.3",

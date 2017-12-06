@@ -1,6 +1,7 @@
 import React from 'react'
 import { RaisedButton } from 'material-ui'
 import SelectField from 'material-ui/SelectField'
+import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
 
 export default function User(props) {
@@ -46,6 +47,11 @@ export default function User(props) {
           <MenuItem value={5} primaryText="22:00" />
           <MenuItem value={5} primaryText="23:00" />
         </SelectField>
+        <TextField
+          floatingLabelText="Your podcast link"
+          floatingLabelFixed={true}
+          defaultValue={`https://summaries.io/podcast/${email}`}
+        />
       </div>
     </div>
   )
