@@ -15,8 +15,8 @@ const WeatherItem = ({ forecast }) => {
       </div>
       <div id="weather_info">
         <h3>{forecast.summary}</h3>
-        <h5>High: {Math.round(forecast.apparentTemperatureHigh)}° F</h5>
-        <h5>Low: {Math.round(forecast.apparentTemperatureLow)}° F</h5>
+        <h5 id="high">High: {Math.round(forecast.apparentTemperatureHigh)}° F</h5>
+        <h5 id="low" >Low: {Math.round(forecast.apparentTemperatureLow)}° F</h5>
       </div>
     </div>
   )
