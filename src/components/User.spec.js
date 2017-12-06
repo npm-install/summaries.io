@@ -1,3 +1,5 @@
+/* global describe beforeEach it */
+
 import { expect } from 'chai'
 import React from 'react'
 import enzyme, { shallow } from 'enzyme'
@@ -10,10 +12,10 @@ enzyme.configure({ adapter })
 describe('User', () => {
   let user
   beforeEach(() => {
-    user = shallow(<User email={'joe@email.com'} />)
+    user = shallow(<User user.email={'joe@email.com'} />)
   })
 
-  it('renders the email in h2', () => {
-    expect(user.find('h2'.text()).to.be.equal('Welcome, joe@email.com'))
+  it('renders the email in an h2', () => {
+    expect(user.find('h2').text()).to.be.equal('Welcome, joe@email.com')
   })
 })
