@@ -26,11 +26,11 @@ describe('WeatherItem', () => {
     expect(weatherItem.find('h3').text()).to.be.equal('cloud day')
   })
 
-  it('Loads the correct apparent temperature', () => {
+  it('Loads the correct high apparent temperature', () => {
     expect(weatherItem.find('#high').text()).to.be.equal('High: 60° F')
   })
 
-  it('Loads the correct apparent temperature', () => {
+  it('Loads the correct low apparent temperature', () => {
     expect(weatherItem.find('#low').text()).to.be.equal('Low: 40° F')
   })
 
