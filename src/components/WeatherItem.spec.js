@@ -4,7 +4,7 @@ import { expect } from 'chai'
 import React from 'react'
 import enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-import { WeatherItem } from './WeatherItem'
+import WeatherItem from './WeatherItem'
 
 const adapter = new Adapter()
 enzyme.configure({ adapter })
