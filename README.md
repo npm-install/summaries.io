@@ -1,12 +1,8 @@
 # Summaries.io
 
-Summaries.io is a text and audio daily summary of your news sources, using machine learning.
+A progressive web app that summarizes your favorite content providers daily and delivers to you summarized text and a podcast-like voice summary powered by IBM Watson
 
-_Using React 16, React Router 4, Material UI, IBM Watson, Firebase, Firestore and Cloud Functions_
-
-#### Features:
-
-* TBC
+Built with React, Firebase (Firestore & Cloud Functions), news API, smmry API (Reddit Bot), IBM Watson and nodemailer 
 
 #### Instructions:
 
