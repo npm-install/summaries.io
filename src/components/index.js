@@ -5,6 +5,7 @@ import Register from './Register'
 import Home from './Home'
 import Landing from './Landing'
 import Dashboard from './protected/Dashboard'
+import Player from './protected/Player'
 import { logout, saveUser } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
@@ -177,6 +178,7 @@ export default class App extends Component {
               </Switch>
             </div>
           </div>
+          {this.state.authed ? <Player /> : ''}
         </div>
       </BrowserRouter>
     )
