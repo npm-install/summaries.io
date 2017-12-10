@@ -2,12 +2,35 @@ import React, { Component } from 'react'
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation'
 import Paper from 'material-ui/Paper'
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
+import { db, firebaseAuth } from '../../config/constants'
 
 const playIcon = <PlayIcon />
 
 class Player extends Component {
   state = {
     selectedIndex: 2
+  }
+
+  componentDidMount() {
+    console.log(firebaseAuth().currentUser.email)
+    db
+      .collection('users')
+      .doc(firebaseAuth().currentUser.email)
+      .collection('emails')
+      // .orderBy('date', 'desc') // Needs to be edited to fetch the last one, and not the first one
+      .limit(1)
+      .get()
+      .then(function(querySnapshot) {
+        return querySnapshot.docs.map(email => {
+          const documentContent = email.data()
+          return documentContent
+        })
+      })
+      .then(name => {
+        // here we change the state to show the current file
+        this.setState({ audioFile: name.audio })
+      })
+      .catch(console.log)
   }
 
   select = index => this.setState({ selectedIndex: index })
@@ -23,7 +46,7 @@ class Player extends Component {
             onClick={() => this.select(1)}
           /> */}
           <BottomNavigationItem
-            label="Play your daily summary"
+            label={this.state.audioFile || 'Come back tomorrow for your first summary!'}
             icon={playIcon}
             onClick={() => this.select(2)}
           />
