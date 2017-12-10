@@ -125,7 +125,7 @@ export default class User extends Component {
           <form onSubmit={this.submitHandler}>
             <label htmlFor="zip">Change Zip Code:</label>
             <input className="user-zip-btn" name="zip" placeholder="10001" type="number" step="1" min="00000" max="99999" />
-            <button type="submit" id="weather-btn" className="btn">
+            <button type="submit" id="weather-btn-user" className="btn">
               SUBMIT</button>
           </form>
           <TextField
