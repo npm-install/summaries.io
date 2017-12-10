@@ -344,6 +344,9 @@ body {
 
 #weather-btn {
   margin-left: 2em;
+  background-color: #FF3F82;
+  color: white;
+  padding: 0.4em 1.5em;
 }
 
 #zip-input {

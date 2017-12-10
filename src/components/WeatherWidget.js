@@ -17,7 +17,6 @@ export default class WeatherWidget extends Component {
       changeZip: false
     };
     this.stateSetter = this.stateSetter.bind(this)
-    this.changeZipClickHandler = this.changeZipClickHandler.bind(this)
   }
 
   componentDidMount() {
@@ -79,11 +78,6 @@ export default class WeatherWidget extends Component {
     this.setState(newStateProps)
   }
 
-  changeZipClickHandler() {
-
-    this.setState({changeZip: true})
-  }
-
   render() {
 
     if (!Object.keys(this.state.location).length || this.state.changeZip) {
@@ -108,7 +102,6 @@ export default class WeatherWidget extends Component {
           <div className="weather-widget">
             <div id="widget_header">
               <h3>Weather for today in {`${location.city}, ${location.state}`}</h3>
-              <button id="zipButton" onClick={this.changeZipClickHandler}>Change Zip?</button>
             </div>
             <div>
               <WeatherItem forecast={weather} />
