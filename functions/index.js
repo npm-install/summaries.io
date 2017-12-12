@@ -106,8 +106,6 @@ function makeEmail(user) {
     .catch(err => console.log('error: ', err))
 }
 
-
-
 function sendEmail(user, html) {
   const { gmail } = require('./keys')
   var transporter = nodemailer.createTransport({
@@ -407,7 +405,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                   .doc(user.id)
                   .collection('emails')
                   .doc(today),
-                { [sub]: true },
+                { [sub]: true, date: new Date() },
                 { merge: true }
               )
               admin
