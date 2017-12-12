@@ -239,6 +239,15 @@ function speech(email, audioString) {
     .file(`/${email}/${dateMaker()}.mp3`)
   const audioStream = newAudioFile.createWriteStream()
 
+  // Let's save the path to the file on the email document.
+  admin
+    .firestore()
+    .collection('users')
+    .doc(email)
+    .collection('emails')
+    .doc(dateMaker())
+    .set({ audio: email + '/' + dateMaker() + '.mp3' }, { merge: true })
+
   textToSpeech
     .synthesize(params)
     .on('error', err => console.error(err))
