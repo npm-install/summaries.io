@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation'
 import Paper from 'material-ui/Paper'
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
-import { db, firebaseAuth } from '../../config/constants'
+import { db, firebaseAuth, storage } from '../../config/constants'
 
 const playIcon = <PlayIcon />
 
@@ -18,17 +18,23 @@ class Player extends Component {
       .doc(firebaseAuth().currentUser.email)
       .collection('emails')
       // .orderBy('date', 'desc') // Needs to be edited to fetch the last one, and not the first one
-      .limit(1)
+      .limit(3)
       .get()
       .then(function(querySnapshot) {
         return querySnapshot.docs.map(email => {
           const documentContent = email.data()
+          console.log('docu content', email.id, documentContent)
           return documentContent
         })
       })
       .then(name => {
-        // here we change the state to show the current file
-        this.setState({ audioFile: name.audio })
+        const path = storage
+          .ref('adrien@alaq.io/2017-12-1.mp3')
+          .getDownloadURL()
+          .then(url => {
+            console.log('file url', url)
+            this.setState({ audioFile: url })
+          })
       })
       .catch(console.log)
   }
@@ -52,7 +58,8 @@ class Player extends Component {
           />
           <audio controls>
             <source
-              src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+              // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+              src="https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media"
               type="audio/mpeg"
             />
             Your browser does not support the audio element.
