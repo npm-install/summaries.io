@@ -50,18 +50,18 @@ class Player extends Component {
     console.log(this.state)
     return (
       <Paper zDepth={1}>
-        <BottomNavigation selectedIndex={this.state.selectedIndex}>
+      <BottomNavigation selectedIndex={this.state.selectedIndex}>
           {/* <BottomNavigationItem label="Recents" icon={recentsIcon} onClick={() => this.select(0)} />
           <BottomNavigationItem
-            label="Favorites"
-            icon={favoritesIcon}
+             label="Favorites"
+              icon={favoritesIcon}
             onClick={() => this.select(1)}
-          /> */}
-          {/* <BottomNavigationItem
+           />
+           <BottomNavigationItem
             label={this.state.audioFile || 'Come back tomorrow for your first summary!'}
             icon={playIcon}
             onClick={() => this.select(2)}
-          /> */}
+           /> */}
           <audio controls>
             <source
               // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
