@@ -46,9 +46,11 @@ function makeEmail(user) {
       userSource = Object.keys(doc.data())
     })
     .then(() => {
-      const promises = userSource.map(async source => {
+      // const promises = userSource.map(async
 
-        const articles = await admin
+        function source () {
+
+        const articles = admin
           .firestore()
           .collection('users')
           .doc(user)
@@ -65,9 +67,14 @@ function makeEmail(user) {
           })
 
         return { [source]: articles }
-      })
+      }
 
-      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+      return Promise.map(userSource, source)
+        .then((promises) => {
+
+          return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+        })
+
     })
     .then(arr => {
       const allSources = Object.keys(arr).map(key => {
