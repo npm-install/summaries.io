@@ -4,6 +4,11 @@ import Paper from 'material-ui/Paper'
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
 import { db, firebaseAuth, storage } from '../../config/constants'
 
+function dateMaker() {
+  const date = new Date()
+  return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+}
+
 const playIcon = <PlayIcon />
 
 class Player extends Component {
@@ -12,32 +17,29 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    console.log(firebaseAuth().currentUser.email)
     db
       .collection('users')
       .doc(firebaseAuth().currentUser.email)
       .collection('emails')
-      // .orderBy('date', 'desc')
-      // .limit(1)
+      .orderBy('date', 'desc')
+      .limit(1)
       .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(storedEmail) {
-          console.log(storedEmail.id, storedEmail.data())
+      .then(querySnapshot => {
+        querySnapshot.forEach(() => {
+          storage
+            .ref(firebaseAuth().currentUser.email + '/' + dateMaker() + '.mp3')
+            .getDownloadURL()
+            .then(url => {
+              console.log('file url', url)
+              this.setState({ audioFile: url })
+            })
+            .catch(err => {
+              console.log(err)
+              // this.setState({ audioFile: 'https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media' })
+              this.setState({ audioFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' })
+            })
         })
-        // return querySnapshot.docs.map(storedEmail => {
-        //   const documentContent = storedEmail.data()
-        //   console.log('docu content', storedEmail.id, documentContent) // here we have to assume that this is fixed
-        //   return documentContent
-        // })
-      })
-      .then(name => {
-        storage
-          .ref('adrien@alaq.io/2017-12-1.mp3')
-          .getDownloadURL()
-          .then(url => {
-            console.log('file url', url)
-            this.setState({ audioFile: url })
-          })
+
       })
       .catch(console.log)
   }
@@ -45,6 +47,7 @@ class Player extends Component {
   select = index => this.setState({ selectedIndex: index })
 
   render() {
+    console.log(this.state)
     return (
       <Paper zDepth={1}>
         <BottomNavigation selectedIndex={this.state.selectedIndex}>
@@ -63,7 +66,6 @@ class Player extends Component {
             <source
               // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
               src={this.state.audioFile}
-              // src="https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media"
               type="audio/mpeg"
             />
             Your browser does not support the audio element.
