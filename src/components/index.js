@@ -5,6 +5,7 @@ import Register from './Register'
 import Home from './Home'
 import Landing from './Landing'
 import Dashboard from './protected/Dashboard'
+import Player from './protected/Player'
 import { logout, saveUser } from '../helpers/auth'
 import { firebaseAuth } from '../config/constants'
 import AppBar from 'material-ui/AppBar'
@@ -21,11 +22,11 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
     <Route
       {...rest}
       render={props =>
-        authed === true ? (
+        (authed === true ? (
           <Component {...rest} /> // was {...props}
         ) : (
           <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-        )
+        ))
       }
     />
   )
@@ -177,6 +178,7 @@ export default class App extends Component {
               </Switch>
             </div>
           </div>
+          {this.state.authed ? <Player style={{ position: 'absolute' }} /> : ''}
         </div>
       </BrowserRouter>
     )
