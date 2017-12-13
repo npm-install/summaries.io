@@ -17,18 +17,21 @@ class Player extends Component {
       .collection('users')
       .doc(firebaseAuth().currentUser.email)
       .collection('emails')
-      // .orderBy('date', 'desc') // Needs to be edited to fetch the last one, and not the first one
-      .limit(3)
+      // .orderBy('date', 'desc')
+      // .limit(1)
       .get()
       .then(function(querySnapshot) {
-        return querySnapshot.docs.map(email => {
-          const documentContent = email.data()
-          console.log('docu content', email.id, documentContent)
-          return documentContent
+        querySnapshot.forEach(function(storedEmail) {
+          console.log(storedEmail.id, storedEmail.data())
         })
+        // return querySnapshot.docs.map(storedEmail => {
+        //   const documentContent = storedEmail.data()
+        //   console.log('docu content', storedEmail.id, documentContent) // here we have to assume that this is fixed
+        //   return documentContent
+        // })
       })
       .then(name => {
-        const path = storage
+        storage
           .ref('adrien@alaq.io/2017-12-1.mp3')
           .getDownloadURL()
           .then(url => {
@@ -51,15 +54,16 @@ class Player extends Component {
             icon={favoritesIcon}
             onClick={() => this.select(1)}
           /> */}
-          <BottomNavigationItem
+          {/* <BottomNavigationItem
             label={this.state.audioFile || 'Come back tomorrow for your first summary!'}
             icon={playIcon}
             onClick={() => this.select(2)}
-          />
+          /> */}
           <audio controls>
             <source
               // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-              src="https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media"
+              src={this.state.audioFile}
+              // src="https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media"
               type="audio/mpeg"
             />
             Your browser does not support the audio element.
