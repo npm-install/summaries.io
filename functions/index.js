@@ -47,6 +47,7 @@ function makeEmail(user) {
     })
     .then(() => {
       const promises = userSource.map(async source => {
+
         const articles = await admin
           .firestore()
           .collection('users')
