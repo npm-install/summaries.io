@@ -3,8 +3,7 @@ import Article from './Article'
 import Paper from 'material-ui/Paper'
 import { db, firebaseAuth } from '../config/constants'
 import { imageSources } from './SourceImgData'
-import ReactLoading from 'react-loading';
-
+import ReactLoading from 'react-loading'
 
 function today() {
   const dt = new Date()
@@ -15,7 +14,7 @@ export default class SourceSummary extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      articles: {},
+      articles: {}
     }
   }
 
@@ -30,7 +29,11 @@ export default class SourceSummary extends Component {
       .get()
       .then(doc => {
         let obj = doc.data()
+        console.log('obj1', obj)
+        delete obj.date
+        console.log('obj2', obj)
         sourceArr = Object.keys(obj)
+        console.log(sourceArr)
       })
       .then(() => {
         const promises = sourceArr.map(async source => {
@@ -55,7 +58,7 @@ export default class SourceSummary extends Component {
         return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
       })
       .then(arr => {
-        this.setState({ articles: arr });
+        this.setState({ articles: arr })
       })
       .catch(err => {
         console.log('Error getting documents', err)
@@ -63,7 +66,6 @@ export default class SourceSummary extends Component {
   }
 
   render() {
-
     console.log('state', this.state.articles)
     if (Object.keys(this.state.articles).length === 0) {
       return (
@@ -72,12 +74,13 @@ export default class SourceSummary extends Component {
           <div id="new_user_load">
             <h4>We are working hard to generate them</h4>
             <div id="user_img_load">
-            <ReactLoading type="bubbles" color="#ffa14a" height="25" width="25" />
+              <ReactLoading type="bubbles" color="#ffa14a" height="25" width="25" />
             </div>
           </div>
         </div>
       )
     }
+    console.log('loggg', this.state.articles)
 
     return (
       <div className="source-summary">
@@ -85,7 +88,11 @@ export default class SourceSummary extends Component {
         {Object.keys(this.state.articles).map(key => (
           <div key={key} className="each-source">
             <div className="source-header">
-              <img src={imageSources[this.state.articles[key][0].source.id]} alt="" className="source-image" />
+              <img
+                src={imageSources[this.state.articles[key][0].source.id]}
+                alt=""
+                className="source-image"
+              />
               <h3 className="source-title">{this.state.articles[key][0].source.name}</h3>
             </div>
 
