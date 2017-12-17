@@ -1,10 +1,12 @@
 {
   "hosting": {
     "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ]
+    "rewrites": [
+      {
+        "source": "/podcast/",
+        "function": "podcast"
+      }
+    ],
+    "ignore": ["**/.*", "**/node_modules/**"]
   }
 }

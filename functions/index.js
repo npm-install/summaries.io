@@ -1,12 +1,16 @@
 const functions = require('firebase-functions')
 const Storage = require('@google-cloud/storage')
 const axios = require('axios')
-const Promise = require('bluebird')
+// const Promise = require('bluebird')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
 const RSS = require('rss')
+<<<<<<< HEAD
 
+=======
+>>>>>>> fb9e64f263679a3f93f44b5e7e675ada35f9063b
 const admin = require('firebase-admin')
+const Promise = require('bluebird')
 admin.initializeApp(functions.config().firebase)
 
 function dateMaker() {
@@ -46,8 +50,11 @@ function makeEmail(user) {
       userSource = Object.keys(doc.data())
     })
     .then(() => {
-      const promises = userSource.map(async source => {
-        const articles = await admin
+      // const promises = userSource.map(async
+
+        function source () {
+
+        const articles = admin
           .firestore()
           .collection('users')
           .doc(user)
@@ -64,9 +71,14 @@ function makeEmail(user) {
           })
 
         return { [source]: articles }
-      })
+      }
 
-      return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+      return Promise.map(userSource, source)
+        .then((promises) => {
+
+          return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+        })
+
     })
     .then(arr => {
       const allSources = Object.keys(arr).map(key => {
@@ -130,33 +142,34 @@ function sendEmail(user, html) {
 }
 
 exports.podcast = functions.https.onRequest((request, response) => {
+  const userEmail = request.path.slice(1)
   /* lets create an rss feed */
   var feed = new RSS({
     title: 'Your daily summaries',
-    description: 'description',
-    feed_url: 'http://example.com/rss.xml',
-    site_url: 'http://example.com',
+    description: 'Your news, your way',
+    feed_url: 'https://summaries.io/podcast/' + userEmail,
+    site_url: 'https://summaries.io',
     image_url: 'http://example.com/icon.png',
-    docs: 'http://example.com/rss/docs.html',
-    managingEditor: 'Dylan Greene',
-    webMaster: 'Dylan Greene',
-    copyright: '2013 Dylan Greene',
+    managingEditor: 'summaries.io',
+    webMaster: 'summaries.io',
     language: 'en',
-    categories: ['Category 1', 'Category 2', 'Category 3'],
-    pubDate: 'May 20, 2012 04:00:00 GMT',
+    categories: ['News'],
+    pubDate: dateMaker(),
     ttl: '60',
     custom_namespaces: {
       itunes: 'http://www.itunes.com/dtds/podcast-1.0.dtd'
     },
     custom_elements: [
-      { 'itunes:subtitle': 'A show about everything' },
-      { 'itunes:author': 'John Doe' },
+      { 'itunes:subtitle': 'Your news, your way' },
+      { 'itunes:author': 'summaries.io' },
       {
-        'itunes:summary':
-          'All About Everything is a show about everything. Each week we dive into any subject known to man and talk about it as much as we can. Look for our podcast in the Podcasts app or in the iTunes Store'
+        'itunes:summary': 'summaries, everywhere!'
       },
       {
-        'itunes:owner': [{ 'itunes:name': 'John Doe' }, { 'itunes:email': 'john.doe@example.com' }]
+        'itunes:owner': [
+          { 'itunes:name': 'summaries.io' },
+          { 'itunes:email': 'summariesio@gmail.com' }
+        ]
       },
       {
         'itunes:image': {
@@ -169,13 +182,13 @@ exports.podcast = functions.https.onRequest((request, response) => {
         'itunes:category': [
           {
             _attr: {
-              text: 'Technology'
+              text: 'News'
             }
           },
           {
             'itunes:category': {
               _attr: {
-                text: 'Gadgets'
+                text: 'News'
               }
             }
           }
@@ -187,7 +200,7 @@ exports.podcast = functions.https.onRequest((request, response) => {
   /* loop over data and add to feed */
   feed.item({
     title: 'item title',
-    description: 'use this for the content. It can include html.',
+    description: `Today's summary, on ${dateMaker()}`,
     url:
       'https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/verblodung%40gmail.com%2F2017-11-29.mp3?alt=media&token=1b726323-da41-4e3d-81ca-4036ad964164', // link to the item
     guid: '1123', // optional - defaults to url
@@ -238,6 +251,15 @@ function speech(email, audioString) {
     .file(`/${email}/${dateMaker()}.mp3`)
   const audioStream = newAudioFile.createWriteStream()
 
+  // Let's save the path to the file on the email document.
+  admin
+    .firestore()
+    .collection('users')
+    .doc(email)
+    .collection('emails')
+    .doc(dateMaker())
+    .set({ audio: email + '/' + dateMaker() + '.mp3' }, { merge: true })
+
   textToSpeech
     .synthesize(params)
     .on('error', err => console.error(err))
@@ -267,10 +289,8 @@ exports.makeSummaries = functions.https.onRequest((request, response) => {
     'cnn',
     'crypto-coins-news',
     'engadget',
-    'entertainment-weekly',
     'espn',
     'fortune',
-    'hacker-news',
     'ign',
     'mashable',
     'msnbc',
@@ -406,7 +426,7 @@ exports.makeEmails = functions.https.onRequest((request, response) => {
                   .doc(user.id)
                   .collection('emails')
                   .doc(today),
-                { [sub]: true },
+                { [sub]: true, date: new Date() },
                 { merge: true }
               )
               admin
@@ -491,6 +511,7 @@ exports.getWeather = functions.https.onRequest((request, response) => {
         })
         .catch(console.error)
     })
+    .catch(console.error)
 
   function writeWeather(location) {
     forecast.get([location.latitude, location.longitude], function(err, weather) {
