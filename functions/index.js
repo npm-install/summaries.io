@@ -5,10 +5,6 @@ const axios = require('axios')
 const zipcodes = require('zipcodes')
 const nodemailer = require('nodemailer')
 const RSS = require('rss')
-<<<<<<< HEAD
-
-=======
->>>>>>> fb9e64f263679a3f93f44b5e7e675ada35f9063b
 const admin = require('firebase-admin')
 const Promise = require('bluebird')
 admin.initializeApp(functions.config().firebase)
@@ -52,8 +48,7 @@ function makeEmail(user) {
     .then(() => {
       // const promises = userSource.map(async
 
-        function source () {
-
+      function source() {
         const articles = admin
           .firestore()
           .collection('users')
@@ -73,12 +68,9 @@ function makeEmail(user) {
         return { [source]: articles }
       }
 
-      return Promise.map(userSource, source)
-        .then((promises) => {
-
-          return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
-        })
-
+      return Promise.map(userSource, source).then(promises => {
+        return Promise.all(promises).then(articleObjects => Object.assign({}, ...articleObjects))
+      })
     })
     .then(arr => {
       const allSources = Object.keys(arr).map(key => {
@@ -129,6 +121,14 @@ function sendEmail(user, html) {
   })
 
   const mailOptions = {
+    list: {
+      unsubscribe: {
+        /* url:  add url for users to come and unsubscribe
+           might be a link to remove themselves from the firestore database
+        */
+        comment: 'Unsubscribe from this mailing list'
+      }
+    },
     from: '⚡ summaries.io ⚡ <your@summaries.io>',
     to: user,
     subject: 'Your daily summaries',
