@@ -345,6 +345,12 @@ body {
 #weather-btn {
   margin-left: 2em;
 }
+#weather-btn-user {
+  margin-left: 2em;
+  background-color: #FF3F82;
+  color: white;
+  padding: 0.4em 1.5em;
+}
 
 #zip-input {
   margin-left: 1em;
@@ -475,4 +481,20 @@ body {
   width: 15em;
   margin-left: auto;
   margin-right: auto;
+}
+
+#widget_header {
+  display: flex;
+  position: relative;
+}
+
+#zipButton {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin-left: 10em;
+}
+
+.user-zip-btn{
+  margin-left: 1em;
 }
