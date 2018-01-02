@@ -1,11 +1,12 @@
 # Summaries.io
 
-![Landing Page]()
+![Landing Page](https://i.imgur.com/6klxIFg.png)
 
 A progressive web app that summarizes your favorite content providers daily and delivers to you summarized text (available on the web app, mobile app and daily summarization emails) and a podcast-like voice summary powered by IBM Watson.
 
 Built with React, Firebase (Firestore & Cloud Functions), news API, smmry API (Reddit Bot), IBM Watson and nodemailer 
 
+Visit deployed site at: [summaries.io](https://summaries.io)
 #### Instructions:
 
 * Swap out the firebase config in `config/constants` with your own
