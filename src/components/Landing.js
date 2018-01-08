@@ -43,10 +43,10 @@ export default class Landing extends Component {
     }
   }
 
-  componentWillMount(){
-    window.setInterval(this.handleNext, 3000)
-    window.setInterval(() => this.setState({ stepIndex: 0, finished: false }), 12000)
-  }
+  // componentWillMount(){
+  //   window.setInterval(this.handleNext, 3000)
+  //   window.setInterval(() => this.setState({ stepIndex: 0, finished: false }), 12000)
+  // }
 
 
   render() {
@@ -159,15 +159,15 @@ export default class Landing extends Component {
             {finished ? (
               <p>
                 Voila!
-                <button
+                <RaisedButton
+                  label="Click Here"
+                  primary={true}
                   onClick={event => {
                     event.preventDefault()
                     this.setState({ stepIndex: 0, finished: false })
                   }}
-                  style={{ background: 'none', border: 'none' }}
-                >
-                  Click here
-                </button>{' '}
+                  style={{ marginRight: '1em', marginLeft: '1em' }}
+                />
                 to go back to step one.
               </p>
             ) : (

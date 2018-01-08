@@ -50,7 +50,7 @@ export default class App extends Component {
     firebaseAuth()
       .getRedirectResult()
       .then(function(authData) {
-        console.log(authData)
+        // console.log(authData)
         saveUser(authData.user)
       })
       .catch(function(error) {
@@ -59,7 +59,7 @@ export default class App extends Component {
 
     this.removeListener = firebaseAuth().onAuthStateChanged(user => {
       // Now let's modify the state with user information and auth
-      console.log('auth has changed', user)
+      // console.log('auth has changed', user)
       if (user) {
         // Let's retrieve the user's information
         var userRef = db.collection('users')
@@ -90,7 +90,7 @@ export default class App extends Component {
     this.removeListener()
   }
   render() {
-    console.log(this.state)
+    // console.log(this.state)
 
     const authButtons = this.state.authed ? (
       <IconMenu

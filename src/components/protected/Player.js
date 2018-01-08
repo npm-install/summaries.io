@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation'
+import { BottomNavigation } from 'material-ui/BottomNavigation'
 import Paper from 'material-ui/Paper'
-import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
+// import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
 import { db, firebaseAuth, storage } from '../../config/constants'
 
 function dateMaker() {
@@ -9,7 +9,7 @@ function dateMaker() {
   return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 }
 
-const playIcon = <PlayIcon />
+// const playIcon = <PlayIcon />
 
 class Player extends Component {
   state = {
