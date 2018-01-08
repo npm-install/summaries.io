@@ -70,7 +70,7 @@ export default class SourceSummary extends Component {
     if (Object.keys(this.state.articles).length === 0) {
       return (
         <div>
-          <h3>Come back tomorrow for your daily summaries</h3>
+          <h3>Come back tomorrow for your daily summaries!</h3>
           <div id="new_user_load">
             <h4>We are working hard to generate them</h4>
             <div id="user_img_load">

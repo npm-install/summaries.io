@@ -8,7 +8,6 @@ export default class Home extends Component {
       <div>
         <h1 className="welcome">Welcome back!</h1>
         <WeatherWidget />
-
         <SourceSummary />
       </div>
     )

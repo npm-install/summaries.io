@@ -5,7 +5,6 @@ import Paper from 'material-ui/Paper'
 import Toggle from 'material-ui/Toggle'
 import Autosuggest from 'react-autosuggest'
 import TextField from 'material-ui/TextField'
-// import Snackbar from "material-ui/Snackbar";
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import Chip from 'material-ui/Chip'
