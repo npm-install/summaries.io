@@ -36,10 +36,11 @@ class Player extends Component {
             .catch(err => {
               console.log(err)
               // this.setState({ audioFile: 'https://firebasestorage.googleapis.com/v0/b/summary-73ccc.appspot.com/o/adrien%40alaq.io%2F2017-12-1.mp3?alt=media' })
-              this.setState({ audioFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' })
+              this.setState({
+                audioFile: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+              })
             })
         })
-
       })
       .catch(console.log)
   }
@@ -49,29 +50,16 @@ class Player extends Component {
   render() {
     console.log(this.state)
     return (
-      <Paper zDepth={1}>
-      <BottomNavigation selectedIndex={this.state.selectedIndex}>
-          {/* <BottomNavigationItem label="Recents" icon={recentsIcon} onClick={() => this.select(0)} />
-          <BottomNavigationItem
-             label="Favorites"
-              icon={favoritesIcon}
-            onClick={() => this.select(1)}
-           />
-           <BottomNavigationItem
-            label={this.state.audioFile || 'Come back tomorrow for your first summary!'}
-            icon={playIcon}
-            onClick={() => this.select(2)}
-           /> */}
-          <audio controls>
-            <source
-              // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-              src={this.state.audioFile}
-              type="audio/mpeg"
-            />
-            Your browser does not support the audio element.
-          </audio>
-        </BottomNavigation>
-      </Paper>
+      <div id="player">
+        <audio controls>
+          <source
+            // src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            src={this.state.audioFile}
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio element.
+        </audio>
+      </div>
     )
   }
 }
