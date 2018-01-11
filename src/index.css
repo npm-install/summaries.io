@@ -22,8 +22,8 @@ body {
 .source-title {
   margin-top: 0.1em;
   margin-left: 0.4em;
-  padding-top: .5em;
-  padding-left: .25em
+  padding-top: 0.5em;
+  padding-left: 0.25em;
 }
 
 .sourcelogo {
@@ -287,7 +287,7 @@ body {
   padding-bottom: 15em;
 }
 
-.mobile-hero{
+.mobile-hero {
   display: none;
 }
 
@@ -347,7 +347,7 @@ body {
 }
 #weather-btn-user {
   margin-left: 2em;
-  background-color: #FF3F82;
+  background-color: #ff3f82;
   color: white;
   padding: 0.4em 1.5em;
 }
@@ -358,12 +358,12 @@ body {
 }
 
 .form-zip {
-  margin-top: 2em
+  margin-top: 2em;
 }
 
 /* Mobile */
 /* @media only screen and (max-width: 667px) { */
-  @media only screen and (max-width: 736px){
+@media only screen and (max-width: 736px) {
   .stepper {
     display: none;
   }
@@ -382,7 +382,7 @@ body {
     color: snow;
   }
 
-  .mobile-logo{
+  .mobile-logo {
     width: 100vw;
     margin-left: -20vw;
     margin-top: -5vh;
@@ -495,6 +495,18 @@ body {
   margin-left: 10em;
 }
 
-.user-zip-btn{
+.user-zip-btn {
   margin-left: 1em;
+}
+
+#player {
+  height: 32px;
+  position: fixed;
+  bottom: 0px;
+  width: 100vw;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+audio {
+  width: 100%;
 }

@@ -22,11 +22,11 @@ function PrivateRoute({ component: Component, authed, ...rest }) {
     <Route
       {...rest}
       render={props =>
-        (authed === true ? (
+        authed === true ? (
           <Component {...rest} /> // was {...props}
         ) : (
           <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-        ))
+        )
       }
     />
   )
@@ -178,7 +178,7 @@ export default class App extends Component {
               </Switch>
             </div>
           </div>
-          {this.state.authed ? <Player style={{ position: 'absolute' }} /> : ''}
+          {this.state.authed ? <Player /> : ''}
         </div>
       </BrowserRouter>
     )
